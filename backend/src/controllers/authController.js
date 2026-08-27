@@ -196,6 +196,6 @@ export const refresh = asyncHandler(async (req, res) => {
   return res.status(200).json({ message: "Token refreshed successfully!" });
 });
 
-export const welcomeInstructor = asyncHandler(async (req, res) => {
-  return res.status(200).json({ message: "Welcome, Instructor!" });
+export const welcomeAdmin = asyncHandler(async (req, res) => {
+  return res.status(200).json({ message: "Welcome, Admin!" });
 });

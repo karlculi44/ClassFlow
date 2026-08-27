@@ -8,7 +8,7 @@ import {
   logout,
   getMe,
   refresh,
-  welcomeInstructor,
+  welcomeAdmin,
 } from "../controllers/authController.js";
 import { registerSchema, loginSchema } from "../schemas/authSchema.js";
 
@@ -19,11 +19,6 @@ router.post("/login", validate(loginSchema), login);
 router.post("/logout", logout);
 router.post("/refresh", refresh);
 router.get("/me", verifyToken, getMe);
-router.get(
-  "/instructor",
-  verifyToken,
-  authorize("Instructor"),
-  welcomeInstructor,
-);
+router.get("/admin", verifyToken, authorize("Admin"), welcomeAdmin);
 
 export default router;
