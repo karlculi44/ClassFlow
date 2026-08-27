@@ -2,6 +2,7 @@ import "./config/env.js";
 import express from "express";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js";
+import errorHandler from "./middleware/errorHandler.js";
 
 const app = express();
 
@@ -15,5 +16,7 @@ app.use("/api/auth", authRoutes);
 app.get("/", (req, res) => {
   res.send("App is running!");
 });
+
+app.use(errorHandler);
 
 export default app;
