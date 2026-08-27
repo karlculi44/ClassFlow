@@ -10,6 +10,7 @@ import {
   deleteRefreshToken,
   saveRefreshToken,
 } from "../models/userModel.js";
+import hashToken from "../utils/hashToken.js";
 
 // Controller for handling user authentication (registration)
 // This includes registering new users and ensuring that all required fields are provided,
@@ -74,7 +75,7 @@ export const login = asyncHandler(async (req, res) => {
     },
   );
 
-  const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+  const hashedRefreshToken = hashToken(refreshToken);
   await saveRefreshToken(user.id, hashedRefreshToken);
 
   res.cookie("accessToken", accessToken, {
