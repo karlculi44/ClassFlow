@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
-function Dashboard() {
+function AdminDashboard() {
   const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -12,26 +12,33 @@ function Dashboard() {
   };
 
   const stats = [
-    { label: "Enrolled Classes", value: "6" },
-    { label: "Assignments Due", value: "3" },
-    { label: "Attendance Rate", value: "94%" },
-    { label: "Upcoming Exams", value: "2" },
+    { label: "Total Students", value: "1,248" },
+    { label: "Total Teachers", value: "86" },
+    { label: "Active Classes", value: "52" },
+    { label: "Pending Approvals", value: "7" },
   ];
 
-  const upcomingClasses = [
-    { subject: "Mathematics", time: "9:00 AM", room: "Room 204" },
-    { subject: "Physics", time: "11:00 AM", room: "Room 118" },
-    { subject: "English Literature", time: "1:30 PM", room: "Room 305" },
+  const recentActivity = [
+    { text: "New teacher account approved", time: "10 min ago" },
+    { text: "Class schedule updated for Grade 10", time: "1 hr ago" },
+    { text: "Student enrollment request submitted", time: "3 hrs ago" },
   ];
 
-  const navItems = ["Overview", "Classes", "Assignments", "Grades", "Profile"];
+  const navItems = [
+    "Overview",
+    "Students",
+    "Teachers",
+    "Classes",
+    "Reports",
+    "Settings",
+  ];
 
   return (
     <div className="relative min-h-screen bg-gray-950 overflow-hidden">
       {/* Ambience background */}
-      <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-indigo-600/20 blur-3xl" />
-      <div className="absolute top-1/3 -right-32 h-96 w-96 rounded-full bg-purple-600/20 blur-3xl" />
-      <div className="absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-indigo-500/10 blur-3xl" />
+      <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-purple-600/20 blur-3xl" />
+      <div className="absolute top-1/2 -left-32 h-96 w-96 rounded-full bg-indigo-600/20 blur-3xl" />
+      <div className="absolute bottom-0 right-1/4 h-72 w-72 rounded-full bg-purple-500/10 blur-3xl" />
 
       <div className="relative flex flex-col md:flex-row">
         {/* Sidebar */}
@@ -41,7 +48,14 @@ function Dashboard() {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-950/50">
                 <span className="text-sm font-bold text-white">CF</span>
               </div>
-              <span className="text-lg font-bold text-white">ClassFlow</span>
+              <div>
+                <span className="block text-lg font-bold text-white">
+                  ClassFlow
+                </span>
+                <span className="block text-xs text-indigo-400 font-medium">
+                  Admin
+                </span>
+              </div>
             </div>
             <nav className="flex md:flex-col overflow-x-auto md:overflow-visible gap-1 px-3 pb-4 md:pb-6">
               {navItems.map((item, i) => (
@@ -72,10 +86,10 @@ function Dashboard() {
         <main className="flex-1 px-4 py-8 sm:px-6 lg:px-10">
           <div className="mb-8">
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-              Welcome back, Student
+              Admin Dashboard
             </h1>
             <p className="mt-1 text-sm text-gray-400">
-              Here&apos;s what&apos;s happening with your classes today.
+              Manage students, teachers, and classes across ClassFlow.
             </p>
           </div>
 
@@ -95,43 +109,42 @@ function Dashboard() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Upcoming classes */}
+            {/* Recent activity */}
             <div className="lg:col-span-2 rounded-2xl bg-gray-900 border border-gray-800 p-6 shadow-lg shadow-black/30">
               <h2 className="text-lg font-semibold text-white mb-4">
-                Today&apos;s Schedule
+                Recent Activity
               </h2>
               <div className="space-y-3">
-                {upcomingClasses.map((cls) => (
+                {recentActivity.map((activity) => (
                   <div
-                    key={cls.subject}
+                    key={activity.text}
                     className="flex items-center justify-between rounded-xl bg-gray-800/60 border border-gray-800 px-4 py-3"
                   >
-                    <div>
-                      <p className="text-sm font-medium text-gray-100">
-                        {cls.subject}
-                      </p>
-                      <p className="text-xs text-gray-400">{cls.room}</p>
-                    </div>
-                    <span className="text-sm font-medium text-indigo-400">
-                      {cls.time}
+                    <p className="text-sm text-gray-100">{activity.text}</p>
+                    <span className="text-xs text-gray-500 whitespace-nowrap">
+                      {activity.time}
                     </span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Placeholder panel */}
+            {/* Quick actions */}
             <div className="rounded-2xl bg-gray-900 border border-gray-800 p-6 shadow-lg shadow-black/30">
               <h2 className="text-lg font-semibold text-white mb-4">
-                Announcements
+                Quick Actions
               </h2>
-              <div className="space-y-3 text-sm text-gray-400">
-                <p className="rounded-xl bg-gray-800/60 border border-gray-800 px-4 py-3">
-                  Placeholder announcement content goes here.
-                </p>
-                <p className="rounded-xl bg-gray-800/60 border border-gray-800 px-4 py-3">
-                  Placeholder announcement content goes here.
-                </p>
+              <div className="space-y-3">
+                {["Add Student", "Add Teacher", "Create Class"].map(
+                  (action) => (
+                    <button
+                      key={action}
+                      className="w-full rounded-lg bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white text-sm font-semibold py-2.5 transition"
+                    >
+                      {action}
+                    </button>
+                  ),
+                )}
               </div>
             </div>
           </div>
@@ -141,4 +154,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default AdminDashboard;

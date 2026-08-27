@@ -33,8 +33,13 @@ export function AuthProvider({ children }) {
     return userData;
   };
 
+  const logout = async () => {
+    await logoutUser();
+    setUser(null);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, setLoading, login }}>
+    <AuthContext.Provider value={{ user, loading, setLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
