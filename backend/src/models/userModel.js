@@ -23,3 +23,19 @@ export const findUserForLogin = async (email) => {
   );
   return rows[0];
 };
+
+export const findUserById = async (id) => {
+  const [rows] = await pool.query(
+    "SELECT id, name, email, role FROM users WHERE id = ?",
+    [id],
+  );
+  return rows[0];
+};
+
+export const saveRefreshToken = async (userId, refreshToken) => {
+  const [rows] = await pool.query(
+    "UPDATE users SET refresh_token = ? WHERE id = ?",
+    [refreshToken, userId],
+  );
+  return rows;
+};

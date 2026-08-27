@@ -1,8 +1,10 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import {
   createUser,
   findUserByEmail,
   findUserForLogin,
+  findUserById,
 } from "../models/userModel.js";
 
 // Controller for handling user authentication (registration)
@@ -52,11 +54,52 @@ export const login = async (req, res) => {
     return res.status(401).json({ message: "Invalid email or password." });
   }
 
+  const accessToken = jwt.sign(
+    { id: user.id, role: user.role },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: "1h",
+    },
+  );
+
+  const refreshToken = jwt.sign(
+    { id: user.id },
+    process.env.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: "7d",
+    },
+  );
+
+  const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+  await saveRefreshToken(user.id, hashedRefreshToken);
+
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
+  });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
+  });
+
   return res.status(200).json({ message: "Login successful!", user });
 };
 
+export const getMe = async (req, res) => {
+  const user = await findUserById(req.user.id);
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  return res
+    .status(200)
+    .json({ message: "User retrieved successfully!", user });
+};
+
 export const logout = async (req, res) => {
-  // For simplicity, we'll just return a success message.
-  // In a real application, you might handle token invalidation or session destruction here.
   return res.status(200).json({ message: "Logout successful!" });
 };
