@@ -9,6 +9,7 @@ import {
   findUserById,
   deleteRefreshToken,
   saveRefreshToken,
+  findRefreshTokenByUserId,
 } from "../models/userModel.js";
 import hashToken from "../utils/hashToken.js";
 
@@ -26,15 +27,13 @@ export const register = asyncHandler(async (req, res) => {
 
   // Check if the user already exists
   if (existingUser) {
-    throw new AppError("User already exists!", 400);
+    throw new AppError("Email is already taken", 400);
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = await createUser({ name, email, hashedPassword, role });
 
-  return res
-    .status(201)
-    .json({ message: "User registered successfully!", user: newUser });
+  return res.status(201).json({ message: "User registered successfully!" });
 });
 
 // Controller for handling user login (authentication)
@@ -82,12 +81,14 @@ export const login = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "Strict",
+    maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
   });
 
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "Strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
   });
 
   return res.status(200).json({ message: "Login successful!", user });
@@ -127,4 +128,70 @@ export const logout = asyncHandler(async (req, res) => {
   });
 
   return res.status(200).json({ message: "Logout successful!" });
+});
+
+export const refresh = asyncHandler(async (req, res) => {
+  const { refreshToken } = req.cookies;
+
+  if (!refreshToken) {
+    throw new AppError("Refresh token is required!", 400);
+  }
+
+  const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+  if (!decoded) {
+    throw new AppError("Invalid refresh token.", 401);
+  }
+
+  const user = await findUserById(decoded.id);
+
+  if (!user) {
+    throw new AppError("User not found.", 404);
+  }
+
+  const storedHashedRefreshToken = await findRefreshTokenByUserId(decoded.id);
+  const hashedRefreshToken = hashToken(refreshToken);
+
+  if (
+    !storedHashedRefreshToken ||
+    storedHashedRefreshToken !== hashedRefreshToken
+  ) {
+    throw new AppError("Unauthorized.", 401);
+  }
+
+  const newAccessToken = jwt.sign(
+    { id: decoded.id, role: user.role },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: "15m",
+    },
+  );
+
+  const newRefreshToken = jwt.sign(
+    { id: decoded.id },
+    process.env.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: "7d",
+    },
+  );
+
+  const hashedNewRefreshToken = hashToken(newRefreshToken);
+
+  await saveRefreshToken(decoded.id, hashedNewRefreshToken);
+
+  res.cookie("accessToken", newAccessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
+    maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
+  });
+
+  res.cookie("refreshToken", newRefreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+  });
+
+  return res.status(200).json({ message: "Token refreshed successfully!" });
 });

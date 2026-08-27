@@ -47,3 +47,11 @@ export const deleteRefreshToken = async (userId) => {
   );
   return rows;
 };
+
+export const findRefreshTokenByUserId = async (userId) => {
+  const [rows] = await pool.query(
+    "SELECT refresh_token FROM users WHERE id = ?",
+    [userId],
+  );
+  return rows[0].refresh_token;
+};
