@@ -5,6 +5,8 @@ import {
   findUserByEmail,
   findUserForLogin,
   findUserById,
+  deleteRefreshToken,
+  saveRefreshToken,
 } from "../models/userModel.js";
 
 // Controller for handling user authentication (registration)
@@ -101,5 +103,25 @@ export const getMe = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
+  const { refreshToken } = req.cookies;
+
+  if (!refreshToken) {
+    return res.status(400).json({ message: "Refresh token is required!" });
+  }
+
+  const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+  await deleteRefreshToken(decoded.id);
+
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
+  });
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
+  });
+
   return res.status(200).json({ message: "Logout successful!" });
 };

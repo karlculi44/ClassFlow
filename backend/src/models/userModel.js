@@ -39,3 +39,11 @@ export const saveRefreshToken = async (userId, refreshToken) => {
   );
   return rows;
 };
+
+export const deleteRefreshToken = async (userId) => {
+  const [rows] = await pool.query(
+    "UPDATE users SET refresh_token = NULL WHERE id = ?",
+    [userId],
+  );
+  return rows;
+};
