@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import asyncHandler from "../utils/asyncHandler.js";
+import AppError from "../utils/AppError.js";
 import {
   createUser,
   findUserByEmail,
@@ -17,14 +18,14 @@ export const register = asyncHandler(async (req, res) => {
   const { name, email, password, role } = req.body;
 
   if (!name || !email || !password || !role) {
-    return res.status(400).send("All fields are required!");
+    throw new AppError("All fields are required!", 400);
   }
 
   const existingUser = await findUserByEmail(email);
 
   // Check if the user already exists
   if (existingUser) {
-    return res.status(400).json({ message: "User already exists!" });
+    throw new AppError("User already exists!", 400);
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -42,19 +43,19 @@ export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).send("Email and password are required!");
+    throw new AppError("Email and password are required!", 400);
   }
 
   const user = await findUserForLogin(email);
 
   if (!user) {
-    return res.status(401).json({ message: "Invalid email or password." });
+    throw new AppError("Invalid email or password.", 401);
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.hashedPassword);
 
   if (!isPasswordValid) {
-    return res.status(401).json({ message: "Invalid email or password." });
+    throw new AppError("Invalid email or password.", 401);
   }
 
   const accessToken = jwt.sign(
@@ -95,7 +96,7 @@ export const getMe = asyncHandler(async (req, res) => {
   const user = await findUserById(req.user.id);
 
   if (!user) {
-    return res.status(404).json({ message: "User not found." });
+    throw new AppError("User not found.", 404);
   }
 
   return res
@@ -107,7 +108,7 @@ export const logout = asyncHandler(async (req, res) => {
   const { refreshToken } = req.cookies;
 
   if (!refreshToken) {
-    return res.status(400).json({ message: "Refresh token is required!" });
+    throw new AppError("Refresh token is required!", 400);
   }
 
   const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
