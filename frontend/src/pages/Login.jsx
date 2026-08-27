@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
-  const { login, user } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -19,10 +19,9 @@ function Login() {
   };
 
   const handleSubmit = async (e) => {
-    console.log(user);
     e.preventDefault();
     try {
-      await login(formData);
+      const user = await login(formData);
       navigate(user.role === "Admin" ? "/admin" : "/dashboard");
     } catch (error) {
       console.error("Login failed:", error);

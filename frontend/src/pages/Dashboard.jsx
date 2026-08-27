@@ -1,16 +1,9 @@
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import Sidebar from "../components/Sidebar";
 
 function Dashboard() {
-  const { logout, user } = useContext(AuthContext);
-
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    navigate("/");
-    await logout();
-  };
+  const { user } = useContext(AuthContext);
 
   const stats = [
     { label: "Enrolled Classes", value: "6" },
@@ -25,8 +18,6 @@ function Dashboard() {
     { subject: "English Literature", time: "1:30 PM", room: "Room 305" },
   ];
 
-  const navItems = ["Overview", "Classes", "Assignments", "Grades", "Profile"];
-
   return (
     <div className="relative min-h-screen bg-gray-950 overflow-hidden">
       {/* Ambience background */}
@@ -35,39 +26,7 @@ function Dashboard() {
       <div className="absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-indigo-500/10 blur-3xl" />
 
       <div className="relative flex flex-col md:flex-row">
-        {/* Sidebar */}
-        <aside className="w-full md:w-64 shrink-0 border-b md:border-b-0 md:border-r border-gray-800 bg-gray-900/60 backdrop-blur-sm md:flex md:flex-col md:justify-between">
-          <div>
-            <div className="flex items-center gap-3 px-6 py-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-950/50">
-                <span className="text-sm font-bold text-white">CF</span>
-              </div>
-              <span className="text-lg font-bold text-white">ClassFlow</span>
-            </div>
-            <nav className="flex md:flex-col overflow-x-auto md:overflow-visible gap-1 px-3 pb-4 md:pb-6">
-              {navItems.map((item, i) => (
-                <button
-                  key={item}
-                  className={`whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-medium text-left transition ${
-                    i === 0
-                      ? "bg-indigo-600 text-white"
-                      : "text-gray-400 hover:bg-gray-800 hover:text-gray-100"
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-            </nav>
-          </div>
-          <div className="px-3 pb-6">
-            <button
-              onClick={handleLogout}
-              className="w-full rounded-lg px-4 py-2.5 text-sm font-medium text-left text-red-400 hover:bg-red-500/10 hover:text-red-300 transition"
-            >
-              Sign Out
-            </button>
-          </div>
-        </aside>
+        <Sidebar />
 
         {/* Main content */}
         <main className="flex-1 px-4 py-8 sm:px-6 lg:px-10">
