@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import Unauthorized from "./pages/Unauthorized";
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["Student"]}>
                 <Dashboard />
               </ProtectedRoute>
             }
@@ -21,11 +22,12 @@ function App() {
           <Route
             path="/admin"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["Admin"]}>
                 <AdminDashboard />
               </ProtectedRoute>
             }
           />
+          <Route path="/unauthorized" element={<Unauthorized />} />
         </Routes>
       </Router>
     </>

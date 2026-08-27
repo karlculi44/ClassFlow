@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
+  const { login, user } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -19,10 +19,11 @@ function Login() {
   };
 
   const handleSubmit = async (e) => {
+    console.log(user);
     e.preventDefault();
     try {
       await login(formData);
-      navigate("/dashboard");
+      navigate(user.role === "Admin" ? "/admin" : "/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -139,12 +140,6 @@ function Login() {
                   >
                     Password
                   </label>
-                  <a
-                    href="#"
-                    className="text-xs text-indigo-400 hover:text-indigo-300 transition"
-                  >
-                    Forgot password?
-                  </a>
                 </div>
                 <input
                   id="password"
@@ -164,6 +159,12 @@ function Login() {
               >
                 Sign In
               </button>
+              <a
+                href="#"
+                className="text-xs text-indigo-400 hover:text-indigo-300 transition"
+              >
+                Forgot password?
+              </a>
             </form>
 
             <div className="mt-6 text-center text-sm text-gray-400">

@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 function Dashboard() {
-  const { logout } = useContext(AuthContext);
+  const { logout, user } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await logout();
     navigate("/");
+    await logout();
   };
 
   const stats = [
@@ -72,7 +73,7 @@ function Dashboard() {
         <main className="flex-1 px-4 py-8 sm:px-6 lg:px-10">
           <div className="mb-8">
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-              Welcome back, Student
+              Welcome back, {user?.name || "Student"}
             </h1>
             <p className="mt-1 text-sm text-gray-400">
               Here&apos;s what&apos;s happening with your classes today.

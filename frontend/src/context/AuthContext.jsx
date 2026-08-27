@@ -15,7 +15,7 @@ export function AuthProvider({ children }) {
     const fetchUser = async () => {
       try {
         const data = await getMe();
-        setUser(data);
+        setUser(data.user);
       } catch (error) {
         console.error("Failed to fetch user:", error);
         setUser(null);
@@ -29,8 +29,8 @@ export function AuthProvider({ children }) {
   const login = async (data) => {
     await loginUser(data);
     const userData = await getMe();
-    setUser(userData);
-    return userData;
+    setUser(userData.user);
+    return userData.user;
   };
 
   const logout = async () => {

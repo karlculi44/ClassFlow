@@ -7,8 +7,8 @@ function AdminDashboard() {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await logout();
     navigate("/");
+    await logout();
   };
 
   const stats = [
