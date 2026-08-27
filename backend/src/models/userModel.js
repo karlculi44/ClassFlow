@@ -15,3 +15,11 @@ export const findUserByEmail = async (email) => {
   );
   return rows[0];
 };
+
+export const findUserForLogin = async (email) => {
+  const [rows] = await pool.query(
+    "SELECT id, name, email, password as hashedPassword, role FROM users WHERE email = ?",
+    [email],
+  );
+  return rows[0];
+};
