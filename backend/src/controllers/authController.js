@@ -54,3 +54,9 @@ export const login = async (req, res) => {
 
   return res.status(200).json({ message: "Login successful!", user });
 };
+
+export const logout = async (req, res) => {
+  // For simplicity, we'll just return a success message.
+  // In a real application, you might handle token invalidation or session destruction here.
+  return res.status(200).json({ message: "Logout successful!" });
+};
