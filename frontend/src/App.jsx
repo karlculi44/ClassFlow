@@ -4,6 +4,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import Unauthorized from "./pages/Unauthorized";
+import AdminClasses from "./pages/AdminClasses";
+import MainLayout from "./layout/MainLayout";
 
 function App() {
   return (
@@ -11,22 +13,35 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={["Student"]}>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute allowedRoles={["Admin"]}>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
+
+          <Route element={<MainLayout />}>
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={["Student"]}>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute allowedRoles={["Admin"]}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin-classes"
+              element={
+                <ProtectedRoute allowedRoles={["Admin"]}>
+                  <AdminClasses />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+
           <Route path="/unauthorized" element={<Unauthorized />} />
         </Routes>
       </Router>

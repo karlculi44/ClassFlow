@@ -1,5 +1,3 @@
-import Sidebar from "../components/Sidebar";
-
 function AdminDashboard() {
   const stats = [
     { label: "Total Students", value: "1,248" },
@@ -22,8 +20,6 @@ function AdminDashboard() {
       <div className="absolute bottom-0 right-1/4 h-72 w-72 rounded-full bg-purple-500/10 blur-3xl" />
 
       <div className="relative flex flex-col md:flex-row">
-        <Sidebar />
-
         {/* Main content */}
         <main className="flex-1 px-4 py-8 sm:px-6 lg:px-10">
           <div className="mb-8">

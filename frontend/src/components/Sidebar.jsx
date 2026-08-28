@@ -1,26 +1,71 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import { NavLink } from "react-router-dom";
 
 const studentNavItems = [
-  "Overview",
-  "Classes",
-  "Assignments",
-  "Grades",
-  "Profile",
-];
-const adminNavItems = [
-  "Overview",
-  "Students",
-  "Teachers",
-  "Classes",
-  "Reports",
-  "Settings",
+  {
+    id: 1,
+    title: "Overview",
+    path: "/dashboard",
+  },
+  {
+    id: 2,
+    title: "Classes",
+    path: "/classes",
+  },
+  {
+    id: 3,
+    title: "Assignments",
+    path: "/assignments",
+  },
+  {
+    id: 4,
+    title: "Grades",
+    path: "/grades",
+  },
+  {
+    id: 5,
+    title: "Profile",
+    path: "/profile",
+  },
 ];
 
-function Sidebar() {
+const adminNavItems = [
+  {
+    id: 1,
+    title: "Overview",
+    path: "/admin",
+  },
+  {
+    id: 2,
+    title: "Students",
+    path: "/students",
+  },
+  {
+    id: 3,
+    title: "Teachers",
+    path: "/teachers",
+  },
+  {
+    id: 4,
+    title: "Classes",
+    path: "/admin-classes",
+  },
+  {
+    id: 5,
+    title: "Reports",
+    path: "/reports",
+  },
+  {
+    id: 6,
+    title: "Settings",
+    path: "/settings",
+  },
+];
+
+function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const { logout, user } = useContext(AuthContext);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
   const isAdmin = user?.role === "Admin";
@@ -34,7 +79,7 @@ function Sidebar() {
   return (
     <>
       {/* Mobile top bar */}
-      <div className="md:hidden relative flex items-center justify-between px-4 py-4 border-b border-gray-800 bg-gray-900/60 backdrop-blur-sm">
+      <div className="relative z-30 flex w-full shrink-0 items-center justify-between border-b border-gray-800 bg-gray-900/95 px-4 py-4 shadow-lg shadow-black/10 backdrop-blur-sm md:hidden">
         <div className="flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-purple-600">
             <span className="text-xs font-bold text-white">CF</span>
@@ -73,7 +118,7 @@ function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 flex flex-col justify-between border-r border-gray-800 bg-gray-900/95 backdrop-blur-sm transform transition-transform duration-300 ease-in-out ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-72 max-w-[85vw] flex-col justify-between border-r border-gray-800 bg-gray-900/98 shadow-2xl shadow-black/40 backdrop-blur-sm transform transition-transform duration-300 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:static md:z-auto md:translate-x-0 md:w-64 md:shrink-0 md:bg-gray-900/60`}
       >
@@ -118,14 +163,16 @@ function Sidebar() {
           <nav className="flex flex-col gap-1 px-3 pb-4 md:pb-6">
             {navItems.map((item, i) => (
               <button
-                key={item}
+                key={item.id}
                 className={`whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-medium text-left transition ${
                   i === 0
                     ? "bg-indigo-600 text-white"
                     : "text-gray-400 hover:bg-gray-800 hover:text-gray-100"
                 }`}
               >
-                {item}
+                <NavLink to={item.path} onClick={() => setSidebarOpen(false)}>
+                  {item.title}
+                </NavLink>
               </button>
             ))}
           </nav>
