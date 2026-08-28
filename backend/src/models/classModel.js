@@ -15,10 +15,11 @@ export const createNewClass = async ({
   name,
   schedule,
   capacity,
+  status = "Active",
 }) => {
   const [rows] = await pool.query(
-    "INSERT INTO classes (status, code, admin_id, name, schedule, capacity) VALUES ('Active', ?, ?, ?, ?, ?)",
-    [code, adminId, name, schedule, capacity],
+    "INSERT INTO classes (status, code, admin_id, name, schedule, capacity) VALUES (?, ?, ?, ?, ?, ?)",
+    [status, code, adminId, name, schedule, capacity],
   );
 
   return rows[0];

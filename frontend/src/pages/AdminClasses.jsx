@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { getClasses } from "../services/classServices";
+import { createClass, getClasses } from "../services/classServices";
 import ClassCard from "../components/ClassCard";
+import ClassModal from "../components/ClassModal";
 
 const accents = [
   "bg-indigo-500",
@@ -11,10 +12,22 @@ const accents = [
   "bg-violet-500",
 ];
 
+const initialFormData = {
+  name: "",
+  code: "",
+  schedule: "",
+  capacity: "30",
+  status: "Active",
+};
+
 function AdminClasses() {
   const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [classModalOpen, setClassModalOpen] = useState(false);
+  const [formData, setFormData] = useState(initialFormData);
+  const [creatingClass, setCreatingClass] = useState(false);
+  const [createError, setCreateError] = useState("");
 
   useEffect(() => {
     const fetchClasses = async () => {
@@ -33,6 +46,48 @@ function AdminClasses() {
 
     fetchClasses();
   }, []);
+
+  const handleFormChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((currentFormData) => ({
+      ...currentFormData,
+      [name]: value,
+    }));
+  };
+
+  const closeClassModal = (force = false) => {
+    if (creatingClass && !force) {
+      return;
+    }
+
+    setClassModalOpen(false);
+    setCreateError("");
+    setFormData(initialFormData);
+  };
+
+  const handleCreateClass = async (event) => {
+    event.preventDefault();
+    setCreatingClass(true);
+    setCreateError("");
+
+    try {
+      await createClass({
+        ...formData,
+        capacity: Number(formData.capacity),
+      });
+      const data = await getClasses();
+      setClasses(data.classes ?? []);
+      setCreatingClass(false);
+      closeClassModal(true);
+    } catch (requestError) {
+      setCreateError(
+        requestError.response?.data?.message ||
+          "Unable to create this class right now.",
+      );
+    } finally {
+      setCreatingClass(false);
+    }
+  };
 
   const totalStudents = classes.reduce(
     (total, classItem) =>
@@ -57,7 +112,14 @@ function AdminClasses() {
               Manage class schedules, teachers, and enrollment.
             </p>
           </div>
-          <button className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 active:bg-indigo-700">
+          <button
+            type="button"
+            onClick={() => {
+              setCreateError("");
+              setClassModalOpen(true);
+            }}
+            className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 active:bg-indigo-700"
+          >
             Create class
           </button>
         </header>
@@ -68,7 +130,10 @@ function AdminClasses() {
               Total classes
             </p>
             <p className="mt-1 text-2xl font-bold text-white">
-              {classes.length}
+              {
+                classes.filter((classItem) => classItem.status === "Active")
+                  .length
+              }
             </p>
           </div>
           <div>
@@ -95,6 +160,15 @@ function AdminClasses() {
           )}
 
           {!loading && error && <p className="text-sm text-red-400">{error}</p>}
+          <ClassModal
+            isOpen={classModalOpen}
+            formData={formData}
+            loading={creatingClass}
+            error={createError}
+            onChange={handleFormChange}
+            onClose={closeClassModal}
+            onSubmit={handleCreateClass}
+          />
 
           {!loading && !error && classes.length === 0 && (
             <p className="text-sm text-gray-400">

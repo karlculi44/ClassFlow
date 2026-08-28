@@ -13,7 +13,7 @@ export const getClasses = asyncHandler(async (req, res) => {
 });
 
 export const createClass = asyncHandler(async (req, res) => {
-  const { code, name, schedule, capacity } = req.body;
+  const { code, name, schedule, capacity, status } = req.body;
   const { user } = req;
   const findUser = await findUserById(user.id);
 
@@ -32,6 +32,7 @@ export const createClass = asyncHandler(async (req, res) => {
     name,
     schedule,
     capacity,
+    status,
   });
 
   return res
