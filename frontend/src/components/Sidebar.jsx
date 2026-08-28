@@ -161,19 +161,22 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             </button>
           </div>
           <nav className="flex flex-col gap-1 px-3 pb-4 md:pb-6">
-            {navItems.map((item, i) => (
-              <button
+            {navItems.map((item) => (
+              <NavLink
                 key={item.id}
-                className={`whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-medium text-left transition ${
-                  i === 0
-                    ? "bg-indigo-600 text-white"
-                    : "text-gray-400 hover:bg-gray-800 hover:text-gray-100"
-                }`}
+                to={item.path}
+                end={item.path === "/admin" || item.path === "/dashboard"}
+                onClick={() => setSidebarOpen(false)}
+                className={({ isActive }) =>
+                  `block w-full whitespace-nowrap rounded-lg px-4 py-2.5 text-left text-sm font-medium transition ${
+                    isActive
+                      ? "bg-indigo-600 text-white shadow-lg shadow-indigo-950/30"
+                      : "text-gray-400 hover:bg-gray-800 hover:text-gray-100"
+                  }`
+                }
               >
-                <NavLink to={item.path} onClick={() => setSidebarOpen(false)}>
-                  {item.title}
-                </NavLink>
-              </button>
+                {item.title}
+              </NavLink>
             ))}
           </nav>
         </div>
