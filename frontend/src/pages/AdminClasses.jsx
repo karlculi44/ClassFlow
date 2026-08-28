@@ -130,10 +130,7 @@ function AdminClasses() {
               Total classes
             </p>
             <p className="mt-1 text-2xl font-bold text-white">
-              {
-                classes.filter((classItem) => classItem.status === "Active")
-                  .length
-              }
+              {classes.length}
             </p>
           </div>
           <div>
@@ -149,7 +146,10 @@ function AdminClasses() {
               Active classes
             </p>
             <p className="mt-1 text-2xl font-bold text-emerald-400">
-              {classes.length}
+              {
+                classes.filter((classItem) => classItem.status === "Active")
+                  .length
+              }
             </p>
           </div>
         </section>

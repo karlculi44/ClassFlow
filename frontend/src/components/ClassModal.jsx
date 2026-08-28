@@ -111,10 +111,14 @@ function ClassModal({
                 name="status"
                 value={formData.status}
                 onChange={onChange}
-                className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-white outline-none focus:border-indigo-500"
+                className={
+                  formData.status === "Active"
+                    ? "w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-white outline-none focus:border-indigo-500"
+                    : "w-full rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2.5 text-red-400 outline-none focus:border-red-500"
+                }
               >
                 <option value="Active">Active</option>
-                <option value="Archived">Inactive</option>
+                <option value="Inactive">Inactive</option>
               </select>
             </label>
           </div>

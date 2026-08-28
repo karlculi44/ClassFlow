@@ -1,6 +1,10 @@
 function ClassCard({ classItem }) {
   const students = classItem.students ?? classItem.enrolledStudents ?? 0;
   const status = classItem.status ?? "Active";
+  const statusClassName =
+    status === "Active"
+      ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
+      : "border-red-500/20 bg-red-500/10 text-red-400";
   const enrollmentPercent = Math.round((students / classItem.capacity) * 100);
 
   return (
@@ -9,7 +13,9 @@ function ClassCard({ classItem }) {
         <div
           className={`h-2 w-12 rounded-full ${classItem.accent ?? "bg-indigo-500"}`}
         />
-        <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-400">
+        <span
+          className={`rounded-full border px-2.5 py-1 text-xs font-medium ${statusClassName}`}
+        >
           {status}
         </span>
       </div>
