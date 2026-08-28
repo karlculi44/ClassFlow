@@ -3,9 +3,11 @@ import {
   createClass,
   getClasses,
   updateClass,
+  deleteClass,
 } from "../services/classServices";
 import ClassCard from "../components/ClassCard";
 import ClassModal from "../components/ClassModal";
+import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
 const accents = [
   "bg-indigo-500",
@@ -33,12 +35,19 @@ function AdminClasses() {
   const [formData, setFormData] = useState(initialFormData);
   const [creatingClass, setCreatingClass] = useState(false);
   const [createError, setCreateError] = useState("");
+  const [classToDelete, setClassToDelete] = useState(null);
+  const [deletingClass, setDeletingClass] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+
+  const loadClasses = async () => {
+    const data = await getClasses();
+    setClasses(data.classes ?? []);
+  };
 
   useEffect(() => {
-    const fetchClasses = async () => {
+    const fetchInitialClasses = async () => {
       try {
-        const data = await getClasses();
-        setClasses(data.classes ?? []);
+        await loadClasses();
       } catch (requestError) {
         setError(
           requestError.response?.data?.message ||
@@ -49,7 +58,7 @@ function AdminClasses() {
       }
     };
 
-    fetchClasses();
+    fetchInitialClasses();
   }, []);
 
   const handleFormChange = (event) => {
@@ -112,6 +121,46 @@ function AdminClasses() {
     });
     setCreateError("");
     setClassModalOpen(true);
+  };
+
+  const requestDeleteClass = (selectedClass) => {
+    setClassToDelete(selectedClass);
+    setDeleteError("");
+  };
+
+  const closeDeleteModal = () => {
+    if (deletingClass) {
+      return;
+    }
+
+    setClassToDelete(null);
+    setDeleteError("");
+  };
+
+  const handleDeleteClass = async () => {
+    if (!classToDelete) {
+      return;
+    }
+
+    setDeletingClass(true);
+    setDeleteError("");
+    setLoading(true);
+    setError("");
+
+    try {
+      await deleteClass(classToDelete.id);
+      await loadClasses();
+      setClassToDelete(null);
+      setDeleteError("");
+    } catch (requestError) {
+      setDeleteError(
+        requestError.response?.data?.message ||
+          "Unable to delete this class right now.",
+      );
+    } finally {
+      setDeletingClass(false);
+      setLoading(false);
+    }
   };
 
   const totalStudents = classes.reduce(
@@ -199,6 +248,7 @@ function AdminClasses() {
               <ClassCard
                 key={classItem.id ?? classItem.code}
                 onEdit={handleEditClass}
+                onDelete={requestDeleteClass}
                 classItem={{
                   ...classItem,
                   accent: accents[index % accents.length],
@@ -216,6 +266,14 @@ function AdminClasses() {
         onChange={handleFormChange}
         onClose={closeClassModal}
         onSubmit={handleCreateClass}
+      />
+      <ConfirmDeleteModal
+        isOpen={Boolean(classToDelete)}
+        className={classToDelete?.name}
+        loading={deletingClass}
+        error={deleteError}
+        onClose={closeDeleteModal}
+        onConfirm={handleDeleteClass}
       />
     </div>
   );

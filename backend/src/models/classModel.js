@@ -41,3 +41,12 @@ export const createNewClass = async ({
 
   return rows[0];
 };
+
+export const deleteClassById = async ({ classId, adminId }) => {
+  const [result] = await pool.query(
+    "DELETE FROM classes WHERE id = ? AND admin_id = ?",
+    [classId, adminId],
+  );
+
+  return result.affectedRows;
+};

@@ -1,7 +1,7 @@
 import { MoreVertical, Pencil, Trash } from "lucide-react";
 import { useState } from "react";
 
-function ClassCard({ classItem, onEdit }) {
+function ClassCard({ classItem, onEdit, onDelete }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const students = classItem.students ?? classItem.enrolledStudents ?? 0;
   const status = classItem.status ?? "Active";
@@ -40,7 +40,10 @@ function ClassCard({ classItem, onEdit }) {
             </button>
             <button
               type="button"
-              onClick={() => setMenuOpen(false)}
+              onClick={() => {
+                setMenuOpen(false);
+                onDelete(classItem);
+              }}
               className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-gray-300 transition hover:bg-red-500/10 hover:text-red-300"
             >
               <Trash size={15} strokeWidth={1.8} />

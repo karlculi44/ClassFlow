@@ -11,6 +11,11 @@ export const createClass = async (data) => {
 };
 
 export const updateClass = async (classId, data) => {
-  const response = await api.put(`/classes/${classId}`, data);
+  const response = await api.put(`/classes/update-class/${classId}`, data);
+  return response.data;
+};
+
+export const deleteClass = async (classId) => {
+  const response = await api.delete(`/classes/delete-class/${classId}`);
   return response.data;
 };

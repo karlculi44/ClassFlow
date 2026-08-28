@@ -4,6 +4,7 @@ import {
   createNewClass,
   findClassesByAdminId,
   updateClassById,
+  deleteClassById,
 } from "../models/classModel.js";
 import { findUserById } from "../models/userModel.js";
 
@@ -66,4 +67,12 @@ export const updateClass = asyncHandler(async (req, res) => {
   }
 
   return res.status(200).json({ message: "Class updated successfully!" });
+});
+
+export const deleteClass = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  await deleteClassById({ classId: id, adminId: req.user.id });
+
+  return res.status(200).json({ message: "Class deleted successfully!" });
 });
