@@ -1,4 +1,6 @@
-function ClassCard({ classItem }) {
+import { Pencil } from "lucide-react";
+
+function ClassCard({ classItem, onEdit }) {
   const students = classItem.students ?? classItem.enrolledStudents ?? 0;
   const status = classItem.status ?? "Active";
   const statusClassName =
@@ -8,8 +10,18 @@ function ClassCard({ classItem }) {
   const enrollmentPercent = Math.round((students / classItem.capacity) * 100);
 
   return (
-    <article className="flex h-full flex-col rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:border-gray-700">
-      <div className="flex items-start justify-between gap-4">
+    <article className="relative flex h-full flex-col rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:border-gray-700">
+      <button
+        type="button"
+        onClick={() => onEdit(classItem)}
+        aria-label={`Edit ${classItem.name}`}
+        title="Edit class"
+        className="absolute right-4 top-4 rounded-lg p-2 text-gray-400 transition hover:bg-indigo-500/10 hover:text-indigo-300"
+      >
+        <Pencil size={17} strokeWidth={1.8} />
+      </button>
+
+      <div className="flex items-start justify-between gap-4 pr-10">
         <div
           className={`h-2 w-12 rounded-full ${classItem.accent ?? "bg-indigo-500"}`}
         />

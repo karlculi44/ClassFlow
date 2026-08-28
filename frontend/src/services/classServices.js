@@ -9,3 +9,8 @@ export const createClass = async (data) => {
   const response = await api.post("/classes/create-class", data);
   return response.data;
 };
+
+export const updateClass = async (classId, data) => {
+  const response = await api.put(`/classes/${classId}`, data);
+  return response.data;
+};

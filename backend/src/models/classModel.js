@@ -9,6 +9,23 @@ export const findClassesByAdminId = async (adminId) => {
   return rows;
 };
 
+export const updateClassById = async ({
+  classId,
+  adminId,
+  code,
+  name,
+  schedule,
+  capacity,
+  status,
+}) => {
+  const [result] = await pool.query(
+    "UPDATE classes SET code = ?, name = ?, schedule = ?, capacity = ?, status = ? WHERE id = ? AND admin_id = ?",
+    [code, name, schedule, capacity, status, classId, adminId],
+  );
+
+  return result.affectedRows;
+};
+
 export const createNewClass = async ({
   code,
   adminId,

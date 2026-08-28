@@ -1,6 +1,10 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import AppError from "../utils/AppError.js";
-import { createNewClass, findClassesByAdminId } from "../models/classModel.js";
+import {
+  createNewClass,
+  findClassesByAdminId,
+  updateClassById,
+} from "../models/classModel.js";
 import { findUserById } from "../models/userModel.js";
 
 export const getClasses = asyncHandler(async (req, res) => {
@@ -38,4 +42,28 @@ export const createClass = asyncHandler(async (req, res) => {
   return res
     .status(201)
     .json({ message: "Class created successfully!", class: newClass });
+});
+
+export const updateClass = asyncHandler(async (req, res) => {
+  const { code, name, schedule, capacity, status } = req.body;
+
+  if (!code || !name || !schedule || !capacity || !status) {
+    throw new AppError("All fields are required!", 400);
+  }
+
+  const updatedRows = await updateClassById({
+    classId: req.params.id,
+    adminId: req.user.id,
+    code,
+    name,
+    schedule,
+    capacity,
+    status,
+  });
+
+  if (!updatedRows) {
+    throw new AppError("Class not found.", 404);
+  }
+
+  return res.status(200).json({ message: "Class updated successfully!" });
 });

@@ -3,6 +3,7 @@ function ClassModal({
   formData,
   loading,
   error,
+  isEditing,
   onChange,
   onClose,
   onSubmit,
@@ -36,7 +37,7 @@ function ClassModal({
               id="create-class-title"
               className="mt-1 text-xl font-bold text-white"
             >
-              Create a class
+              {isEditing ? "Update Class" : "Create a class"}
             </h2>
             <p className="mt-1 text-sm text-gray-400">
               Add the basic details for a new class.
@@ -138,7 +139,7 @@ function ClassModal({
               disabled={loading}
               className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {loading ? "Creating..." : "Create class"}
+              {loading ? "Saving..." : isEditing ? "Save" : "Create class"}
             </button>
           </div>
         </form>

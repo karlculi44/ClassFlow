@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { createClass, getClasses } from "../services/classServices";
+import {
+  createClass,
+  getClasses,
+  updateClass,
+} from "../services/classServices";
 import ClassCard from "../components/ClassCard";
 import ClassModal from "../components/ClassModal";
 
@@ -25,6 +29,7 @@ function AdminClasses() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [classModalOpen, setClassModalOpen] = useState(false);
+  const [editingClass, setEditingClass] = useState(null);
   const [formData, setFormData] = useState(initialFormData);
   const [creatingClass, setCreatingClass] = useState(false);
   const [createError, setCreateError] = useState("");
@@ -61,6 +66,7 @@ function AdminClasses() {
     }
 
     setClassModalOpen(false);
+    setEditingClass(null);
     setCreateError("");
     setFormData(initialFormData);
   };
@@ -71,10 +77,16 @@ function AdminClasses() {
     setCreateError("");
 
     try {
-      await createClass({
+      const classData = {
         ...formData,
         capacity: Number(formData.capacity),
-      });
+      };
+
+      if (editingClass) {
+        await updateClass(editingClass.id, classData);
+      } else {
+        await createClass(classData);
+      }
       const data = await getClasses();
       setClasses(data.classes ?? []);
       setCreatingClass(false);
@@ -87,6 +99,19 @@ function AdminClasses() {
     } finally {
       setCreatingClass(false);
     }
+  };
+
+  const handleEditClass = (selectedClass) => {
+    setEditingClass(selectedClass);
+    setFormData({
+      name: selectedClass.name ?? "",
+      code: selectedClass.code ?? "",
+      schedule: selectedClass.schedule ?? "",
+      capacity: String(selectedClass.capacity ?? ""),
+      status: selectedClass.status ?? "Active",
+    });
+    setCreateError("");
+    setClassModalOpen(true);
   };
 
   const totalStudents = classes.reduce(
@@ -116,6 +141,8 @@ function AdminClasses() {
             type="button"
             onClick={() => {
               setCreateError("");
+              setEditingClass(null);
+              setFormData(initialFormData);
               setClassModalOpen(true);
             }}
             className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 active:bg-indigo-700"
@@ -160,16 +187,6 @@ function AdminClasses() {
           )}
 
           {!loading && error && <p className="text-sm text-red-400">{error}</p>}
-          <ClassModal
-            isOpen={classModalOpen}
-            formData={formData}
-            loading={creatingClass}
-            error={createError}
-            onChange={handleFormChange}
-            onClose={closeClassModal}
-            onSubmit={handleCreateClass}
-          />
-
           {!loading && !error && classes.length === 0 && (
             <p className="text-sm text-gray-400">
               No classes have been created yet.
@@ -181,6 +198,7 @@ function AdminClasses() {
             classes.map((classItem, index) => (
               <ClassCard
                 key={classItem.id ?? classItem.code}
+                onEdit={handleEditClass}
                 classItem={{
                   ...classItem,
                   accent: accents[index % accents.length],
@@ -189,6 +207,16 @@ function AdminClasses() {
             ))}
         </section>
       </main>
+      <ClassModal
+        isOpen={classModalOpen}
+        formData={formData}
+        loading={creatingClass}
+        error={createError}
+        isEditing={Boolean(editingClass)}
+        onChange={handleFormChange}
+        onClose={closeClassModal}
+        onSubmit={handleCreateClass}
+      />
     </div>
   );
 }
