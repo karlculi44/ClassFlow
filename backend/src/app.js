@@ -4,6 +4,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js";
 import errorHandler from "./middleware/errorHandler.js";
+import classRoutes from "./routes/classRoutes.js";
 
 const app = express();
 
@@ -18,6 +19,9 @@ app.use(cookieParser());
 
 // Auth routes
 app.use("/api/auth", authRoutes);
+
+// Class routes
+app.use("/api/classes", classRoutes);
 
 // Root route
 app.get("/", (req, res) => {
