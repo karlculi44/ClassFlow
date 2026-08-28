@@ -1,6 +1,8 @@
-import { Pencil } from "lucide-react";
+import { MoreVertical, Pencil, Trash } from "lucide-react";
+import { useState } from "react";
 
 function ClassCard({ classItem, onEdit }) {
+  const [menuOpen, setMenuOpen] = useState(false);
   const students = classItem.students ?? classItem.enrolledStudents ?? 0;
   const status = classItem.status ?? "Active";
   const statusClassName =
@@ -11,15 +13,42 @@ function ClassCard({ classItem, onEdit }) {
 
   return (
     <article className="relative flex h-full flex-col rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:border-gray-700">
-      <button
-        type="button"
-        onClick={() => onEdit(classItem)}
-        aria-label={`Edit ${classItem.name}`}
-        title="Edit class"
-        className="absolute right-4 top-4 rounded-lg p-2 text-gray-400 transition hover:bg-indigo-500/10 hover:text-indigo-300"
-      >
-        <Pencil size={17} strokeWidth={1.8} />
-      </button>
+      <div className="absolute right-4 top-4">
+        <button
+          type="button"
+          onClick={() => setMenuOpen((isOpen) => !isOpen)}
+          aria-label={`More options for ${classItem.name}`}
+          aria-expanded={menuOpen}
+          title="More options"
+          className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white"
+        >
+          <MoreVertical size={17} strokeWidth={1.8} />
+        </button>
+
+        {menuOpen && (
+          <div className="absolute right-0 top-11 z-10 w-36 rounded-lg border border-gray-700 bg-gray-900 p-1 shadow-xl shadow-black/40">
+            <button
+              type="button"
+              onClick={() => {
+                setMenuOpen(false);
+                onEdit(classItem);
+              }}
+              className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-gray-300 transition hover:bg-indigo-500/10 hover:text-indigo-300"
+            >
+              <Pencil size={15} strokeWidth={1.8} />
+              Edit
+            </button>
+            <button
+              type="button"
+              onClick={() => setMenuOpen(false)}
+              className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-gray-300 transition hover:bg-red-500/10 hover:text-red-300"
+            >
+              <Trash size={15} strokeWidth={1.8} />
+              Delete
+            </button>
+          </div>
+        )}
+      </div>
 
       <div className="flex items-start justify-between gap-4 pr-10">
         <div

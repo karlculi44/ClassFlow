@@ -40,7 +40,9 @@ function ClassModal({
               {isEditing ? "Update Class" : "Create a class"}
             </h2>
             <p className="mt-1 text-sm text-gray-400">
-              Add the basic details for a new class.
+              {isEditing
+                ? "Update the details for this class."
+                : "Add the basic details for a new class."}
             </p>
           </div>
           <button
