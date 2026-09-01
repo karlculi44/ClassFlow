@@ -4,6 +4,7 @@ import authorize from "../middleware/authorize.js";
 import upload from "../middleware/upload.js";
 import {
   createAssignment,
+  getAssignmentDetails,
   getAssignmentsByClassId,
   //   updateAssignment,
   //   deleteAssignment,
@@ -11,6 +12,12 @@ import {
 
 const router = express.Router();
 
+router.get(
+  "/:classId/:assignmentId",
+  verifyToken,
+  authorize("Admin"),
+  getAssignmentDetails,
+);
 router.get(
   "/:classId",
   verifyToken,

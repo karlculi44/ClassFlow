@@ -277,6 +277,11 @@ function ClassWorkspace() {
                         <li key={assignment.id}>
                           <button
                             type="button"
+                            onClick={() =>
+                              navigate(
+                                `/classes/${classId}/assignments/${assignment.id}`,
+                              )
+                            }
                             className="flex w-full items-start gap-3 rounded-xl border border-gray-800 bg-gray-900 p-4 text-left transition hover:-translate-y-0.5 hover:border-indigo-500/60 hover:bg-gray-800/60"
                           >
                             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400">

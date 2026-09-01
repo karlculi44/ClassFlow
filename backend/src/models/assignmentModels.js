@@ -36,3 +36,16 @@ export const getAssignmentByClassId = async (classId) => {
   );
   return rows;
 };
+
+export const getAssignmentById = async ({ classId, assignmentId }) => {
+  const [rows] = await pool.query(
+    `
+      SELECT * FROM assignments
+      WHERE id = ? AND class_id = ?
+      LIMIT 1
+    `,
+    [assignmentId, classId],
+  );
+
+  return rows[0];
+};

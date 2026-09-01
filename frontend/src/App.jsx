@@ -6,6 +6,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Unauthorized from "./pages/Unauthorized";
 import AdminClasses from "./pages/AdminClasses";
 import ClassWorkspace from "./pages/ClassWorkspace";
+import AssignmentDetails from "./pages/AssignmentDetails";
 import MainLayout from "./layout/MainLayout";
 
 function App() {
@@ -46,6 +47,24 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["Admin"]}>
                   <ClassWorkspace />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/classes/:classId/assignments/:assignmentId"
+              element={
+                <ProtectedRoute allowedRoles={["Admin"]}>
+                  <AssignmentDetails />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/classes/:classId/assignments/:assignmentId/submissions"
+              element={
+                <ProtectedRoute allowedRoles={["Admin"]}>
+                  <div className="min-h-screen bg-gray-950 px-4 py-8 text-sm text-gray-400 sm:px-6 lg:px-10">
+                    Submissions page coming soon.
+                  </div>
                 </ProtectedRoute>
               }
             />

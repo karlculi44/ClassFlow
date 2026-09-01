@@ -4,6 +4,12 @@ export const getAssignments = async (classId) => {
   const response = await api.get(`/assignments/${classId}`);
   return response.data;
 };
+
+export const getAssignmentDetails = async (classId, assignmentId) => {
+  const response = await api.get(`/assignments/${classId}/${assignmentId}`);
+  return response.data;
+};
+
 export const createAssignment = async (classId, assignmentData) => {
   const response = await api.post(
     `/assignments/create-assignment/${classId}`,
