@@ -7,6 +7,7 @@ import Unauthorized from "./pages/Unauthorized";
 import AdminClasses from "./pages/AdminClasses";
 import ClassWorkspace from "./pages/ClassWorkspace";
 import AssignmentDetails from "./pages/AssignmentDetails";
+import Assignments from "./pages/Assignments";
 import MainLayout from "./layout/MainLayout";
 
 function App() {
@@ -22,6 +23,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["Student"]}>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assignments"
+              element={
+                <ProtectedRoute allowedRoles={["Student"]}>
+                  <Assignments />
                 </ProtectedRoute>
               }
             />
