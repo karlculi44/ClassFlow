@@ -17,7 +17,7 @@ router.get(
   getAssignmentsByClassId,
 );
 router.post(
-  "/create-assignment",
+  "/create-assignment/:classId",
   verifyToken,
   authorize("Admin"),
   createAssignment,

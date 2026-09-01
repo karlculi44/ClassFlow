@@ -4,7 +4,6 @@ import {
   createNewAssignment,
   getAssignmentByClassId,
 } from "../models/assignmentModels.js";
-import { findClassByIdAndAdminId } from "../models/classModel.js";
 
 export const getAssignmentsByClassId = asyncHandler(async (req, res, next) => {
   const { classId } = req.params;
@@ -20,7 +19,8 @@ export const getAssignmentsByClassId = asyncHandler(async (req, res, next) => {
 });
 
 export const createAssignment = asyncHandler(async (req, res) => {
-  const { classId, title, description, dueDate, attachment = null } = req.body;
+  const { title, description, dueDate, attachment = null } = req.body;
+  const { classId } = req.params;
 
   if (!classId || !title?.trim() || !description?.trim() || !dueDate) {
     throw new AppError(
@@ -31,15 +31,6 @@ export const createAssignment = asyncHandler(async (req, res) => {
 
   if (attachment !== null && typeof attachment !== "string") {
     throw new AppError("Attachment must be a string or null.", 400);
-  }
-
-  const classItem = await findClassByIdAndAdminId({
-    classId,
-    adminId: req.user.id,
-  });
-
-  if (!classItem) {
-    throw new AppError("Class not found.", 404);
   }
 
   const assignment = await createNewAssignment({

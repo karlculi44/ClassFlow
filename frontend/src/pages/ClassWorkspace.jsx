@@ -9,7 +9,10 @@ import {
   Users,
 } from "lucide-react";
 import { getClasses } from "../services/classServices";
-import { getAssignments } from "../services/assignmentServices";
+import {
+  createAssignment,
+  getAssignments,
+} from "../services/assignmentServices";
 import AssignmentModal from "../components/AssignmentModal";
 
 const initialAssignmentFormData = {
@@ -104,14 +107,30 @@ function ClassWorkspace() {
     }));
   };
 
-  const handleCreateAssignment = (event) => {
+  const handleCreateAssignment = async (event) => {
     event.preventDefault();
     setCreatingAssignment(true);
     setCreateAssignmentError("");
 
-    // TODO: wire up to assignment creation endpoint once available
-    setCreatingAssignment(false);
-    closeAssignmentModal();
+    try {
+      await createAssignment(classId, {
+        title: assignmentFormData.title,
+        description: assignmentFormData.description,
+        dueDate: assignmentFormData.dueDate,
+        attachment: assignmentFormData.attachment?.name ?? null,
+      });
+
+      const data = await getAssignments(classId);
+      setAssignments(data.data ?? []);
+      closeAssignmentModal();
+    } catch (requestError) {
+      setCreateAssignmentError(
+        requestError.response?.data?.message ||
+          "Unable to create this assignment right now.",
+      );
+    } finally {
+      setCreatingAssignment(false);
+    }
   };
 
   return (

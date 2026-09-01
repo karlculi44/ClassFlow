@@ -9,15 +9,6 @@ export const findClassesByAdminId = async (adminId) => {
   return rows;
 };
 
-export const findClassByIdAndAdminId = async ({ classId, adminId }) => {
-  const [rows] = await pool.query(
-    "SELECT id FROM classes WHERE id = ? AND admin_id = ? LIMIT 1",
-    [classId, adminId],
-  );
-
-  return rows[0];
-};
-
 export const updateClassById = async ({
   classId,
   adminId,
