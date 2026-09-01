@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, ClipboardList, Download, Users } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAssignmentDetails } from "../services/assignmentServices";
-import { formatDate } from "../utils/formatDate";
+import formatDate from "../utils/formatDate";
 
 function AdminAssignmentDetails() {
   const { classId, assignmentId } = useParams();

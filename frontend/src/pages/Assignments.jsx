@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { CalendarDays, ChevronDown, Clock3, FileText } from "lucide-react";
 import { getStudentAssignments } from "../services/assignmentServices";
+import formatDate from "../utils/formatDate";
 
 const filterClassName =
   "h-11 w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 px-3 pr-10 text-sm text-gray-300 outline-none transition hover:border-gray-600 focus:border-indigo-500";
@@ -27,6 +28,12 @@ const accentColors = [
     icon: "bg-emerald-500/10 text-emerald-400 group-hover:text-emerald-300",
   },
 ];
+
+const statusColors = {
+  "not started": "border-gray-600 bg-gray-700/30 text-gray-300",
+  "in progress": "border-blue-400/40 bg-blue-500/10 text-blue-300",
+  submitted: "border-green-400/40 bg-green-500/10 text-green-300",
+};
 
 function Assignments() {
   const [assignments, setAssignments] = useState([]);
@@ -130,53 +137,60 @@ function Assignments() {
             )}
             {!loading &&
               !error &&
-              assignments.map((assignment) => (
-                <article
-                  key={assignment.id}
-                  tabIndex="0"
-                  className="group relative cursor-pointer rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-lg shadow-black/20 outline-none transition duration-200 hover:-translate-y-0.5 hover:border-indigo-500/50 hover:bg-gray-900/95 focus:border-indigo-500/70 focus:ring-2 focus:ring-indigo-500/20"
-                >
-                  <div
-                    className={`absolute inset-y-5 left-0 w-1 rounded-r-full ${accentColors[assignment.id % accentColors.length].bar}`}
-                  />
-                  <div className="flex flex-col gap-5 pl-2 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="min-w-0">
-                      <div className="flex items-start gap-3">
-                        <div
-                          className={`mt-0.5 rounded-lg border border-gray-700 p-2 transition ${accentColors[assignment.id % accentColors.length].icon}`}
-                        >
-                          <FileText size={18} strokeWidth={1.8} />
-                        </div>
-                        <div className="min-w-0">
-                          <h2 className="truncate text-base font-semibold text-white sm:text-lg">
-                            {assignment.title}
-                          </h2>
-                          <p className="mt-1 text-sm text-gray-400">
-                            {assignment.class_name}
-                            <span className="mx-2 text-gray-700">/</span>
-                            <span className="text-gray-500">
-                              {assignment.class_code}
-                            </span>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+              assignments.map((assignment) => {
+                const status = assignment.status ?? "Not started";
+                const statusKey = status.toLowerCase().replaceAll("-", " ");
+                const statusColor =
+                  statusColors[statusKey] ?? statusColors["not started"];
 
-                    <div className="flex flex-wrap items-center gap-4 border-t border-gray-800 pt-4 text-sm sm:border-0 sm:pt-0">
-                      <div className="flex items-center gap-2 text-gray-400">
-                        <CalendarDays size={16} className="text-gray-500" />
-                        <span>Due {assignment.due_date}</span>
+                return (
+                  <article
+                    key={assignment.id}
+                    tabIndex="0"
+                    className="group relative cursor-pointer rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-lg shadow-black/20 outline-none transition duration-200 hover:-translate-y-0.5 hover:border-indigo-500/50 hover:bg-gray-900/95 focus:border-indigo-500/70 focus:ring-2 focus:ring-indigo-500/20"
+                  >
+                    <div
+                      className={`absolute inset-y-5 left-0 w-1 rounded-r-full ${accentColors[assignment.id % accentColors.length].bar}`}
+                    />
+                    <div className="flex flex-col gap-5 pl-2 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="min-w-0">
+                        <div className="flex items-start gap-3">
+                          <div
+                            className={`mt-0.5 rounded-lg border border-gray-700 p-2 transition ${accentColors[assignment.id % accentColors.length].icon}`}
+                          >
+                            <FileText size={18} strokeWidth={1.8} />
+                          </div>
+                          <div className="min-w-0">
+                            <h2 className="truncate text-base font-semibold text-white sm:text-lg">
+                              {assignment.title}
+                            </h2>
+                            <p className="mt-1 text-sm text-gray-400">
+                              {assignment.class_name}
+                              <span className="mx-2 text-gray-700">/</span>
+                              <span className="text-gray-500">
+                                {assignment.class_code}
+                              </span>
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      <span
-                        className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${assignment.statusTone}`}
-                      >
-                        <Clock3 size={14} />
-                        Not started
-                      </span>
+
+                      <div className="flex flex-wrap items-center gap-4 border-t border-gray-800 pt-4 text-sm sm:border-0 sm:pt-0">
+                        <div className="flex items-center gap-2 text-gray-400">
+                          <CalendarDays size={16} className="text-gray-500" />
+                          <span>Due {formatDate(assignment.due_date)}</span>
+                        </div>
+                        <span
+                          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${statusColor}`}
+                        >
+                          <Clock3 size={14} />
+                          {status}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
           </section>
         </div>
       </main>
