@@ -7,6 +7,7 @@ import {
   login,
   logout,
   getMe,
+  getStudents,
   refresh,
   welcomeAdmin,
 } from "../controllers/authController.js";
@@ -19,6 +20,7 @@ router.post("/login", validate(loginSchema), login);
 router.post("/logout", logout);
 router.post("/refresh", refresh);
 router.get("/me", verifyToken, getMe);
+router.get("/students", verifyToken, authorize("Admin"), getStudents);
 router.get("/admin", verifyToken, authorize("Admin"), welcomeAdmin);
 
 export default router;

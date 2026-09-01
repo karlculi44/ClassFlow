@@ -1,4 +1,4 @@
-function AssignmentModal({
+function CreateAssignmentModal({
   isOpen,
   formData,
   loading,
@@ -138,4 +138,4 @@ function AssignmentModal({
   );
 }
 
-export default AssignmentModal;
+export default CreateAssignmentModal;

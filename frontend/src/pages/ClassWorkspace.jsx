@@ -18,8 +18,14 @@ import {
   getAssignments,
   updateAssignment,
 } from "../services/assignmentServices";
-import AssignmentModal from "../components/AssignmentModal";
+import CreateAssignmentModal from "../components/CreateAssignmentModal";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import AddStudentModal from "../components/AddStudentModal";
+import { getStudents } from "../services/userServices";
+import {
+  addStudents,
+  getEnrolledStudents,
+} from "../services/enrollmentServices";
 
 const initialAssignmentFormData = {
   title: "",
@@ -46,6 +52,13 @@ function ClassWorkspace() {
   const [assignmentToDelete, setAssignmentToDelete] = useState(null);
   const [deletingAssignment, setDeletingAssignment] = useState(false);
   const [deleteAssignmentError, setDeleteAssignmentError] = useState("");
+  const [studentModalOpen, setStudentModalOpen] = useState(false);
+  const [studentsList, setStudentsList] = useState([]);
+  const [studentsLoading, setStudentsLoading] = useState(false);
+  const [studentsError, setStudentsError] = useState("");
+  const [addingStudents, setAddingStudents] = useState(false);
+  const [enrolledStudents, setEnrolledStudents] = useState([]);
+  const [enrolledStudentsError, setEnrolledStudentsError] = useState("");
 
   useEffect(() => {
     const fetchClasses = async () => {
@@ -77,6 +90,20 @@ function ClassWorkspace() {
     };
 
     fetchAssignments();
+
+    const fetchEnrolledStudents = async () => {
+      try {
+        const data = await getEnrolledStudents(classId);
+        setEnrolledStudents(data.students ?? []);
+      } catch (requestError) {
+        setEnrolledStudentsError(
+          requestError.response?.data?.message ||
+            "Unable to load enrolled students right now.",
+        );
+      }
+    };
+
+    fetchEnrolledStudents();
   }, [classId]);
 
   const classItem = useMemo(
@@ -85,7 +112,9 @@ function ClassWorkspace() {
   );
 
   const students = classItem
-    ? (classItem.students ?? classItem.enrolledStudents ?? 0)
+    ? enrolledStudents.length > 0
+      ? enrolledStudents.length
+      : (classItem.students ?? classItem.enrolledStudents ?? 0)
     : 0;
   const status = classItem?.status ?? "Active";
   const statusClassName =
@@ -194,6 +223,50 @@ function ClassWorkspace() {
     }
   };
 
+  const handleOpenStudentModal = async () => {
+    setStudentModalOpen(true);
+    setStudentsLoading(true);
+    setStudentsError("");
+
+    try {
+      const data = await getStudents();
+      setStudentsList(data.students ?? []);
+    } catch (requestError) {
+      setStudentsError(
+        requestError.response?.data?.message ||
+          "Unable to load students right now.",
+      );
+    } finally {
+      setStudentsLoading(false);
+    }
+  };
+
+  const handleAddStudents = async (studentIds) => {
+    setAddingStudents(true);
+    setStudentsError("");
+
+    try {
+      await addStudents(classId, studentIds);
+      const data = await getEnrolledStudents(classId);
+      setEnrolledStudents(data.students ?? []);
+      setStudentModalOpen(false);
+    } catch (requestError) {
+      setStudentsError(
+        requestError.response?.data?.message ||
+          "Unable to add students right now.",
+      );
+    } finally {
+      setAddingStudents(false);
+    }
+  };
+
+  const enrolledStudentIds = new Set(
+    enrolledStudents.map((student) => String(student.id)),
+  );
+  const availableStudents = studentsList.filter(
+    (student) => !enrolledStudentIds.has(String(student.id)),
+  );
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-gray-950">
       <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-indigo-600/10 blur-3xl" />
@@ -265,6 +338,7 @@ function ClassWorkspace() {
               </button>
               <button
                 type="button"
+                onClick={handleOpenStudentModal}
                 className="inline-flex items-center gap-2 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white"
               >
                 <UserPlus size={16} strokeWidth={1.8} />
@@ -291,14 +365,44 @@ function ClassWorkspace() {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td
-                          colSpan={3}
-                          className="px-4 py-6 text-center text-gray-500"
-                        >
-                          No students enrolled yet.
-                        </td>
-                      </tr>
+                      {enrolledStudentsError ? (
+                        <tr>
+                          <td
+                            colSpan={3}
+                            className="px-4 py-6 text-center text-sm text-red-400"
+                          >
+                            {enrolledStudentsError}
+                          </td>
+                        </tr>
+                      ) : enrolledStudents.length > 0 ? (
+                        enrolledStudents.map((student) => (
+                          <tr
+                            key={student.id}
+                            className="border-b border-gray-800 last:border-b-0"
+                          >
+                            <td className="px-4 py-3 text-gray-200">
+                              {student.name}
+                            </td>
+                            <td className="px-4 py-3 text-gray-400">
+                              {student.email}
+                            </td>
+                            <td className="px-4 py-3">
+                              <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-400">
+                                Active
+                              </span>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td
+                            colSpan={3}
+                            className="px-4 py-6 text-center text-gray-500"
+                          >
+                            No students enrolled yet.
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -422,7 +526,7 @@ function ClassWorkspace() {
         )}
       </main>
 
-      <AssignmentModal
+      <CreateAssignmentModal
         isOpen={assignmentModalOpen}
         formData={assignmentFormData}
         loading={creatingAssignment}
@@ -447,6 +551,20 @@ function ClassWorkspace() {
           }
         }}
         onConfirm={handleDeleteAssignment}
+      />
+      <AddStudentModal
+        key={studentModalOpen ? "student-modal-open" : "student-modal-closed"}
+        isOpen={studentModalOpen}
+        students={availableStudents}
+        loading={studentsLoading}
+        saving={addingStudents}
+        error={studentsError}
+        onClose={() => {
+          if (!studentsLoading) {
+            setStudentModalOpen(false);
+          }
+        }}
+        onAdd={handleAddStudents}
       />
     </div>
   );

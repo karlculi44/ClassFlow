@@ -32,6 +32,13 @@ export const findUserById = async (id) => {
   return rows[0];
 };
 
+export const findStudents = async () => {
+  const [rows] = await pool.query(
+    "SELECT id, name, email, role FROM users WHERE role = 'Student' ORDER BY name ASC",
+  );
+  return rows;
+};
+
 export const saveRefreshToken = async (userId, refreshToken) => {
   const [rows] = await pool.query(
     "UPDATE users SET refresh_token = ? WHERE id = ?",

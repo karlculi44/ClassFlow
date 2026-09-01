@@ -7,6 +7,7 @@ import {
   findUserByEmail,
   findUserForLogin,
   findUserById,
+  findStudents,
   deleteRefreshToken,
   saveRefreshToken,
   findRefreshTokenByUserId,
@@ -104,6 +105,15 @@ export const getMe = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json({ message: "User retrieved successfully!", user });
+});
+
+export const getStudents = asyncHandler(async (req, res) => {
+  const students = await findStudents();
+
+  return res.status(200).json({
+    message: "Students retrieved successfully!",
+    students,
+  });
 });
 
 export const logout = asyncHandler(async (req, res) => {

@@ -6,6 +6,7 @@ import authRoutes from "./routes/authRoutes.js";
 import errorHandler from "./middleware/errorHandler.js";
 import classRoutes from "./routes/classRoutes.js";
 import assignmentRoutes from "./routes/assignmentRoutes.js";
+import enrollmentRoutes from "./routes/enrollmentRoutes.js";
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use("/api/auth", authRoutes);
 // Class routes
 app.use("/api/classes", classRoutes);
 app.use("/api/assignments", assignmentRoutes);
+app.use("/api/enrollments", enrollmentRoutes);
 
 // Root route
 app.get("/", (req, res) => {
