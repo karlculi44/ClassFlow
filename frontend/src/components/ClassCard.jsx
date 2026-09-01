@@ -1,7 +1,9 @@
 import { MoreVertical, Pencil, Trash } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function ClassCard({ classItem, onEdit, onDelete }) {
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const students = classItem.students ?? classItem.enrolledStudents ?? 0;
   const status = classItem.status ?? "Active";
@@ -11,12 +13,20 @@ function ClassCard({ classItem, onEdit, onDelete }) {
       : "border-red-500/20 bg-red-500/10 text-red-400";
   const enrollmentPercent = Math.round((students / classItem.capacity) * 100);
 
+  const goToClassWorkspace = () => navigate(`/admin-classes/${classItem.id}`);
+
   return (
-    <article className="relative flex h-full flex-col rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:border-gray-700">
+    <article
+      onClick={goToClassWorkspace}
+      className="relative flex h-full cursor-pointer flex-col rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:border-gray-700"
+    >
       <div className="absolute right-4 top-4">
         <button
           type="button"
-          onClick={() => setMenuOpen((isOpen) => !isOpen)}
+          onClick={(event) => {
+            event.stopPropagation();
+            setMenuOpen((isOpen) => !isOpen);
+          }}
           aria-label={`More options for ${classItem.name}`}
           aria-expanded={menuOpen}
           title="More options"
@@ -26,7 +36,10 @@ function ClassCard({ classItem, onEdit, onDelete }) {
         </button>
 
         {menuOpen && (
-          <div className="absolute right-0 top-11 z-10 w-36 rounded-lg border border-gray-700 bg-gray-900 p-1 shadow-xl shadow-black/40">
+          <div
+            onClick={(event) => event.stopPropagation()}
+            className="absolute right-0 top-11 z-10 w-36 rounded-lg border border-gray-700 bg-gray-900 p-1 shadow-xl shadow-black/40"
+          >
             <button
               type="button"
               onClick={() => {
@@ -95,7 +108,14 @@ function ClassCard({ classItem, onEdit, onDelete }) {
         </div>
       </div>
 
-      <button className="mt-5 w-full rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white">
+      <button
+        type="button"
+        onClick={(event) => {
+          event.stopPropagation();
+          goToClassWorkspace();
+        }}
+        className="mt-5 w-full rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white"
+      >
         View class
       </button>
     </article>

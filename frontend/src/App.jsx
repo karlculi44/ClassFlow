@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import Unauthorized from "./pages/Unauthorized";
 import AdminClasses from "./pages/AdminClasses";
+import ClassWorkspace from "./pages/ClassWorkspace";
 import MainLayout from "./layout/MainLayout";
 
 function App() {
@@ -37,6 +38,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["Admin"]}>
                   <AdminClasses />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin-classes/:classId"
+              element={
+                <ProtectedRoute allowedRoles={["Admin"]}>
+                  <ClassWorkspace />
                 </ProtectedRoute>
               }
             />
