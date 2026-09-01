@@ -4,16 +4,22 @@ import {
   ArrowLeft,
   CalendarDays,
   ClipboardList,
+  MoreVertical,
+  Pencil,
   Plus,
+  Trash,
   UserPlus,
   Users,
 } from "lucide-react";
 import { getClasses } from "../services/classServices";
 import {
   createAssignment,
+  deleteAssignment,
   getAssignments,
+  updateAssignment,
 } from "../services/assignmentServices";
 import AssignmentModal from "../components/AssignmentModal";
+import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
 const initialAssignmentFormData = {
   title: "",
@@ -35,6 +41,11 @@ function ClassWorkspace() {
   );
   const [creatingAssignment, setCreatingAssignment] = useState(false);
   const [createAssignmentError, setCreateAssignmentError] = useState("");
+  const [openAssignmentMenu, setOpenAssignmentMenu] = useState(null);
+  const [editingAssignment, setEditingAssignment] = useState(null);
+  const [assignmentToDelete, setAssignmentToDelete] = useState(null);
+  const [deletingAssignment, setDeletingAssignment] = useState(false);
+  const [deleteAssignmentError, setDeleteAssignmentError] = useState("");
 
   useEffect(() => {
     const fetchClasses = async () => {
@@ -88,6 +99,7 @@ function ClassWorkspace() {
     }
 
     setAssignmentModalOpen(false);
+    setEditingAssignment(null);
     setAssignmentFormData(initialAssignmentFormData);
     setCreateAssignmentError("");
   };
@@ -121,7 +133,11 @@ function ClassWorkspace() {
         payload.append("attachment", assignmentFormData.attachment);
       }
 
-      await createAssignment(classId, payload);
+      if (editingAssignment) {
+        await updateAssignment(classId, editingAssignment.id, payload);
+      } else {
+        await createAssignment(classId, payload);
+      }
 
       const data = await getAssignments(classId);
       setAssignments(data.data ?? []);
@@ -129,10 +145,52 @@ function ClassWorkspace() {
     } catch (requestError) {
       setCreateAssignmentError(
         requestError.response?.data?.message ||
-          "Unable to create this assignment right now.",
+          "Unable to save this assignment right now.",
       );
     } finally {
       setCreatingAssignment(false);
+    }
+  };
+
+  const handleEditAssignment = (assignment) => {
+    setEditingAssignment(assignment);
+    setAssignmentFormData({
+      title: assignment.title ?? "",
+      description: assignment.description ?? "",
+      dueDate: String(assignment.due_date ?? assignment.dueDate ?? "").slice(
+        0,
+        10,
+      ),
+      attachment: null,
+    });
+    setCreateAssignmentError("");
+    setOpenAssignmentMenu(null);
+    setAssignmentModalOpen(true);
+  };
+
+  const handleDeleteAssignment = async () => {
+    if (!assignmentToDelete) {
+      return;
+    }
+
+    setDeletingAssignment(true);
+    setDeleteAssignmentError("");
+
+    try {
+      await deleteAssignment(classId, assignmentToDelete.id);
+      setAssignments((currentAssignments) =>
+        currentAssignments.filter(
+          (assignment) => assignment.id !== assignmentToDelete.id,
+        ),
+      );
+      setAssignmentToDelete(null);
+    } catch (requestError) {
+      setDeleteAssignmentError(
+        requestError.response?.data?.message ||
+          "Unable to delete this assignment right now.",
+      );
+    } finally {
+      setDeletingAssignment(false);
     }
   };
 
@@ -274,7 +332,7 @@ function ClassWorkspace() {
                         : 0;
 
                       return (
-                        <li key={assignment.id}>
+                        <li className="relative" key={assignment.id}>
                           <button
                             type="button"
                             onClick={() =>
@@ -282,7 +340,7 @@ function ClassWorkspace() {
                                 `/classes/${classId}/assignments/${assignment.id}`,
                               )
                             }
-                            className="flex w-full items-start gap-3 rounded-xl border border-gray-800 bg-gray-900 p-4 text-left transition hover:-translate-y-0.5 hover:border-indigo-500/60 hover:bg-gray-800/60"
+                            className="flex w-full items-start gap-3 rounded-xl border border-gray-800 bg-gray-900 p-4 pr-12 text-left transition hover:-translate-y-0.5 hover:border-indigo-500/60 hover:bg-gray-800/60 cursor-pointer"
                           >
                             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400">
                               <ClipboardList size={18} strokeWidth={1.8} />
@@ -302,6 +360,57 @@ function ClassWorkspace() {
                               </div>
                             </div>
                           </button>
+                          <div className="absolute right-2 top-2">
+                            <button
+                              type="button"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                setOpenAssignmentMenu((openAssignmentId) =>
+                                  openAssignmentId === assignment.id
+                                    ? null
+                                    : assignment.id,
+                                );
+                              }}
+                              aria-label={`More options for ${assignment.title}`}
+                              aria-expanded={
+                                openAssignmentMenu === assignment.id
+                              }
+                              title="More options"
+                              className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white"
+                            >
+                              <MoreVertical size={17} strokeWidth={1.8} />
+                            </button>
+
+                            {openAssignmentMenu === assignment.id && (
+                              <div
+                                onClick={(event) => event.stopPropagation()}
+                                className="absolute right-0 top-11 z-10 w-44 rounded-lg border border-gray-700 bg-gray-900 p-1 shadow-xl shadow-black/40"
+                              >
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleEditAssignment(assignment)
+                                  }
+                                  className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-gray-300 transition hover:bg-indigo-500/10 hover:text-indigo-300"
+                                >
+                                  <Pencil size={15} strokeWidth={1.8} />
+                                  Edit Assignment
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setOpenAssignmentMenu(null);
+                                    setDeleteAssignmentError("");
+                                    setAssignmentToDelete(assignment);
+                                  }}
+                                  className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-gray-300 transition hover:bg-red-500/10 hover:text-red-300"
+                                >
+                                  <Trash size={15} strokeWidth={1.8} />
+                                  Delete Assignment
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </li>
                       );
                     })}
@@ -318,10 +427,26 @@ function ClassWorkspace() {
         formData={assignmentFormData}
         loading={creatingAssignment}
         error={createAssignmentError}
+        isEditing={Boolean(editingAssignment)}
+        existingAttachmentName={editingAssignment?.attachment_name}
         onChange={handleAssignmentFormChange}
         onFileChange={handleAssignmentFileChange}
         onClose={closeAssignmentModal}
         onSubmit={handleCreateAssignment}
+      />
+      <ConfirmDeleteModal
+        isOpen={Boolean(assignmentToDelete)}
+        className={assignmentToDelete?.title}
+        itemLabel="assignment"
+        loading={deletingAssignment}
+        error={deleteAssignmentError}
+        onClose={() => {
+          if (!deletingAssignment) {
+            setAssignmentToDelete(null);
+            setDeleteAssignmentError("");
+          }
+        }}
+        onConfirm={handleDeleteAssignment}
       />
     </div>
   );

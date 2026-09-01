@@ -18,15 +18,19 @@ export const createAssignment = async (classId, assignmentData) => {
   return response.data;
 };
 
-export const updateAssignment = async (id, assignmentData) => {
+export const updateAssignment = async (
+  classId,
+  assignmentId,
+  assignmentData,
+) => {
   const response = await api.put(
-    `/assignments/update-assignment/${id}`,
+    `/assignments/${classId}/${assignmentId}`,
     assignmentData,
   );
   return response.data;
 };
 
-export const deleteAssignment = async (id) => {
-  const response = await api.delete(`/assignments/delete-assignment/${id}`);
+export const deleteAssignment = async (classId, assignmentId) => {
+  const response = await api.delete(`/assignments/${classId}/${assignmentId}`);
   return response.data;
 };

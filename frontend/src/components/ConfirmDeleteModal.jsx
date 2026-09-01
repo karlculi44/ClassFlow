@@ -4,6 +4,7 @@ import { useState } from "react";
 function ConfirmDeleteModal({
   isOpen,
   className,
+  itemLabel = "class",
   loading,
   error,
   onClose,
@@ -46,10 +47,10 @@ function ConfirmDeleteModal({
               id="delete-class-title"
               className="text-xl font-bold text-white"
             >
-              Delete class?
+              Delete {itemLabel}?
             </h2>
             <p className="mt-2 text-sm leading-6 text-gray-400">
-              Are you sure you want to delete this class?
+              Are you sure you want to delete this {itemLabel}?
             </p>
             <p className="mt-2 text-sm leading-6 text-gray-400">
               This will permanently delete{" "}
@@ -91,7 +92,7 @@ function ConfirmDeleteModal({
             disabled={loading || confirmationValue !== confirmationText}
             className="rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading ? "Deleting..." : "Delete class"}
+            {loading ? "Deleting..." : `Delete ${itemLabel}`}
           </button>
         </div>
       </section>

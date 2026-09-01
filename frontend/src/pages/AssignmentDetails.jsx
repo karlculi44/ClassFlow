@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  ArrowLeft,
-  ClipboardList,
-  Download,
-  Pencil,
-  Trash,
-  Users,
-} from "lucide-react";
+import { ArrowLeft, ClipboardList, Download, Users } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAssignmentDetails } from "../services/assignmentServices";
 import { formatDate } from "../utils/formatDate";
@@ -143,20 +136,6 @@ function AssignmentDetails() {
               >
                 <Users size={16} strokeWidth={1.8} />
                 View Submissions
-              </button>
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white"
-              >
-                <Pencil size={16} strokeWidth={1.8} />
-                Edit Assignment
-              </button>
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 rounded-lg border border-red-500/30 px-4 py-2.5 text-sm font-semibold text-red-300 transition hover:bg-red-500/10"
-              >
-                <Trash size={16} strokeWidth={1.8} />
-                Delete Assignment
               </button>
             </div>
           </section>

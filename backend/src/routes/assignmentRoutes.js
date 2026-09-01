@@ -4,10 +4,10 @@ import authorize from "../middleware/authorize.js";
 import upload from "../middleware/upload.js";
 import {
   createAssignment,
+  deleteAssignment,
   getAssignmentDetails,
   getAssignmentsByClassId,
-  //   updateAssignment,
-  //   deleteAssignment,
+  updateAssignment,
 } from "../controllers/assignmentController.js";
 
 const router = express.Router();
@@ -31,7 +31,18 @@ router.post(
   upload.single("attachment"),
   createAssignment,
 );
-// router.put("/update-assignment/:id", updateAssignment);
-// router.delete("/delete-assignment/:id", deleteAssignment);
+router.put(
+  "/:classId/:assignmentId",
+  verifyToken,
+  authorize("Admin"),
+  upload.single("attachment"),
+  updateAssignment,
+);
+router.delete(
+  "/:classId/:assignmentId",
+  verifyToken,
+  authorize("Admin"),
+  deleteAssignment,
+);
 
 export default router;
