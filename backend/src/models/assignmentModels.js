@@ -16,7 +16,7 @@ export const createNewAssignment = async ({
         description,
         due_date,
         attachment_name,
-        attachhment_url
+        attachment_url
       )
       VALUES (?, ?, ?, ?, ?, ?)
     `,
@@ -86,7 +86,7 @@ export const updateAssignmentById = async ({
     `
       UPDATE assignments
       SET title = ?, description = ?, due_date = ?,
-          attachment_name = ?, attachhment_url = ?
+          attachment_name = ?, attachment_url = ?
       WHERE id = ? AND class_id = ?
     `,
     [

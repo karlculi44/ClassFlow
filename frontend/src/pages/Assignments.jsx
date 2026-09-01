@@ -178,7 +178,9 @@ function Assignments() {
                       <div className="flex flex-wrap items-center gap-4 border-t border-gray-800 pt-4 text-sm sm:border-0 sm:pt-0">
                         <div className="flex items-center gap-2 text-gray-400">
                           <CalendarDays size={16} className="text-gray-500" />
-                          <span>Due {formatDate(assignment.due_date)}</span>
+                          <span>
+                            Due on {formatDate(assignment.due_date)} | 11:59PM
+                          </span>
                         </div>
                         <span
                           className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${statusColor}`}
