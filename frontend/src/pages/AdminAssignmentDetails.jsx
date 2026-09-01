@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getAssignmentDetails } from "../services/assignmentServices";
 import { formatDate } from "../utils/formatDate";
 
-function AssignmentDetails() {
+function AdminAssignmentDetails() {
   const { classId, assignmentId } = useParams();
   const navigate = useNavigate();
   const [assignment, setAssignment] = useState(null);
@@ -145,4 +145,4 @@ function AssignmentDetails() {
   );
 }
 
-export default AssignmentDetails;
+export default AdminAssignmentDetails;
