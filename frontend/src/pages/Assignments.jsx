@@ -5,6 +5,29 @@ import { getStudentAssignments } from "../services/assignmentServices";
 const filterClassName =
   "h-11 w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 px-3 pr-10 text-sm text-gray-300 outline-none transition hover:border-gray-600 focus:border-indigo-500";
 
+const accentColors = [
+  {
+    bar: "bg-indigo-400",
+    icon: "bg-indigo-500/10 text-indigo-400 group-hover:text-indigo-300",
+  },
+  {
+    bar: "bg-cyan-400",
+    icon: "bg-cyan-500/10 text-cyan-400 group-hover:text-cyan-300",
+  },
+  {
+    bar: "bg-amber-400",
+    icon: "bg-amber-500/10 text-amber-400 group-hover:text-amber-300",
+  },
+  {
+    bar: "bg-rose-400",
+    icon: "bg-rose-500/10 text-rose-400 group-hover:text-rose-300",
+  },
+  {
+    bar: "bg-emerald-400",
+    icon: "bg-emerald-500/10 text-emerald-400 group-hover:text-emerald-300",
+  },
+];
+
 function Assignments() {
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -113,11 +136,15 @@ function Assignments() {
                   tabIndex="0"
                   className="group relative cursor-pointer rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-lg shadow-black/20 outline-none transition duration-200 hover:-translate-y-0.5 hover:border-indigo-500/50 hover:bg-gray-900/95 focus:border-indigo-500/70 focus:ring-2 focus:ring-indigo-500/20"
                 >
-                  <div className="absolute inset-y-5 left-0 w-1 rounded-r-full bg-indigo-400" />
+                  <div
+                    className={`absolute inset-y-5 left-0 w-1 rounded-r-full ${accentColors[assignment.id % accentColors.length].bar}`}
+                  />
                   <div className="flex flex-col gap-5 pl-2 sm:flex-row sm:items-center sm:justify-between">
                     <div className="min-w-0">
                       <div className="flex items-start gap-3">
-                        <div className="mt-0.5 rounded-lg border border-gray-700 bg-gray-800/70 p-2 text-gray-400 transition group-hover:text-indigo-300">
+                        <div
+                          className={`mt-0.5 rounded-lg border border-gray-700 p-2 transition ${accentColors[assignment.id % accentColors.length].icon}`}
+                        >
                           <FileText size={18} strokeWidth={1.8} />
                         </div>
                         <div className="min-w-0">
