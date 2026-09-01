@@ -9,10 +9,6 @@ export const getAssignmentsByClassId = asyncHandler(async (req, res, next) => {
   const { classId } = req.params;
   const assignments = await getAssignmentByClassId(classId);
 
-  if (!assignments || assignments.length === 0) {
-    throw new AppError("No assignments found for this class.", 404);
-  }
-
   res
     .status(200)
     .json({ message: "Assignments retrieved successfully", data: assignments });
