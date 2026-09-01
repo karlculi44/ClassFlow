@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAssignmentDetails } from "../services/assignmentServices";
+import { formatDate } from "../utils/formatDate";
 
 function AssignmentDetails() {
   const { classId, assignmentId } = useParams();
@@ -93,7 +94,7 @@ function AssignmentDetails() {
                     Due date
                   </p>
                   <p className="mt-2 text-sm text-gray-300">
-                    {assignment.due_date}
+                    {formatDate(assignment.due_date)} | 11:59 PM
                   </p>
                 </div>
                 <div>
