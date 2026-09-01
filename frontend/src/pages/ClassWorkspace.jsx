@@ -9,6 +9,7 @@ import {
   Users,
 } from "lucide-react";
 import { getClasses } from "../services/classServices";
+import { getAssignments } from "../services/assignmentServices";
 import AssignmentModal from "../components/AssignmentModal";
 
 const initialAssignmentFormData = {
@@ -22,6 +23,7 @@ function ClassWorkspace() {
   const { classId } = useParams();
   const navigate = useNavigate();
   const [classes, setClasses] = useState([]);
+  const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [assignmentModalOpen, setAssignmentModalOpen] = useState(false);
@@ -47,7 +49,21 @@ function ClassWorkspace() {
     };
 
     fetchClasses();
-  }, []);
+
+    const fetchAssignments = async () => {
+      try {
+        const data = await getAssignments(classId);
+        setAssignments(data.data ?? []);
+      } catch (requestError) {
+        setError(
+          requestError.response?.data?.message ||
+            "Unable to load assignments right now.",
+        );
+      }
+    };
+
+    fetchAssignments();
+  }, [classId]);
 
   const classItem = useMemo(
     () => classes.find((item) => String(item.id) === String(classId)),
@@ -85,13 +101,6 @@ function ClassWorkspace() {
     setAssignmentFormData((currentFormData) => ({
       ...currentFormData,
       attachment: event.target.files?.[0] ?? null,
-    }));
-  };
-
-  const handleClearAttachment = () => {
-    setAssignmentFormData((currentFormData) => ({
-      ...currentFormData,
-      attachment: null,
     }));
   };
 
@@ -222,16 +231,55 @@ function ClassWorkspace() {
                     Assignments
                   </h2>
                 </div>
-                <div className="mt-4 flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-gray-800 bg-gray-900 px-4 py-10 text-center">
-                  <ClipboardList
-                    size={22}
-                    strokeWidth={1.6}
-                    className="text-gray-600"
-                  />
-                  <p className="text-sm text-gray-500">
-                    No assignments created yet.
-                  </p>
-                </div>
+                {assignments.length === 0 ? (
+                  <div className="mt-4 flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-gray-800 bg-gray-900 px-4 py-10 text-center">
+                    <ClipboardList
+                      size={22}
+                      strokeWidth={1.6}
+                      className="text-gray-600"
+                    />
+                    <p className="text-sm text-gray-500">
+                      No assignments created yet.
+                    </p>
+                  </div>
+                ) : (
+                  <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    {assignments.map((assignment) => {
+                      const submitted = assignment.submissions ?? 0;
+                      const total = assignment.totalStudents ?? students;
+                      const submissionPercent = total
+                        ? Math.min(100, Math.round((submitted / total) * 100))
+                        : 0;
+
+                      return (
+                        <li key={assignment.id}>
+                          <button
+                            type="button"
+                            className="flex w-full items-start gap-3 rounded-xl border border-gray-800 bg-gray-900 p-4 text-left transition hover:-translate-y-0.5 hover:border-indigo-500/60 hover:bg-gray-800/60"
+                          >
+                            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400">
+                              <ClipboardList size={18} strokeWidth={1.8} />
+                            </span>
+                            <div className="min-w-0">
+                              <p className="truncate text-sm font-semibold text-white">
+                                {assignment.title}
+                              </p>
+                              <p className="mt-1 text-xs text-gray-500">
+                                {submitted}/{total} submitted
+                              </p>
+                              <div className="mt-2 h-1 overflow-hidden rounded-full bg-gray-800">
+                                <div
+                                  className="h-full rounded-full bg-indigo-500"
+                                  style={{ width: `${submissionPercent}%` }}
+                                />
+                              </div>
+                            </div>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
               </section>
             </div>
           </>
@@ -245,7 +293,6 @@ function ClassWorkspace() {
         error={createAssignmentError}
         onChange={handleAssignmentFormChange}
         onFileChange={handleAssignmentFileChange}
-        onClearAttachment={handleClearAttachment}
         onClose={closeAssignmentModal}
         onSubmit={handleCreateAssignment}
       />

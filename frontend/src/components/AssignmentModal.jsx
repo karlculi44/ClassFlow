@@ -1,5 +1,3 @@
-import { X } from "lucide-react";
-
 function AssignmentModal({
   isOpen,
   formData,
@@ -7,7 +5,6 @@ function AssignmentModal({
   error,
   onChange,
   onFileChange,
-  onClearAttachment,
   onClose,
   onSubmit,
 }) {
@@ -103,20 +100,6 @@ function AssignmentModal({
               className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-sm text-gray-400 outline-none file:mr-3 file:rounded-md file:border-0 file:bg-gray-800 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-gray-200 hover:file:bg-gray-700 focus:border-indigo-500"
             />
           </label>
-
-          {formData.attachment && (
-            <div className="flex items-center justify-between gap-3 rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-sm text-gray-300">
-              <span className="truncate">{formData.attachment.name}</span>
-              <button
-                type="button"
-                onClick={onClearAttachment}
-                aria-label="Remove attachment"
-                className="rounded-md p-1 text-gray-400 transition hover:bg-gray-800 hover:text-white"
-              >
-                <X size={15} strokeWidth={1.8} />
-              </button>
-            </div>
-          )}
 
           {error && <p className="text-sm text-red-400">{error}</p>}
 
