@@ -37,6 +37,29 @@ export const getAssignmentByClassId = async (classId) => {
   return rows;
 };
 
+export const getAssignmentsByStudentId = async (studentId) => {
+  const [rows] = await pool.query(
+    `
+      SELECT
+        assignments.id,
+        assignments.class_id,
+        assignments.title,
+        assignments.description,
+        assignments.due_date,
+        classes.name AS class_name,
+        classes.code AS class_code
+      FROM assignments
+      INNER JOIN classes ON classes.id = assignments.class_id
+      INNER JOIN enrollments ON enrollments.class_id = assignments.class_id
+      WHERE enrollments.student_id = ?
+      ORDER BY assignments.due_date ASC, classes.code ASC
+    `,
+    [studentId],
+  );
+
+  return rows;
+};
+
 export const getAssignmentById = async ({ classId, assignmentId }) => {
   const [rows] = await pool.query(
     `

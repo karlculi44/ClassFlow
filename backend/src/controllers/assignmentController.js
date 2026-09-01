@@ -5,8 +5,18 @@ import {
   deleteAssignmentById,
   getAssignmentById,
   getAssignmentByClassId,
+  getAssignmentsByStudentId,
   updateAssignmentById,
 } from "../models/assignmentModels.js";
+
+export const getStudentAssignments = asyncHandler(async (req, res) => {
+  const assignments = await getAssignmentsByStudentId(req.user.id);
+
+  return res.status(200).json({
+    message: "Student assignments retrieved successfully",
+    assignments,
+  });
+});
 
 export const getAssignmentsByClassId = asyncHandler(async (req, res, next) => {
   const { classId } = req.params;

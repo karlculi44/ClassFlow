@@ -7,10 +7,18 @@ import {
   deleteAssignment,
   getAssignmentDetails,
   getAssignmentsByClassId,
+  getStudentAssignments,
   updateAssignment,
 } from "../controllers/assignmentController.js";
 
 const router = express.Router();
+
+router.get(
+  "/student",
+  verifyToken,
+  authorize("Student"),
+  getStudentAssignments,
+);
 
 router.get(
   "/:classId/:assignmentId",

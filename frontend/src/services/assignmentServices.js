@@ -1,5 +1,10 @@
 import api from "../api/axios";
 
+export const getStudentAssignments = async () => {
+  const response = await api.get("/assignments/student");
+  return response.data;
+};
+
 export const getAssignments = async (classId) => {
   const response = await api.get(`/assignments/${classId}`);
   return response.data;
