@@ -5,6 +5,8 @@ export const createNewAssignment = async ({
   title,
   description,
   dueDate,
+  attachmentName = null,
+  attachmentUrl = null,
 }) => {
   const [result] = await pool.query(
     `
@@ -12,11 +14,13 @@ export const createNewAssignment = async ({
         class_id,
         title,
         description,
-        due_date
+        due_date,
+        attachment_name,
+        attachment_url
       )
-      VALUES (?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?)
     `,
-    [classId, title, description, dueDate],
+    [classId, title, description, dueDate, attachmentName, attachmentUrl],
   );
 
   return result;

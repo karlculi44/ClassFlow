@@ -113,12 +113,15 @@ function ClassWorkspace() {
     setCreateAssignmentError("");
 
     try {
-      await createAssignment(classId, {
-        title: assignmentFormData.title,
-        description: assignmentFormData.description,
-        dueDate: assignmentFormData.dueDate,
-        attachment: assignmentFormData.attachment?.name ?? null,
-      });
+      const payload = new FormData();
+      payload.append("title", assignmentFormData.title);
+      payload.append("description", assignmentFormData.description);
+      payload.append("dueDate", assignmentFormData.dueDate);
+      if (assignmentFormData.attachment) {
+        payload.append("attachment", assignmentFormData.attachment);
+      }
+
+      await createAssignment(classId, payload);
 
       const data = await getAssignments(classId);
       setAssignments(data.data ?? []);

@@ -15,7 +15,7 @@ export const getAssignmentsByClassId = asyncHandler(async (req, res, next) => {
 });
 
 export const createAssignment = asyncHandler(async (req, res) => {
-  const { title, description, dueDate, attachment = null } = req.body;
+  const { title, description, dueDate } = req.body;
   const { classId } = req.params;
 
   if (!classId || !title?.trim() || !description?.trim() || !dueDate) {
@@ -25,16 +25,18 @@ export const createAssignment = asyncHandler(async (req, res) => {
     );
   }
 
-  if (attachment !== null && typeof attachment !== "string") {
-    throw new AppError("Attachment must be a string or null.", 400);
-  }
+  const attachmentName = req.file?.originalname ?? null;
+  const attachmentUrl = req.file
+    ? `/uploads/assignments/${req.file.filename}`
+    : null;
 
   const assignment = await createNewAssignment({
     classId,
     title: title.trim(),
     description: description.trim(),
     dueDate,
-    attachment,
+    attachmentName,
+    attachmentUrl,
   });
 
   return res.status(201).json({

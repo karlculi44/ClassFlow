@@ -1,6 +1,7 @@
 import express from "express";
 import verifyToken from "../middleware/verifyToken.js";
 import authorize from "../middleware/authorize.js";
+import upload from "../middleware/upload.js";
 import {
   createAssignment,
   getAssignmentsByClassId,
@@ -20,6 +21,7 @@ router.post(
   "/create-assignment/:classId",
   verifyToken,
   authorize("Admin"),
+  upload.single("attachment"),
   createAssignment,
 );
 // router.put("/update-assignment/:id", updateAssignment);
