@@ -1,23 +1,25 @@
 import api from "../api/axios";
 
-export const getStudentAssignments = async () => {
+// Student assignments
+export const getAssignments = async () => {
   const response = await api.get("/assignments/student");
   return response.data;
 };
 
-export const getStudentAssignmentDetails = async (classId, assignmentId) => {
+export const getAssignmentDetails = async (classId, assignmentId) => {
   const response = await api.get(
     `/assignments/student/${classId}/${assignmentId}`,
   );
   return response.data;
 };
 
-export const getAssignments = async (classId) => {
+// Admin assignments
+export const getAdminAssignments = async (classId) => {
   const response = await api.get(`/assignments/${classId}`);
   return response.data;
 };
 
-export const getAssignmentDetails = async (classId, assignmentId) => {
+export const getAdminAssignmentDetails = async (classId, assignmentId) => {
   const response = await api.get(`/assignments/${classId}/${assignmentId}`);
   return response.data;
 };

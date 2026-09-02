@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft, ClipboardList, Download, Upload } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getStudentAssignmentDetails } from "../services/assignmentServices";
+import { getAssignmentDetails } from "../services/assignmentServices";
 import {
   getStudentSubmission,
   submitAssignment,
@@ -25,7 +25,7 @@ function AssignmentDetails() {
   useEffect(() => {
     const fetchAssignment = async () => {
       try {
-        const data = await getStudentAssignmentDetails(classId, assignmentId);
+        const data = await getAssignmentDetails(classId, assignmentId);
         setAssignment(data.assignment);
       } catch (requestError) {
         setError(

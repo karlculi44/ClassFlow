@@ -14,21 +14,26 @@ export const getStudentAssignments = asyncHandler(async (req, res) => {
   const assignments = await getAssignmentsByStudentId(req.user.id);
 
   return res.status(200).json({
-    message: "Student assignments retrieved successfully",
+    message: "Assignments retrieved successfully",
     assignments,
   });
 });
 
-export const getAssignmentsByClassId = asyncHandler(async (req, res, next) => {
-  const { classId } = req.params;
-  const assignments = await getAssignmentByClassId(classId);
+export const getAdminAssignmentsByClassId = asyncHandler(
+  async (req, res, next) => {
+    const { classId } = req.params;
+    const assignments = await getAssignmentByClassId(classId);
 
-  res
-    .status(200)
-    .json({ message: "Assignments retrieved successfully", data: assignments });
-});
+    res
+      .status(200)
+      .json({
+        message: "Assignments retrieved successfully",
+        data: assignments,
+      });
+  },
+);
 
-export const getAssignmentDetails = asyncHandler(async (req, res) => {
+export const getAdminAssignmentDetails = asyncHandler(async (req, res) => {
   const assignment = await getAssignmentById({
     classId: req.params.classId,
     assignmentId: req.params.assignmentId,

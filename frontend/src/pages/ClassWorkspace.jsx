@@ -15,7 +15,7 @@ import { getClasses } from "../services/classServices";
 import {
   createAssignment,
   deleteAssignment,
-  getAssignments,
+  getAdminAssignments,
   updateAssignment,
 } from "../services/assignmentServices";
 import CreateAssignmentModal from "../components/CreateAssignmentModal";
@@ -79,7 +79,7 @@ function ClassWorkspace() {
 
     const fetchAssignments = async () => {
       try {
-        const data = await getAssignments(classId);
+        const data = await getAdminAssignments(classId);
         setAssignments(data.data ?? []);
       } catch (requestError) {
         setError(
@@ -168,7 +168,7 @@ function ClassWorkspace() {
         await createAssignment(classId, payload);
       }
 
-      const data = await getAssignments(classId);
+      const data = await getAdminAssignments(classId);
       setAssignments(data.data ?? []);
       closeAssignmentModal();
     } catch (requestError) {
@@ -441,7 +441,7 @@ function ClassWorkspace() {
                             type="button"
                             onClick={() =>
                               navigate(
-                                `/classes/${classId}/assignments/${assignment.id}`,
+                                `/admin-classes/${classId}/assignments/${assignment.id}`,
                               )
                             }
                             className="flex w-full items-start gap-3 rounded-xl border border-gray-800 bg-gray-900 p-4 pr-12 text-left transition hover:-translate-y-0.5 hover:border-indigo-500/60 hover:bg-gray-800/60 cursor-pointer"

@@ -5,8 +5,8 @@ import upload from "../middleware/upload.js";
 import {
   createAssignment,
   deleteAssignment,
-  getAssignmentDetails,
-  getAssignmentsByClassId,
+  getAdminAssignmentDetails,
+  getAdminAssignmentsByClassId,
   getStudentAssignments,
   getStudentAssignmentDetails,
   updateAssignment,
@@ -31,13 +31,13 @@ router.get(
   "/:classId/:assignmentId",
   verifyToken,
   authorize("Admin"),
-  getAssignmentDetails,
+  getAdminAssignmentDetails,
 );
 router.get(
   "/:classId",
   verifyToken,
   authorize("Admin"),
-  getAssignmentsByClassId,
+  getAdminAssignmentsByClassId,
 );
 router.post(
   "/create-assignment/:classId",

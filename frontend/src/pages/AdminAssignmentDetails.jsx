@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft, ClipboardList, Download, Users } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getAssignmentDetails } from "../services/assignmentServices";
+import { getAdminAssignmentDetails } from "../services/assignmentServices";
 import formatDate from "../utils/formatDate";
 
 function AdminAssignmentDetails() {
@@ -14,7 +14,7 @@ function AdminAssignmentDetails() {
   useEffect(() => {
     const fetchAssignment = async () => {
       try {
-        const data = await getAssignmentDetails(classId, assignmentId);
+        const data = await getAdminAssignmentDetails(classId, assignmentId);
         setAssignment(data.assignment);
       } catch (requestError) {
         setError(

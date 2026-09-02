@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { CalendarDays, ChevronDown, Clock3, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { getStudentAssignments } from "../services/assignmentServices";
+import { getAssignments } from "../services/assignmentServices";
 import formatDate from "../utils/formatDate";
 
 const filterClassName =
@@ -45,7 +45,7 @@ function Assignments() {
   useEffect(() => {
     const fetchAssignments = async () => {
       try {
-        const data = await getStudentAssignments();
+        const data = await getAssignments();
         setAssignments(data.assignments ?? []);
       } catch (requestError) {
         setError(
