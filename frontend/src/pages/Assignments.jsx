@@ -152,14 +152,14 @@ function Assignments() {
                     role="button"
                     onClick={() =>
                       navigate(
-                        `/assignments/${assignment.class_id}/${assignment.id}`,
+                        `/assignments/${assignment.id}/class/${assignment.class_id}`,
                       )
                     }
                     onKeyDown={(event) => {
                       if (event.key === "Enter" || event.key === " ") {
                         event.preventDefault();
                         navigate(
-                          `/assignments/${assignment.class_id}/${assignment.id}`,
+                          `/assignments/${assignment.id}/class/${assignment.class_id}`,
                         );
                       }
                     }}

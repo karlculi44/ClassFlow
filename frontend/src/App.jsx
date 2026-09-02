@@ -36,7 +36,7 @@ function App() {
               }
             />
             <Route
-              path="/assignments/:classId/:assignmentId"
+              path="/assignments/:assignmentId/class/:classId"
               element={
                 <ProtectedRoute allowedRoles={["Student"]}>
                   <AssignmentDetails />
