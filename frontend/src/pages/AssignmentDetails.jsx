@@ -128,6 +128,18 @@ function AssignmentDetails() {
     }
   };
 
+  const handleCancelUpdate = () => {
+    setEditingSubmission(false);
+    setResponse("");
+    setAttachment(null);
+    setError("");
+    setSuccess(
+      editingSubmission
+        ? "Your submission was updated successfully."
+        : "Your assignment was submitted successfully.",
+    );
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-gray-950">
       <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-indigo-600/10 blur-3xl" />
@@ -161,7 +173,6 @@ function AssignmentDetails() {
                   <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
                     {assignment.title}
                   </h1>
-                  <p className="mt-1 text-sm text-gray-400">{}</p>
                 </div>
               </div>
             </header>
@@ -272,7 +283,17 @@ function AssignmentDetails() {
                   <p className="mt-3 text-sm text-emerald-400">{success}</p>
                 )}
 
-                <div className="mt-4 flex justify-end">
+                <div className="mt-4 flex justify-end gap-3">
+                  {editingSubmission && (
+                    <button
+                      type="button"
+                      onClick={handleCancelUpdate}
+                      disabled={submitting}
+                      className="cursor-pointer rounded-lg border border-gray-700 px-4 py-2 text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      Cancel
+                    </button>
+                  )}
                   <button
                     type="submit"
                     disabled={submitting}
