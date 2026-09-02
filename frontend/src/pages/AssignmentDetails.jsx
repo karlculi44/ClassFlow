@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, ClipboardList, Download, Upload } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getStudentAssignmentDetails } from "../services/assignmentServices";
-import { submitAssignment } from "../services/submissionServices";
+import {
+  getStudentSubmission,
+  submitAssignment,
+  updateSubmission,
+} from "../services/submissionServices";
 import formatDate from "../utils/formatDate";
 
 function AssignmentDetails() {
@@ -11,8 +15,10 @@ function AssignmentDetails() {
   const [assignment, setAssignment] = useState(null);
   const [response, setResponse] = useState("");
   const [attachment, setAttachment] = useState(null);
+  const [editingSubmission, setEditingSubmission] = useState(false);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [loadingSubmission, setLoadingSubmission] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -37,11 +43,56 @@ function AssignmentDetails() {
   const attachmentName = assignment?.attachment_name;
   const attachmentPath =
     assignment?.attachment_url ?? assignment?.attachhment_url;
+  const submission = assignment?.submission;
+  const submissionAttachmentPath = submission?.attachment_url;
+
+  const isPastDue = () => {
+    if (!assignment?.due_date) {
+      return false;
+    }
+
+    const dueDateValue =
+      typeof assignment.due_date === "string"
+        ? assignment.due_date.slice(0, 10)
+        : new Date(assignment.due_date).toISOString().slice(0, 10);
+    const dueDate = new Date(`${dueDateValue}T23:59:59`);
+    return new Date() > dueDate;
+  };
+
+  const handleUpdateClick = async () => {
+    setError("");
+    setSuccess("");
+    setLoadingSubmission(true);
+
+    try {
+      const data = await getStudentSubmission(assignmentId);
+      setResponse(data.submission.content ?? "");
+      setAttachment(null);
+      setEditingSubmission(true);
+    } catch (requestError) {
+      setError(
+        requestError.response?.data?.message ||
+          "Unable to load your submission right now.",
+      );
+    } finally {
+      setLoadingSubmission(false);
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
     setSuccess("");
+
+    if (!editingSubmission && isPastDue()) {
+      setError("The submission deadline has passed.");
+      return;
+    }
+
+    if (!response.trim() && !attachment) {
+      setError("Written response or an attachment is required.");
+      return;
+    }
 
     const formData = new FormData();
     if (response.trim()) {
@@ -53,8 +104,20 @@ function AssignmentDetails() {
 
     try {
       setSubmitting(true);
-      await submitAssignment(assignmentId, formData);
-      setSuccess("Your assignment was submitted successfully.");
+      const data = editingSubmission
+        ? await updateSubmission(assignmentId, formData)
+        : await submitAssignment(assignmentId, formData);
+      setAssignment((currentAssignment) => ({
+        ...currentAssignment,
+        submission: data.submission,
+      }));
+      setEditingSubmission(false);
+      setAttachment(null);
+      setSuccess(
+        editingSubmission
+          ? "Your submission was updated successfully."
+          : "Your assignment was submitted successfully.",
+      );
     } catch (requestError) {
       setError(
         requestError.response?.data?.message ||
@@ -144,63 +207,112 @@ function AssignmentDetails() {
               )}
             </div>
 
-            <form
-              className="mt-6 rounded-2xl border border-gray-800 bg-gray-900 p-5"
-              onSubmit={handleSubmit}
-            >
-              <div className="flex items-start gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400">
-                  <Upload size={19} strokeWidth={1.8} />
-                </span>
-                <div>
-                  <h2 className="text-lg font-semibold text-white">
-                    Your response
-                  </h2>
-                  <p className="mt-1 text-sm text-gray-400">
-                    Add written work or attach a file for your instructor.
+            {!submission || editingSubmission ? (
+              <form
+                className="mt-6 rounded-2xl border border-gray-800 bg-gray-900 p-5"
+                onSubmit={handleSubmit}
+              >
+                <div className="flex items-start gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400">
+                    <Upload size={19} strokeWidth={1.8} />
+                  </span>
+                  <div>
+                    <h2 className="text-lg font-semibold text-white">
+                      Your response
+                    </h2>
+                    <p className="mt-1 text-sm text-gray-400">
+                      Add written work or attach a file for your instructor.
+                    </p>
+                  </div>
+                </div>
+                <label className="mt-5 block space-y-1.5 text-sm text-gray-300">
+                  Written response
+                  <textarea
+                    value={response}
+                    onChange={(event) => setResponse(event.target.value)}
+                    rows={7}
+                    placeholder="Write your response here..."
+                    className="w-full resize-y rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-white outline-none placeholder:text-gray-600 focus:border-indigo-500 mt-2"
+                  />
+                </label>
+                <label className="mt-4 block space-y-1.5 text-sm text-gray-300">
+                  Upload file
+                  <input
+                    type="file"
+                    onChange={(event) =>
+                      setAttachment(event.target.files?.[0] ?? null)
+                    }
+                    className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-sm text-gray-400 outline-none file:mr-3 file:rounded-md file:border-0 file:bg-gray-800 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-gray-200 hover:file:bg-gray-700 focus:border-indigo-500 mt-2"
+                  />
+                  {editingSubmission && submission?.attachment_name && (
+                    <p className="text-xs text-gray-500">
+                      Current file:{" "}
+                      {submissionAttachmentPath ? (
+                        <a
+                          href={`http://localhost:3000${submissionAttachmentPath}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-indigo-400 hover:text-indigo-300"
+                        >
+                          {submission.attachment_name}
+                        </a>
+                      ) : (
+                        submission.attachment_name
+                      )}
+                    </p>
+                  )}
+                </label>
+                {attachment && (
+                  <p className="mt-2 text-xs text-gray-500">
+                    Selected: {attachment.name}
                   </p>
+                )}
+                {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
+                {success && (
+                  <p className="mt-3 text-sm text-emerald-400">{success}</p>
+                )}
+
+                <div className="mt-4 flex justify-end">
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="cursor-pointer rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {submitting
+                      ? editingSubmission
+                        ? "Resubmitting..."
+                        : "Submitting..."
+                      : editingSubmission
+                        ? "Resubmit"
+                        : "Submit"}
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-gray-900 p-5">
+                {success && (
+                  <p className="mb-3 text-sm text-emerald-400">{success}</p>
+                )}
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-emerald-400">
+                      Assignment Submitted
+                    </p>
+                    <p className="mt-1 text-sm text-gray-400">
+                      Your response has been recorded.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleUpdateClick}
+                    disabled={loadingSubmission}
+                    className="shrink-0 rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {loadingSubmission ? "Loading..." : "Update Submission"}
+                  </button>
                 </div>
               </div>
-              <label className="mt-5 block space-y-1.5 text-sm text-gray-300">
-                Written response
-                <textarea
-                  value={response}
-                  onChange={(event) => setResponse(event.target.value)}
-                  rows={7}
-                  placeholder="Write your response here..."
-                  className="w-full resize-y rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-white outline-none placeholder:text-gray-600 focus:border-indigo-500 mt-2"
-                />
-              </label>
-              <label className="mt-4 block space-y-1.5 text-sm text-gray-300">
-                Upload file
-                <input
-                  type="file"
-                  onChange={(event) =>
-                    setAttachment(event.target.files?.[0] ?? null)
-                  }
-                  className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-sm text-gray-400 outline-none file:mr-3 file:rounded-md file:border-0 file:bg-gray-800 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-gray-200 hover:file:bg-gray-700 focus:border-indigo-500 mt-2"
-                />
-              </label>
-              {attachment && (
-                <p className="mt-2 text-xs text-gray-500">
-                  Selected: {attachment.name}
-                </p>
-              )}
-              {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
-              {success && (
-                <p className="mt-3 text-sm text-emerald-400">{success}</p>
-              )}
-
-              <div className="mt-4 flex justify-end">
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="cursor-pointer rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {submitting ? "Submitting..." : "Submit"}
-                </button>
-              </div>
-            </form>
+            )}
           </section>
         )}
       </main>

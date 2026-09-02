@@ -80,9 +80,17 @@ export const getStudentAssignmentById = async ({
 }) => {
   const [rows] = await pool.query(
     `
-      SELECT assignments.*
+      SELECT assignments.*, submissions.id AS submission_id,
+             submissions.content AS submission_content,
+             submissions.attachment_name AS submission_attachment_name,
+             submissions.attachment_url AS submission_attachment_url,
+             submissions.submitted_at AS submission_submitted_at,
+             submissions.updated_at AS submission_updated_at
       FROM assignments
       INNER JOIN enrollments ON enrollments.class_id = assignments.class_id
+      LEFT JOIN submissions
+        ON submissions.assignment_id = assignments.id
+       AND submissions.student_id = enrollments.student_id
       WHERE assignments.id = ?
         AND assignments.class_id = ?
         AND enrollments.student_id = ?
@@ -91,7 +99,30 @@ export const getStudentAssignmentById = async ({
     [assignmentId, classId, studentId],
   );
 
-  return rows[0];
+  const assignment = rows[0];
+  if (!assignment) {
+    return null;
+  }
+
+  const submission = assignment.submission_id
+    ? {
+        id: assignment.submission_id,
+        content: assignment.submission_content,
+        attachment_name: assignment.submission_attachment_name,
+        attachment_url: assignment.submission_attachment_url,
+        submitted_at: assignment.submission_submitted_at,
+        updated_at: assignment.submission_updated_at,
+      }
+    : null;
+
+  delete assignment.submission_id;
+  delete assignment.submission_content;
+  delete assignment.submission_attachment_name;
+  delete assignment.submission_attachment_url;
+  delete assignment.submission_submitted_at;
+  delete assignment.submission_updated_at;
+
+  return { ...assignment, submission };
 };
 
 export const updateAssignmentById = async ({
