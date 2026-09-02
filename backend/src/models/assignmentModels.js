@@ -73,6 +73,27 @@ export const getAssignmentById = async ({ classId, assignmentId }) => {
   return rows[0];
 };
 
+export const getStudentAssignmentById = async ({
+  studentId,
+  classId,
+  assignmentId,
+}) => {
+  const [rows] = await pool.query(
+    `
+      SELECT assignments.*
+      FROM assignments
+      INNER JOIN enrollments ON enrollments.class_id = assignments.class_id
+      WHERE assignments.id = ?
+        AND assignments.class_id = ?
+        AND enrollments.student_id = ?
+      LIMIT 1
+    `,
+    [assignmentId, classId, studentId],
+  );
+
+  return rows[0];
+};
+
 export const updateAssignmentById = async ({
   classId,
   assignmentId,

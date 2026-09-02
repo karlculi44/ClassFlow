@@ -8,6 +8,7 @@ import {
   getAssignmentDetails,
   getAssignmentsByClassId,
   getStudentAssignments,
+  getStudentAssignmentDetails,
   updateAssignment,
 } from "../controllers/assignmentController.js";
 
@@ -18,6 +19,12 @@ router.get(
   verifyToken,
   authorize("Student"),
   getStudentAssignments,
+);
+router.get(
+  "/student/:classId/:assignmentId",
+  verifyToken,
+  authorize("Student"),
+  getStudentAssignmentDetails,
 );
 
 router.get(

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { CalendarDays, ChevronDown, Clock3, FileText } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { getStudentAssignments } from "../services/assignmentServices";
 import formatDate from "../utils/formatDate";
 
@@ -36,6 +37,7 @@ const statusColors = {
 };
 
 function Assignments() {
+  const navigate = useNavigate();
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -147,6 +149,20 @@ function Assignments() {
                   <article
                     key={assignment.id}
                     tabIndex="0"
+                    role="button"
+                    onClick={() =>
+                      navigate(
+                        `/assignments/${assignment.class_id}/${assignment.id}`,
+                      )
+                    }
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        navigate(
+                          `/assignments/${assignment.class_id}/${assignment.id}`,
+                        );
+                      }
+                    }}
                     className="group relative cursor-pointer rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-lg shadow-black/20 outline-none transition duration-200 hover:-translate-y-0.5 hover:border-indigo-500/50 hover:bg-gray-900/95 focus:border-indigo-500/70 focus:ring-2 focus:ring-indigo-500/20"
                   >
                     <div

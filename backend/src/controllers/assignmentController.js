@@ -6,6 +6,7 @@ import {
   getAssignmentById,
   getAssignmentByClassId,
   getAssignmentsByStudentId,
+  getStudentAssignmentById,
   updateAssignmentById,
 } from "../models/assignmentModels.js";
 
@@ -29,6 +30,23 @@ export const getAssignmentsByClassId = asyncHandler(async (req, res, next) => {
 
 export const getAssignmentDetails = asyncHandler(async (req, res) => {
   const assignment = await getAssignmentById({
+    classId: req.params.classId,
+    assignmentId: req.params.assignmentId,
+  });
+
+  if (!assignment) {
+    throw new AppError("Assignment not found.", 404);
+  }
+
+  return res.status(200).json({
+    message: "Assignment retrieved successfully",
+    assignment,
+  });
+});
+
+export const getStudentAssignmentDetails = asyncHandler(async (req, res) => {
+  const assignment = await getStudentAssignmentById({
+    studentId: req.user.id,
     classId: req.params.classId,
     assignmentId: req.params.assignmentId,
   });
