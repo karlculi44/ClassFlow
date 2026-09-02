@@ -7,6 +7,7 @@ import errorHandler from "./middleware/errorHandler.js";
 import classRoutes from "./routes/classRoutes.js";
 import assignmentRoutes from "./routes/assignmentRoutes.js";
 import enrollmentRoutes from "./routes/enrollmentRoutes.js";
+import submissionRoutes from "./routes/submissionRoutes.js";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/classes", classRoutes);
 app.use("/api/assignments", assignmentRoutes);
 app.use("/api/enrollments", enrollmentRoutes);
+app.use("/api/submissions", submissionRoutes);
 
 // Root route
 app.get("/", (req, res) => {

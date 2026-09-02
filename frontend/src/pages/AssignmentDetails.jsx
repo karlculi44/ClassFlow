@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, ClipboardList, Download, Upload } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getStudentAssignmentDetails } from "../services/assignmentServices";
+import { submitAssignment } from "../services/submissionServices";
 import formatDate from "../utils/formatDate";
 
 function AssignmentDetails() {
@@ -11,7 +12,9 @@ function AssignmentDetails() {
   const [response, setResponse] = useState("");
   const [attachment, setAttachment] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   useEffect(() => {
     const fetchAssignment = async () => {
@@ -34,6 +37,33 @@ function AssignmentDetails() {
   const attachmentName = assignment?.attachment_name;
   const attachmentPath =
     assignment?.attachment_url ?? assignment?.attachhment_url;
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
+    setSuccess("");
+
+    const formData = new FormData();
+    if (response.trim()) {
+      formData.append("content", response.trim());
+    }
+    if (attachment) {
+      formData.append("attachment", attachment);
+    }
+
+    try {
+      setSubmitting(true);
+      await submitAssignment(assignmentId, formData);
+      setSuccess("Your assignment was submitted successfully.");
+    } catch (requestError) {
+      setError(
+        requestError.response?.data?.message ||
+          "Unable to submit this assignment right now.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gray-950">
@@ -114,7 +144,10 @@ function AssignmentDetails() {
               )}
             </div>
 
-            <form className="mt-6 rounded-2xl border border-gray-800 bg-gray-900 p-5">
+            <form
+              className="mt-6 rounded-2xl border border-gray-800 bg-gray-900 p-5"
+              onSubmit={handleSubmit}
+            >
               <div className="flex items-start gap-3">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400">
                   <Upload size={19} strokeWidth={1.8} />
@@ -153,10 +186,18 @@ function AssignmentDetails() {
                   Selected: {attachment.name}
                 </p>
               )}
+              {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
+              {success && (
+                <p className="mt-3 text-sm text-emerald-400">{success}</p>
+              )}
 
               <div className="mt-4 flex justify-end">
-                <button className="rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 cursor-pointer">
-                  Submit
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="cursor-pointer rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {submitting ? "Submitting..." : "Submit"}
                 </button>
               </div>
             </form>
