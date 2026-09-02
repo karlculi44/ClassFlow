@@ -10,6 +10,7 @@ import AdminAssignmentDetails from "./pages/AdminAssignmentDetails";
 import AssignmentDetails from "./pages/AssignmentDetails";
 import Assignments from "./pages/Assignments";
 import MainLayout from "./layout/MainLayout";
+import Submissions from "./pages/Submissions";
 
 function App() {
   return (
@@ -80,9 +81,7 @@ function App() {
               path="/admin-classes/:classId/assignments/:assignmentId/submissions"
               element={
                 <ProtectedRoute allowedRoles={["Admin"]}>
-                  <div className="min-h-screen bg-gray-950 px-4 py-8 text-sm text-gray-400 sm:px-6 lg:px-10">
-                    Submissions page coming soon.
-                  </div>
+                  <Submissions />
                 </ProtectedRoute>
               }
             />

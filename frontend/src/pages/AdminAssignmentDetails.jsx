@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, ClipboardList, Download, Users } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAdminAssignmentDetails } from "../services/assignmentServices";
+import { getAdminSubmissions } from "../services/submissionServices";
 import formatDate from "../utils/formatDate";
 
 function AdminAssignmentDetails() {
@@ -14,8 +15,15 @@ function AdminAssignmentDetails() {
   useEffect(() => {
     const fetchAssignment = async () => {
       try {
-        const data = await getAdminAssignmentDetails(classId, assignmentId);
-        setAssignment(data.assignment);
+        const [assignmentData, submissionsData] = await Promise.all([
+          getAdminAssignmentDetails(classId, assignmentId),
+          getAdminSubmissions(classId, assignmentId),
+        ]);
+        setAssignment({
+          ...assignmentData.assignment,
+          submissions: submissionsData.assignment.submitted_count,
+          totalStudents: submissionsData.assignment.total_students,
+        });
       } catch (requestError) {
         setError(
           requestError.response?.data?.message ||
@@ -129,7 +137,7 @@ function AdminAssignmentDetails() {
                 type="button"
                 onClick={() =>
                   navigate(
-                    `/classes/${classId}/assignments/${assignmentId}/submissions`,
+                    `/admin-classes/${classId}/assignments/${assignmentId}/submissions`,
                   )
                 }
                 className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500"

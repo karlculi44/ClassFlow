@@ -3,12 +3,36 @@ import verifyToken from "../middleware/verifyToken.js";
 import authorize from "../middleware/authorize.js";
 import upload from "../middleware/upload.js";
 import {
+  getAdminStudentSubmission,
+  getAdminSubmissions,
   getStudentSubmission,
+  gradeSubmission,
   resubmitAssignment,
   submitAssignment,
 } from "../controllers/submissionController.js";
 
 const router = express.Router();
+
+router.get(
+  "/admin/:classId/:assignmentId",
+  verifyToken,
+  authorize("Admin"),
+  getAdminSubmissions,
+);
+
+router.get(
+  "/admin/:classId/:assignmentId/:studentId",
+  verifyToken,
+  authorize("Admin"),
+  getAdminStudentSubmission,
+);
+
+router.put(
+  "/admin/:classId/:assignmentId/:studentId",
+  verifyToken,
+  authorize("Admin"),
+  gradeSubmission,
+);
 
 router.get(
   "/:assignmentId",

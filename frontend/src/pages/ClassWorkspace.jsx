@@ -26,6 +26,7 @@ import {
   addStudents,
   getEnrolledStudents,
 } from "../services/enrollmentServices";
+import { getAdminSubmissions } from "../services/submissionServices";
 
 const initialAssignmentFormData = {
   title: "",
@@ -80,7 +81,21 @@ function ClassWorkspace() {
     const fetchAssignments = async () => {
       try {
         const data = await getAdminAssignments(classId);
-        setAssignments(data.data ?? []);
+        const assignmentsWithSubmissions = await Promise.all(
+          (data.data ?? []).map(async (assignment) => {
+            const submissionData = await getAdminSubmissions(
+              classId,
+              assignment.id,
+            );
+
+            return {
+              ...assignment,
+              submissions: submissionData.assignment.submitted_count,
+              totalStudents: submissionData.assignment.total_students,
+            };
+          }),
+        );
+        setAssignments(assignmentsWithSubmissions);
       } catch (requestError) {
         setError(
           requestError.response?.data?.message ||
