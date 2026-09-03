@@ -14,6 +14,7 @@ import Submissions from "./pages/Submissions";
 import Classes from "./components/Classes";
 import StudentClassWorkspace from "./pages/StudentClassWorkspace";
 import Grades from "./pages/Grades";
+import Signup from "./pages/Signup";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
 
           <Route element={<MainLayout />}>
             <Route

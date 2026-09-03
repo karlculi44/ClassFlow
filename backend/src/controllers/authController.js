@@ -18,9 +18,9 @@ import hashToken from "../utils/hashToken.js";
 // This includes registering new users and ensuring that all required fields are provided,
 // checking for existing users, hashing passwords, and creating new user records in the database.
 export const register = asyncHandler(async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password } = req.body;
 
-  if (!name || !email || !password || !role) {
+  if (!name || !email || !password) {
     throw new AppError("All fields are required!", 400);
   }
 
@@ -32,7 +32,12 @@ export const register = asyncHandler(async (req, res) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser = await createUser({ name, email, hashedPassword, role });
+  await createUser({
+    name,
+    email,
+    hashedPassword,
+    role: "Student",
+  });
 
   return res.status(201).json({ message: "User registered successfully!" });
 });

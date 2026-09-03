@@ -169,7 +169,7 @@ function Login() {
             <div className="mt-6 text-center text-sm text-gray-400">
               Don&apos;t have an account?{" "}
               <a
-                href="#"
+                href="/signup"
                 className="text-indigo-400 hover:text-indigo-300 font-medium transition"
               >
                 Sign up
