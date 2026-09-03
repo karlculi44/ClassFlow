@@ -118,7 +118,7 @@ function Submissions() {
         <button
           type="button"
           onClick={() =>
-            navigate(`/classes/${classId}/assignments/${assignmentId}`)
+            navigate(`/admin-classes/${classId}/assignments/${assignmentId}`)
           }
           className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 transition hover:text-white"
         >

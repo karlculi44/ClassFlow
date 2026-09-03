@@ -4,6 +4,7 @@ import {
   addStudentsToClass,
   addStudentToClass,
   findStudentsByClassId,
+  findClassesByStudentId,
 } from "../models/enrollmentModel.js";
 
 export const addStudents = asyncHandler(async (req, res) => {
@@ -38,6 +39,15 @@ export const getEnrolledStudents = asyncHandler(async (req, res) => {
   return res.status(200).json({
     message: "Enrolled students retrieved successfully",
     students,
+  });
+});
+
+export const getStudentClasses = asyncHandler(async (req, res) => {
+  const classes = await findClassesByStudentId(req.user.id);
+
+  return res.status(200).json({
+    message: "Student classes retrieved successfully",
+    classes,
   });
 });
 

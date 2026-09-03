@@ -1,5 +1,12 @@
 import api from "../api/axios";
 
+//Student Endpoints
+export const getStudentEnrollments = async () => {
+  const response = await api.get("/enrollments/student");
+  return response.data;
+};
+
+//Admin Enpoints
 export const getEnrolledStudents = async (classId) => {
   const response = await api.get(`/enrollments/${classId}`);
   return response.data;

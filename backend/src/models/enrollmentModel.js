@@ -38,3 +38,19 @@ export const findStudentsByClassId = async (classId) => {
 
   return rows;
 };
+
+export const findClassesByStudentId = async (studentId) => {
+  const [rows] = await pool.query(
+    `
+      SELECT classes.id, classes.status, classes.code, classes.name,
+             classes.schedule, classes.capacity
+      FROM enrollments
+      INNER JOIN classes ON classes.id = enrollments.class_id
+      WHERE enrollments.student_id = ?
+      ORDER BY classes.name ASC
+    `,
+    [studentId],
+  );
+
+  return rows;
+};
