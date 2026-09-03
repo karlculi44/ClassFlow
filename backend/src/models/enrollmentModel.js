@@ -42,10 +42,12 @@ export const findStudentsByClassId = async (classId) => {
 export const findClassesByStudentId = async (studentId) => {
   const [rows] = await pool.query(
     `
-      SELECT classes.id, classes.status, classes.code, classes.name,
-             classes.schedule, classes.capacity
+            SELECT classes.id, classes.status, classes.code, classes.name,
+              classes.schedule, classes.capacity,
+              admins.name AS instructor_name
       FROM enrollments
       INNER JOIN classes ON classes.id = enrollments.class_id
+            INNER JOIN users AS admins ON admins.id = classes.admin_id
       WHERE enrollments.student_id = ?
       ORDER BY classes.name ASC
     `,

@@ -11,6 +11,8 @@ import AssignmentDetails from "./pages/AssignmentDetails";
 import Assignments from "./pages/Assignments";
 import MainLayout from "./layout/MainLayout";
 import Submissions from "./pages/Submissions";
+import Classes from "./components/Classes";
+import StudentClassWorkspace from "./pages/StudentClassWorkspace";
 
 function App() {
   return (
@@ -33,6 +35,22 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["Student"]}>
                   <Assignments />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/classes"
+              element={
+                <ProtectedRoute allowedRoles={["Student"]}>
+                  <Classes />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/classes/:classId"
+              element={
+                <ProtectedRoute allowedRoles={["Student"]}>
+                  <StudentClassWorkspace />
                 </ProtectedRoute>
               }
             />
