@@ -5,7 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import Unauthorized from "./pages/Unauthorized";
 import AdminClasses from "./pages/AdminClasses";
-import ClassWorkspace from "./pages/ClassWorkspace";
+import AdminClassWorkspace from "./pages/AdminClassWorkspace";
 import AdminAssignmentDetails from "./pages/AdminAssignmentDetails";
 import AssignmentDetails from "./pages/AssignmentDetails";
 import Assignments from "./pages/Assignments";
@@ -65,7 +65,7 @@ function App() {
               path="/admin-classes/:classId"
               element={
                 <ProtectedRoute allowedRoles={["Admin"]}>
-                  <ClassWorkspace />
+                  <AdminClassWorkspace />
                 </ProtectedRoute>
               }
             />

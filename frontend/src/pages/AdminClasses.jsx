@@ -5,7 +5,7 @@ import {
   updateClass,
   deleteClass,
 } from "../services/classServices";
-import ClassCard from "../components/ClassCard";
+import AdminClassCard from "../components/AdminClassCard";
 import ClassModal from "../components/ClassModal";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
@@ -245,7 +245,7 @@ function AdminClasses() {
           {!loading &&
             !error &&
             classes.map((classItem, index) => (
-              <ClassCard
+              <AdminClassCard
                 key={classItem.id ?? classItem.code}
                 onEdit={handleEditClass}
                 onDelete={requestDeleteClass}
