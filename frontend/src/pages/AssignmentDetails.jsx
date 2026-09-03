@@ -17,7 +17,6 @@ function AssignmentDetails() {
   const [attachment, setAttachment] = useState(null);
   const [editingSubmission, setEditingSubmission] = useState(false);
   const [viewingSubmission, setViewingSubmission] = useState(false);
-  const [feedbackVisible, setFeedbackVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [loadingSubmission, setLoadingSubmission] = useState(false);
@@ -82,14 +81,6 @@ function AssignmentDetails() {
     } finally {
       setLoadingSubmission(false);
     }
-  };
-
-  const handleViewSubmission = () => {
-    setResponse(submission?.content ?? "");
-    setAttachment(null);
-    setViewingSubmission(true);
-    setError("");
-    setSuccess("");
   };
 
   const handleSubmit = async (event) => {
@@ -404,47 +395,23 @@ function AssignmentDetails() {
                       Your response has been recorded.
                     </p>
                     {isGraded && (
-                      <>
-                        {feedbackVisible && (
-                          <div>
-                            <p className="mt-3 text-sm text-gray-300">
-                              <b>Instructor Feedback</b>
-                            </p>
-                            <p className=" whitespace-pre-wrap text-sm leading-6 text-gray-300">
-                              {submission.feedback || "No feedback provided."}
-                            </p>
-                          </div>
-                        )}
-                      </>
+                      <p className="mt-1 text-sm text-gray-400">
+                        See <b>Grades</b> to view more details.
+                      </p>
                     )}
                   </div>
-                  <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:justify-end">
-                    {isGraded && (
+                  {!isGraded && (
+                    <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:justify-end">
                       <button
                         type="button"
-                        onClick={() =>
-                          setFeedbackVisible((visible) => !visible)
-                        }
-                        className="w-full rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white sm:w-auto"
+                        onClick={handleUpdateClick}
+                        disabled={loadingSubmission}
+                        className="w-full rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                       >
-                        {feedbackVisible ? "Hide Feedback" : "View Feedback"}
+                        {loadingSubmission ? "Loading..." : "Update Submission"}
                       </button>
-                    )}
-                    <button
-                      type="button"
-                      onClick={
-                        isGraded ? handleViewSubmission : handleUpdateClick
-                      }
-                      disabled={loadingSubmission}
-                      className="w-full rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-                    >
-                      {loadingSubmission
-                        ? "Loading..."
-                        : isGraded
-                          ? "View Submission"
-                          : "Update Submission"}
-                    </button>
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}

@@ -13,6 +13,7 @@ import MainLayout from "./layout/MainLayout";
 import Submissions from "./pages/Submissions";
 import Classes from "./components/Classes";
 import StudentClassWorkspace from "./pages/StudentClassWorkspace";
+import Grades from "./pages/Grades";
 
 function App() {
   return (
@@ -51,6 +52,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["Student"]}>
                   <StudentClassWorkspace />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/grades"
+              element={
+                <ProtectedRoute allowedRoles={["Student"]}>
+                  <Grades />
                 </ProtectedRoute>
               }
             />

@@ -48,10 +48,15 @@ export const getAssignmentsByStudentId = async (studentId) => {
         assignments.due_date,
         classes.name AS class_name,
         classes.code AS class_code,
+        admins.name AS instructor_name,
         submissions.id AS submission_id,
-        submissions.grade AS grade
+        submissions.grade AS grade,
+        submissions.feedback AS feedback,
+        submissions.submitted_at AS submitted_at,
+        submissions.attachment_name AS attachment_name
       FROM assignments
       INNER JOIN classes ON classes.id = assignments.class_id
+      INNER JOIN users AS admins ON admins.id = classes.admin_id
       INNER JOIN enrollments ON enrollments.class_id = assignments.class_id
       LEFT JOIN submissions
         ON submissions.assignment_id = assignments.id
