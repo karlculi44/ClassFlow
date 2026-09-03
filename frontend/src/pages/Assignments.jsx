@@ -31,9 +31,9 @@ const accentColors = [
 ];
 
 const statusColors = {
-  "not started": "border-gray-600 bg-gray-700/30 text-gray-300",
   "in progress": "border-blue-400/40 bg-blue-500/10 text-blue-300",
-  submitted: "border-green-400/40 bg-green-500/10 text-green-300",
+  submitted: "border-amber-400/40 bg-amber-500/10 text-amber-300",
+  graded: "border-green-400/40 bg-green-500/10 text-green-300",
 };
 
 function Assignments() {
@@ -116,9 +116,9 @@ function Assignments() {
                   className={filterClassName}
                 >
                   <option value="all">All statuses</option>
-                  <option value="not-started">Not started</option>
                   <option value="in-progress">In progress</option>
                   <option value="submitted">Submitted</option>
+                  <option value="graded">Graded</option>
                 </select>
                 <ChevronDown className="pointer-events-none absolute right-3 top-3 h-5 w-5 text-gray-500" />
               </div>
@@ -140,10 +140,14 @@ function Assignments() {
             {!loading &&
               !error &&
               assignments.map((assignment) => {
-                const status = assignment.status ?? "Not started";
-                const statusKey = status.toLowerCase().replaceAll("-", " ");
-                const statusColor =
-                  statusColors[statusKey] ?? statusColors["not started"];
+                const status =
+                  assignment.grade !== null && assignment.grade !== undefined
+                    ? "Graded"
+                    : assignment.submission_id
+                      ? "Submitted"
+                      : "In progress";
+                const statusKey = status.toLowerCase();
+                const statusColor = statusColors[statusKey];
 
                 return (
                   <article

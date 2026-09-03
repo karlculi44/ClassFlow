@@ -9,7 +9,8 @@ export const getSubmissionByAssignmentAndStudent = async ({
 			SELECT submissions.id, submissions.assignment_id, submissions.student_id,
 						 submissions.content, submissions.attachment_name,
 						 submissions.attachment_url, submissions.submitted_at,
-						 submissions.updated_at
+             submissions.updated_at, submissions.grade,
+             submissions.feedback
 			FROM submissions
 			INNER JOIN assignments ON assignments.id = submissions.assignment_id
 			INNER JOIN enrollments ON enrollments.class_id = assignments.class_id
@@ -67,7 +68,7 @@ export const createSubmission = async ({
   const [rows] = await pool.query(
     `
 			SELECT id, assignment_id, student_id, content, attachment_name,
-						 attachment_url, submitted_at, updated_at
+             attachment_url, submitted_at, updated_at, grade, feedback
 			FROM submissions
 			WHERE assignment_id = ? AND student_id = ?
 			LIMIT 1

@@ -47,10 +47,15 @@ export const getAssignmentsByStudentId = async (studentId) => {
         assignments.description,
         assignments.due_date,
         classes.name AS class_name,
-        classes.code AS class_code
+        classes.code AS class_code,
+        submissions.id AS submission_id,
+        submissions.grade AS grade
       FROM assignments
       INNER JOIN classes ON classes.id = assignments.class_id
       INNER JOIN enrollments ON enrollments.class_id = assignments.class_id
+      LEFT JOIN submissions
+        ON submissions.assignment_id = assignments.id
+       AND submissions.student_id = enrollments.student_id
       WHERE enrollments.student_id = ?
       ORDER BY assignments.due_date ASC, classes.code ASC
     `,
@@ -85,7 +90,9 @@ export const getStudentAssignmentById = async ({
              submissions.attachment_name AS submission_attachment_name,
              submissions.attachment_url AS submission_attachment_url,
              submissions.submitted_at AS submission_submitted_at,
-             submissions.updated_at AS submission_updated_at
+             submissions.updated_at AS submission_updated_at,
+             submissions.grade AS submission_grade,
+             submissions.feedback AS submission_feedback
       FROM assignments
       INNER JOIN enrollments ON enrollments.class_id = assignments.class_id
       LEFT JOIN submissions
@@ -112,6 +119,8 @@ export const getStudentAssignmentById = async ({
         attachment_url: assignment.submission_attachment_url,
         submitted_at: assignment.submission_submitted_at,
         updated_at: assignment.submission_updated_at,
+        grade: assignment.submission_grade,
+        feedback: assignment.submission_feedback,
       }
     : null;
 
@@ -121,6 +130,8 @@ export const getStudentAssignmentById = async ({
   delete assignment.submission_attachment_url;
   delete assignment.submission_submitted_at;
   delete assignment.submission_updated_at;
+  delete assignment.submission_grade;
+  delete assignment.submission_feedback;
 
   return { ...assignment, submission };
 };

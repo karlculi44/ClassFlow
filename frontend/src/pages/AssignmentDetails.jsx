@@ -16,9 +16,12 @@ function AssignmentDetails() {
   const [response, setResponse] = useState("");
   const [attachment, setAttachment] = useState(null);
   const [editingSubmission, setEditingSubmission] = useState(false);
+  const [viewingSubmission, setViewingSubmission] = useState(false);
+  const [feedbackVisible, setFeedbackVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [loadingSubmission, setLoadingSubmission] = useState(false);
+  const [pageError, setPageError] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -28,7 +31,7 @@ function AssignmentDetails() {
         const data = await getAssignmentDetails(classId, assignmentId);
         setAssignment(data.assignment);
       } catch (requestError) {
-        setError(
+        setPageError(
           requestError.response?.data?.message ||
             "Unable to load this assignment right now.",
         );
@@ -45,6 +48,8 @@ function AssignmentDetails() {
     assignment?.attachment_url ?? assignment?.attachhment_url;
   const submission = assignment?.submission;
   const submissionAttachmentPath = submission?.attachment_url;
+  const isGraded =
+    submission?.grade !== null && submission?.grade !== undefined;
 
   const isPastDue = () => {
     if (!assignment?.due_date) {
@@ -77,6 +82,14 @@ function AssignmentDetails() {
     } finally {
       setLoadingSubmission(false);
     }
+  };
+
+  const handleViewSubmission = () => {
+    setResponse(submission?.content ?? "");
+    setAttachment(null);
+    setViewingSubmission(true);
+    setError("");
+    setSuccess("");
   };
 
   const handleSubmit = async (event) => {
@@ -112,6 +125,7 @@ function AssignmentDetails() {
         submission: data.submission,
       }));
       setEditingSubmission(false);
+      setViewingSubmission(false);
       setAttachment(null);
       setSuccess(
         editingSubmission
@@ -130,14 +144,11 @@ function AssignmentDetails() {
 
   const handleCancelUpdate = () => {
     setEditingSubmission(false);
+    setViewingSubmission(false);
     setResponse("");
     setAttachment(null);
     setError("");
-    setSuccess(
-      editingSubmission
-        ? "Your submission was updated successfully."
-        : "Your assignment was submitted successfully.",
-    );
+    setSuccess("");
   };
 
   return (
@@ -156,24 +167,36 @@ function AssignmentDetails() {
         {loading && (
           <p className="mt-6 text-sm text-gray-400">Loading assignment...</p>
         )}
-        {!loading && error && (
-          <p className="mt-6 text-sm text-red-400">{error}</p>
+        {!loading && pageError && (
+          <p className="mt-6 text-sm text-red-400">{pageError}</p>
         )}
-        {!loading && !error && assignment && (
+        {!loading && !pageError && assignment && (
           <section className="mt-6 max-w-3xl">
             <header className="border-b border-gray-800 pb-7 mb-3">
-              <div className="flex items-start gap-4">
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400">
-                  <ClipboardList size={23} strokeWidth={1.7} />
-                </span>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-indigo-400">
-                    Assignment Details
-                  </p>
-                  <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-                    {assignment.title}
-                  </h1>
+              <div className="relative flex items-start gap-4">
+                <div className="flex min-w-0 items-start gap-4 pr-28 sm:pr-36">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400">
+                    <ClipboardList size={23} strokeWidth={1.7} />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-indigo-400">
+                      Assignment Details
+                    </p>
+                    <h1 className="mt-1 wrap-break-word text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+                      {assignment.title}
+                    </h1>
+                  </div>
                 </div>
+                {isGraded && (
+                  <div className="absolute right-0 top-0 text-right">
+                    <p className="text-sm font-bold tracking-[0.2em] text-emerald-400 sm:text-base">
+                      GRADED
+                    </p>
+                    <p className="mt-1 text-2xl font-black leading-none text-white sm:text-3xl">
+                      {submission.grade}/100
+                    </p>
+                  </div>
+                )}
               </div>
             </header>
 
@@ -220,7 +243,7 @@ function AssignmentDetails() {
 
             {!submission || editingSubmission ? (
               <form
-                className="mt-6 rounded-2xl border border-gray-800 bg-gray-900 p-5"
+                className="mt-6 rounded-2xl border border-gray-800 bg-gray-900 p-4 sm:p-5"
                 onSubmit={handleSubmit}
               >
                 <div className="flex items-start gap-3">
@@ -241,6 +264,7 @@ function AssignmentDetails() {
                   <textarea
                     value={response}
                     onChange={(event) => setResponse(event.target.value)}
+                    disabled={viewingSubmission}
                     rows={7}
                     placeholder="Write your response here..."
                     className="w-full resize-y rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-white outline-none placeholder:text-gray-600 focus:border-indigo-500 mt-2"
@@ -250,28 +274,30 @@ function AssignmentDetails() {
                   Upload file
                   <input
                     type="file"
+                    disabled={viewingSubmission}
                     onChange={(event) =>
                       setAttachment(event.target.files?.[0] ?? null)
                     }
                     className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-sm text-gray-400 outline-none file:mr-3 file:rounded-md file:border-0 file:bg-gray-800 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-gray-200 hover:file:bg-gray-700 focus:border-indigo-500 mt-2"
                   />
-                  {editingSubmission && submission?.attachment_name && (
-                    <p className="text-xs text-gray-500">
-                      Current file:{" "}
-                      {submissionAttachmentPath ? (
-                        <a
-                          href={`http://localhost:3000${submissionAttachmentPath}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-indigo-400 hover:text-indigo-300"
-                        >
-                          {submission.attachment_name}
-                        </a>
-                      ) : (
-                        submission.attachment_name
-                      )}
-                    </p>
-                  )}
+                  {(editingSubmission || viewingSubmission) &&
+                    submission?.attachment_name && (
+                      <p className="text-xs text-gray-500">
+                        Current file:{" "}
+                        {submissionAttachmentPath ? (
+                          <a
+                            href={`http://localhost:3000${submissionAttachmentPath}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-indigo-400 hover:text-indigo-300"
+                          >
+                            {submission.attachment_name}
+                          </a>
+                        ) : (
+                          submission.attachment_name
+                        )}
+                      </p>
+                    )}
                 </label>
                 {attachment && (
                   <p className="mt-2 text-xs text-gray-500">
@@ -283,54 +309,142 @@ function AssignmentDetails() {
                   <p className="mt-3 text-sm text-emerald-400">{success}</p>
                 )}
 
-                <div className="mt-4 flex justify-end gap-3">
-                  {editingSubmission && (
+                <div className="mt-4 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                  {(editingSubmission || viewingSubmission) && (
                     <button
                       type="button"
-                      onClick={handleCancelUpdate}
+                      onClick={() =>
+                        viewingSubmission
+                          ? setViewingSubmission(false)
+                          : handleCancelUpdate()
+                      }
                       disabled={submitting}
-                      className="cursor-pointer rounded-lg border border-gray-700 px-4 py-2 text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+                      className="w-full cursor-pointer rounded-lg border border-gray-700 px-4 py-2 text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                     >
-                      Cancel
+                      {viewingSubmission ? "Close" : "Cancel"}
                     </button>
                   )}
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="cursor-pointer rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {submitting
-                      ? editingSubmission
-                        ? "Resubmitting..."
-                        : "Submitting..."
-                      : editingSubmission
-                        ? "Resubmit"
-                        : "Submit"}
-                  </button>
+                  {!viewingSubmission && (
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="w-full cursor-pointer rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                    >
+                      {submitting
+                        ? editingSubmission
+                          ? "Resubmitting..."
+                          : "Submitting..."
+                        : editingSubmission
+                          ? "Resubmit"
+                          : "Submit"}
+                    </button>
+                  )}
                 </div>
               </form>
-            ) : (
-              <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-gray-900 p-5">
-                {success && (
-                  <p className="mb-3 text-sm text-emerald-400">{success}</p>
-                )}
-                <div className="flex items-start justify-between gap-4">
+            ) : viewingSubmission ? (
+              <article className="mt-6 rounded-2xl border border-gray-800 bg-gray-900 p-4 sm:p-6">
+                <div className="flex flex-col items-start gap-4 border-b border-gray-800 pb-4 sm:flex-row sm:justify-between">
                   <div>
                     <p className="text-sm font-medium text-emerald-400">
-                      Assignment Submitted
+                      Your Submission
                     </p>
-                    <p className="mt-1 text-sm text-gray-400">
-                      Your response has been recorded.
+                    <p className="mt-1 text-xs text-gray-500">
+                      Submitted {formatDate(submission.submitted_at)}
                     </p>
                   </div>
                   <button
                     type="button"
-                    onClick={handleUpdateClick}
-                    disabled={loadingSubmission}
-                    className="shrink-0 rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                    onClick={() => setViewingSubmission(false)}
+                    className="w-full shrink-0 rounded-lg border border-gray-700 px-4 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white sm:w-auto"
                   >
-                    {loadingSubmission ? "Loading..." : "Update Submission"}
+                    Close
                   </button>
+                </div>
+                <div className="mt-5">
+                  <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    Response
+                  </h2>
+                  <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-gray-300">
+                    {submission.content || "No written response provided."}
+                  </p>
+                </div>
+                {submission.attachment_name && (
+                  <div className="mt-6 border-t border-gray-800 pt-5">
+                    <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                      Attachment
+                    </h2>
+                    {submissionAttachmentPath ? (
+                      <a
+                        href={`http://localhost:3000${submissionAttachmentPath}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-3 inline-block text-sm text-indigo-400 hover:text-indigo-300"
+                      >
+                        {submission.attachment_name}
+                      </a>
+                    ) : (
+                      <p className="mt-3 text-sm text-gray-300">
+                        {submission.attachment_name}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </article>
+            ) : (
+              <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-gray-900 p-4 sm:p-5">
+                {success && (
+                  <p className="mb-3 text-sm text-emerald-400">{success}</p>
+                )}
+                <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-emerald-400">
+                      {isGraded ? "Assignment Graded" : "Assignment Submitted"}
+                    </p>
+                    <p className="mt-1 text-sm text-gray-400">
+                      Your response has been recorded.
+                    </p>
+                    {isGraded && (
+                      <>
+                        {feedbackVisible && (
+                          <div>
+                            <p className="mt-3 text-sm text-gray-300">
+                              <b>Instructor Feedback</b>
+                            </p>
+                            <p className=" whitespace-pre-wrap text-sm leading-6 text-gray-300">
+                              {submission.feedback || "No feedback provided."}
+                            </p>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                  <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:justify-end">
+                    {isGraded && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setFeedbackVisible((visible) => !visible)
+                        }
+                        className="w-full rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white sm:w-auto"
+                      >
+                        {feedbackVisible ? "Hide Feedback" : "View Feedback"}
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={
+                        isGraded ? handleViewSubmission : handleUpdateClick
+                      }
+                      disabled={loadingSubmission}
+                      className="w-full rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                    >
+                      {loadingSubmission
+                        ? "Loading..."
+                        : isGraded
+                          ? "View Submission"
+                          : "Update Submission"}
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
