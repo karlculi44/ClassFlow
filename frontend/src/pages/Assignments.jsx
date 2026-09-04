@@ -36,9 +36,23 @@ const statusColors = {
   graded: "border-green-400/40 bg-green-500/10 text-green-300",
 };
 
+const getAssignmentStatus = (assignment) => {
+  if (assignment.grade !== null && assignment.grade !== undefined) {
+    return { label: "Graded", value: "graded" };
+  }
+
+  if (assignment.submission_id) {
+    return { label: "Submitted", value: "submitted" };
+  }
+
+  return { label: "In progress", value: "in-progress" };
+};
+
 function Assignments() {
   const navigate = useNavigate();
   const [assignments, setAssignments] = useState([]);
+  const [classFilter, setClassFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -59,6 +73,24 @@ function Assignments() {
 
     fetchAssignments();
   }, []);
+
+  const classOptions = [
+    ...new Map(
+      assignments.map((assignment) => [
+        assignment.class_id,
+        { value: String(assignment.class_id), label: assignment.class_name },
+      ]),
+    ).values(),
+  ];
+  const filteredAssignments = assignments.filter((assignment) => {
+    const status = getAssignmentStatus(assignment);
+    const matchesClass =
+      classFilter === "all" || String(assignment.class_id) === classFilter;
+    const matchesStatus =
+      statusFilter === "all" || status.value === statusFilter;
+
+    return matchesClass && matchesStatus;
+  });
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gray-950">
@@ -90,13 +122,16 @@ function Assignments() {
               <div className="relative">
                 <select
                   id="class-filter"
-                  defaultValue="all"
+                  value={classFilter}
+                  onChange={(event) => setClassFilter(event.target.value)}
                   className={filterClassName}
                 >
                   <option value="all">All classes</option>
-                  <option value="math">Algebra II</option>
-                  <option value="physics">Physics</option>
-                  <option value="english">English Literature</option>
+                  {classOptions.map((classOption) => (
+                    <option key={classOption.value} value={classOption.value}>
+                      {classOption.label}
+                    </option>
+                  ))}
                 </select>
                 <ChevronDown className="pointer-events-none absolute right-3 top-3 h-5 w-5 text-gray-500" />
               </div>
@@ -112,7 +147,8 @@ function Assignments() {
               <div className="relative">
                 <select
                   id="status-filter"
-                  defaultValue="all"
+                  value={statusFilter}
+                  onChange={(event) => setStatusFilter(event.target.value)}
                   className={filterClassName}
                 >
                   <option value="all">All statuses</option>
@@ -132,20 +168,17 @@ function Assignments() {
             {!loading && error && (
               <p className="text-sm text-red-400">{error}</p>
             )}
-            {!loading && !error && assignments.length === 0 && (
+            {!loading && !error && filteredAssignments.length === 0 && (
               <p className="text-sm text-gray-400">
-                No assignments found for your enrolled classes.
+                {assignments.length === 0
+                  ? "No assignments found for your enrolled classes."
+                  : "No assignments match the selected filters."}
               </p>
             )}
             {!loading &&
               !error &&
-              assignments.map((assignment) => {
-                const status =
-                  assignment.grade !== null && assignment.grade !== undefined
-                    ? "Graded"
-                    : assignment.submission_id
-                      ? "Submitted"
-                      : "In progress";
+              filteredAssignments.map((assignment) => {
+                const { label: status } = getAssignmentStatus(assignment);
                 const statusKey = status.toLowerCase();
                 const statusColor = statusColors[statusKey];
 
