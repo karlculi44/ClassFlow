@@ -20,6 +20,21 @@ export const getMe = async () => {
   return response.data;
 };
 
+export const getProfile = async () => {
+  const response = await api.get("/auth/profile");
+  return response.data;
+};
+
+export const updateProfile = async (data) => {
+  const response = await api.patch("/auth/profile", data);
+  return response.data;
+};
+
+export const changePassword = async (data) => {
+  const response = await api.patch("/auth/profile/password", data);
+  return response.data;
+};
+
 export const refresh = async () => {
   const response = await api.post("/auth/refresh");
   return response.data;

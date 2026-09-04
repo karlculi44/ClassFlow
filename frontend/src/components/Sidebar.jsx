@@ -44,23 +44,19 @@ const adminNavItems = [
   },
   {
     id: 3,
-    title: "Teachers",
-    path: "/teachers",
-  },
-  {
-    id: 4,
     title: "Classes",
     path: "/admin-classes",
   },
   {
-    id: 5,
+    id: 4,
     title: "Reports",
     path: "/reports",
   },
+
   {
-    id: 6,
-    title: "Settings",
-    path: "/settings",
+    id: 5,
+    title: "Profile",
+    path: "/profile",
   },
 ];
 

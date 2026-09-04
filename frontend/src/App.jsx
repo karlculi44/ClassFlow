@@ -16,6 +16,7 @@ import StudentClassWorkspace from "./pages/StudentClassWorkspace";
 import Grades from "./pages/Grades";
 import Signup from "./pages/Signup";
 import Students from "./pages/Students";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -63,6 +64,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["Student"]}>
                   <Grades />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute allowedRoles={["Student", "Admin"]}>
+                  <Profile />
                 </ProtectedRoute>
               }
             />

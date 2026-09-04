@@ -18,7 +18,7 @@ export const findUserByEmail = async (email) => {
 
 export const findUserForLogin = async (email) => {
   const [rows] = await pool.query(
-    "SELECT id, name, email, password as hashedPassword, role FROM users WHERE email = ?",
+    "SELECT id, name, email, password as hashedPassword, role, created_at FROM users WHERE email = ?",
     [email],
   );
   return rows[0];
@@ -26,10 +26,34 @@ export const findUserForLogin = async (email) => {
 
 export const findUserById = async (id) => {
   const [rows] = await pool.query(
-    "SELECT id, name, email, role FROM users WHERE id = ?",
+    "SELECT id, name, email, role, created_at FROM users WHERE id = ?",
     [id],
   );
   return rows[0];
+};
+
+export const findUserWithPasswordById = async (id) => {
+  const [rows] = await pool.query(
+    "SELECT id, password as hashedPassword FROM users WHERE id = ?",
+    [id],
+  );
+  return rows[0];
+};
+
+export const updateUserProfile = async ({ id, name, email }) => {
+  const [rows] = await pool.query(
+    "UPDATE users SET name = ?, email = ? WHERE id = ?",
+    [name, email, id],
+  );
+  return rows;
+};
+
+export const updateUserPassword = async (id, hashedPassword) => {
+  const [rows] = await pool.query(
+    "UPDATE users SET password = ? WHERE id = ?",
+    [hashedPassword, id],
+  );
+  return rows;
 };
 
 export const findStudents = async () => {

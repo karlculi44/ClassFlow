@@ -1,14 +1,22 @@
-import { Award, CalendarDays, MessageSquareText } from "lucide-react";
+import {
+  Award,
+  CalendarDays,
+  ChevronDown,
+  MessageSquareText,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   getAssignmentDetails,
   getAssignments,
 } from "../services/assignmentServices";
+import { getStudentEnrollments } from "../services/enrollmentServices";
 import GradeDetailsModal from "../components/GradeDetailsModal";
 import formatDate from "../utils/formatDate";
 
 function Grades() {
   const [grades, setGrades] = useState([]);
+  const [classes, setClasses] = useState([]);
+  const [classFilter, setClassFilter] = useState("all");
   const [selectedAssignment, setSelectedAssignment] = useState(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState("");
@@ -18,13 +26,17 @@ function Grades() {
   useEffect(() => {
     const fetchGrades = async () => {
       try {
-        const data = await getAssignments();
+        const [assignmentData, classData] = await Promise.all([
+          getAssignments(),
+          getStudentEnrollments(),
+        ]);
         setGrades(
-          (data.assignments ?? []).filter(
+          (assignmentData.assignments ?? []).filter(
             (assignment) =>
               assignment.grade !== null && assignment.grade !== undefined,
           ),
         );
+        setClasses(classData.classes ?? []);
       } catch (requestError) {
         setError(
           requestError.response?.data?.message ||
@@ -37,6 +49,11 @@ function Grades() {
 
     fetchGrades();
   }, []);
+
+  const filteredGrades = grades.filter(
+    (assignment) =>
+      classFilter === "all" || assignment.class_name === classFilter,
+  );
 
   const handleView = async (assignment) => {
     setSelectedAssignment(assignment);
@@ -94,6 +111,31 @@ function Grades() {
           {!loading && error && <p className="text-sm text-red-400">{error}</p>}
           {!loading && !error && (
             <>
+              <div className="mb-6 w-full sm:max-w-xs">
+                <label
+                  htmlFor="class-filter"
+                  className="mb-2 block text-xs font-semibold uppercase tracking-wider text-gray-500"
+                >
+                  Class
+                </label>
+                <div className="relative">
+                  <select
+                    id="class-filter"
+                    value={classFilter}
+                    onChange={(event) => setClassFilter(event.target.value)}
+                    className="h-11 w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 px-3 pr-10 text-sm text-gray-300 outline-none transition hover:border-gray-600 focus:border-indigo-500"
+                  >
+                    <option value="all">All classes</option>
+                    {classes.map((classItem) => (
+                      <option key={classItem.id} value={classItem.name}>
+                        {classItem.name}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute right-3 top-3 h-5 w-5 text-gray-500" />
+                </div>
+              </div>
+
               <section className="mb-6 grid gap-4 sm:grid-cols-2">
                 <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/10 p-5">
                   <p className="text-xs font-semibold uppercase tracking-wider text-indigo-300">
@@ -113,9 +155,11 @@ function Grades() {
                 </div>
               </section>
 
-              {grades.length === 0 ? (
+              {filteredGrades.length === 0 ? (
                 <p className="rounded-2xl border border-gray-800 bg-gray-900 p-6 text-sm text-gray-400">
-                  No graded assignments yet.
+                  {grades.length === 0
+                    ? "No graded assignments yet."
+                    : "No graded assignments match the selected class."}
                 </p>
               ) : (
                 <section
@@ -130,7 +174,7 @@ function Grades() {
                     <span />
                   </div>
                   <div className="divide-y divide-gray-800">
-                    {grades.map((assignment) => (
+                    {filteredGrades.map((assignment) => (
                       <article
                         key={assignment.id}
                         className="grid gap-4 px-5 py-5 md:grid-cols-[1.4fr_1fr_0.8fr_1.2fr_auto] md:items-center"

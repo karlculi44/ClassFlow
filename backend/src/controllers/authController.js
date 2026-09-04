@@ -7,6 +7,9 @@ import {
   findUserByEmail,
   findUserForLogin,
   findUserById,
+  findUserWithPasswordById,
+  updateUserProfile,
+  updateUserPassword,
   findStudents,
   deleteRefreshToken,
   saveRefreshToken,
@@ -97,7 +100,10 @@ export const login = asyncHandler(async (req, res) => {
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
   });
 
-  return res.status(200).json({ message: "Login successful!", user });
+  const { hashedPassword, ...publicUser } = user;
+  return res
+    .status(200)
+    .json({ message: "Login successful!", user: publicUser });
 });
 
 export const getMe = asyncHandler(async (req, res) => {
@@ -110,6 +116,56 @@ export const getMe = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json({ message: "User retrieved successfully!", user });
+});
+
+export const getProfile = asyncHandler(async (req, res) => {
+  const user = await findUserById(req.user.id);
+
+  if (!user) {
+    throw new AppError("User not found.", 404);
+  }
+
+  return res
+    .status(200)
+    .json({ message: "Profile retrieved successfully!", user });
+});
+
+export const updateProfile = asyncHandler(async (req, res) => {
+  try {
+    await updateUserProfile({ id: req.user.id, ...req.body });
+  } catch (error) {
+    if (error.code === "ER_DUP_ENTRY") {
+      throw new AppError("Email is already taken", 409);
+    }
+    throw error;
+  }
+
+  const user = await findUserById(req.user.id);
+  return res
+    .status(200)
+    .json({ message: "Profile updated successfully!", user });
+});
+
+export const changePassword = asyncHandler(async (req, res) => {
+  const user = await findUserWithPasswordById(req.user.id);
+
+  if (!user) {
+    throw new AppError("User not found.", 404);
+  }
+
+  const isCurrentPasswordValid = await bcrypt.compare(
+    req.body.currentPassword,
+    user.hashedPassword,
+  );
+
+  if (!isCurrentPasswordValid) {
+    throw new AppError("Current password is incorrect.", 400);
+  }
+
+  const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
+  await updateUserPassword(req.user.id, hashedPassword);
+
+  return res.status(200).json({ message: "Password changed successfully!" });
 });
 
 export const getStudents = asyncHandler(async (req, res) => {
