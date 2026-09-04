@@ -13,7 +13,7 @@ import { getClasses } from "../services/classServices";
 import { getAdminAssignments } from "../services/assignmentServices";
 import { getAdminSubmissions } from "../services/submissionServices";
 import { getStudents } from "../services/userServices";
-import { formatSchedule } from "../utils/schedule";
+import { formatSchedule, isScheduleActive } from "../utils/schedule";
 import formatDate from "../utils/formatDate";
 
 const getAssignmentStatus = (assignment) => {
@@ -54,6 +54,12 @@ function AdminDashboard() {
   const [assignmentsExpanded, setAssignmentsExpanded] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [currentTime, setCurrentTime] = useState(() => new Date());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => setCurrentTime(new Date()), 60000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -124,8 +130,9 @@ function AdminDashboard() {
     },
     {
       label: "Active Classes",
-      value: classes.filter((classItem) => classItem.status === "Active")
-        .length,
+      value: classes.filter((classItem) =>
+        isScheduleActive(classItem, currentTime),
+      ).length,
       icon: BookOpen,
       color: "text-emerald-400 bg-emerald-500/10",
     },
@@ -221,8 +228,15 @@ function AdminDashboard() {
                         onClick={() =>
                           navigate(`/admin-classes/${classItem.id}`)
                         }
-                        className="flex min-w-0 w-full items-center justify-between gap-4 overflow-hidden rounded-xl border border-gray-800 bg-gray-950/60 px-4 py-3 text-left transition hover:border-indigo-500/50 hover:bg-gray-800/70"
+                        className="relative flex min-w-0 w-full items-center justify-between gap-4 overflow-hidden rounded-xl border border-gray-800 bg-gray-950/60 px-4 py-3 text-left transition hover:border-indigo-500/50 hover:bg-gray-800/70"
                       >
+                        {isScheduleActive(classItem, currentTime) && (
+                          <span
+                            aria-label="Active now"
+                            title="Active now"
+                            className="absolute right-3 top-3 h-2.5 w-2.5 rounded-full bg-emerald-400"
+                          />
+                        )}
                         <div className="min-w-0">
                           <p className="truncate text-sm font-medium text-gray-100">
                             {classItem.name}
@@ -231,11 +245,6 @@ function AdminDashboard() {
                             {classItem.code} · {formatSchedule(classItem)}
                           </p>
                         </div>
-                        <span
-                          className={`shrink-0 rounded-full border px-2.5 py-1 text-xs font-medium ${classItem.status === "Active" ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-300" : "border-gray-700 bg-gray-800 text-gray-400"}`}
-                        >
-                          {classItem.status}
-                        </span>
                       </button>
                     ))}
                   </div>

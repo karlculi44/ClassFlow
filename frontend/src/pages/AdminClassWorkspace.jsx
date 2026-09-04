@@ -27,7 +27,7 @@ import {
   getEnrolledStudents,
 } from "../services/enrollmentServices";
 import { getAdminSubmissions } from "../services/submissionServices";
-import { formatSchedule } from "../utils/schedule";
+import { formatSchedule, isScheduleActive } from "../utils/schedule";
 
 const initialAssignmentFormData = {
   title: "",
@@ -61,6 +61,12 @@ function ClassWorkspace() {
   const [addingStudents, setAddingStudents] = useState(false);
   const [enrolledStudents, setEnrolledStudents] = useState([]);
   const [enrolledStudentsError, setEnrolledStudentsError] = useState("");
+  const [currentTime, setCurrentTime] = useState(() => new Date());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => setCurrentTime(new Date()), 60000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     const fetchClasses = async () => {
@@ -132,11 +138,13 @@ function ClassWorkspace() {
       ? enrolledStudents.length
       : (classItem.students ?? classItem.enrolledStudents ?? 0)
     : 0;
-  const status = classItem?.status ?? "Active";
+  const status = isScheduleActive(classItem, currentTime)
+    ? "Active"
+    : "Inactive";
   const statusClassName =
     status === "Active"
       ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
-      : "border-red-500/20 bg-red-500/10 text-red-400";
+      : "border-gray-500/20 bg-gray-500/10 text-gray-400";
 
   const closeAssignmentModal = () => {
     if (creatingAssignment) {

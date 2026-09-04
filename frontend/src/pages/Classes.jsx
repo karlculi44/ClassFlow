@@ -2,11 +2,11 @@ import { BookOpen, CalendarDays, UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getStudentEnrollments } from "../services/enrollmentServices";
-import { formatSchedule } from "../utils/schedule";
+import { formatSchedule, isScheduleActive } from "../utils/schedule";
 
 const statusClasses = {
   Active: "border-emerald-400/30 bg-emerald-500/10 text-emerald-300",
-  Archived: "border-gray-700 bg-gray-800 text-gray-400",
+  Inactive: "border-gray-700 bg-gray-800 text-gray-400",
 };
 
 function Classes() {
@@ -14,6 +14,12 @@ function Classes() {
   const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [currentTime, setCurrentTime] = useState(() => new Date());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => setCurrentTime(new Date()), 60000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     const fetchClasses = async () => {
@@ -65,12 +71,22 @@ function Classes() {
               aria-label="Enrolled classes"
             >
               {classes.map((classItem, index) => {
-                const status =
-                  classItem.status === "Archived" ? "Archived" : "Active";
+                const status = isScheduleActive(classItem, currentTime)
+                  ? "Active"
+                  : "Inactive";
                 return (
                   <article
                     key={classItem.id}
-                    className="group flex h-full flex-col rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:border-indigo-500/50"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => navigate(`/classes/${classItem.id}`)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        navigate(`/classes/${classItem.id}`);
+                      }
+                    }}
+                    className="group flex h-full cursor-pointer flex-col rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:border-indigo-500/50"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div
@@ -117,7 +133,10 @@ function Classes() {
                     </dl>
                     <button
                       type="button"
-                      onClick={() => navigate(`/classes/${classItem.id}`)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        navigate(`/classes/${classItem.id}`);
+                      }}
                       className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white"
                     >
                       <BookOpen size={16} /> View Class

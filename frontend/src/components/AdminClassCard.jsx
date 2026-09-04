@@ -1,17 +1,19 @@
 import { MoreVertical, Pencil, Trash } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { formatSchedule } from "../utils/schedule";
+import { formatSchedule, isScheduleActive } from "../utils/schedule";
 
-function ClassCard({ classItem, onEdit, onDelete }) {
+function ClassCard({ classItem, onEdit, onDelete, currentTime }) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const students = classItem.students ?? classItem.enrolledStudents ?? 0;
-  const status = classItem.status ?? "Active";
+  const status = isScheduleActive(classItem, currentTime)
+    ? "Active"
+    : "Inactive";
   const statusClassName =
     status === "Active"
       ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
-      : "border-red-500/20 bg-red-500/10 text-red-400";
+      : "border-gray-500/20 bg-gray-500/10 text-gray-400";
   const enrollmentPercent = Math.round((students / classItem.capacity) * 100);
 
   const goToClassWorkspace = () => navigate(`/admin-classes/${classItem.id}`);

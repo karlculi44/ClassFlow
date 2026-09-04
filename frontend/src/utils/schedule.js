@@ -32,6 +32,32 @@ export const formatTime = (time) => {
   return `${displayHours}:${String(minutes).padStart(2, "0")} ${period}`;
 };
 
+export const isScheduleActive = (classItem, date = new Date()) => {
+  const days = normalizeDays(classItem?.schedule_days);
+  const startTime = String(classItem?.schedule_start_time ?? "").split(":");
+  const endTime = String(classItem?.schedule_end_time ?? "").split(":");
+
+  if (
+    !days.includes(WEEKDAYS[date.getDay()]) ||
+    startTime.length < 2 ||
+    endTime.length < 2
+  ) {
+    return false;
+  }
+
+  const currentMinutes = date.getHours() * 60 + date.getMinutes();
+  const startMinutes = Number(startTime[0]) * 60 + Number(startTime[1]);
+  const endMinutes = Number(endTime[0]) * 60 + Number(endTime[1]);
+
+  return (
+    Number.isFinite(startMinutes) &&
+    Number.isFinite(endMinutes) &&
+    startMinutes < endMinutes &&
+    currentMinutes >= startMinutes &&
+    currentMinutes < endMinutes
+  );
+};
+
 export const formatSchedule = (classItem) => {
   const days = normalizeDays(classItem?.schedule_days);
   if (

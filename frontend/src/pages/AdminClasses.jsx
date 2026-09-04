@@ -8,7 +8,7 @@ import {
 import AdminClassCard from "../components/AdminClassCard";
 import ClassModal from "../components/ClassModal";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
-import { normalizeDays } from "../utils/schedule";
+import { isScheduleActive, normalizeDays } from "../utils/schedule";
 
 const accents = [
   "bg-indigo-500",
@@ -41,6 +41,12 @@ function AdminClasses() {
   const [classToDelete, setClassToDelete] = useState(null);
   const [deletingClass, setDeletingClass] = useState(false);
   const [deleteError, setDeleteError] = useState("");
+  const [currentTime, setCurrentTime] = useState(() => new Date());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => setCurrentTime(new Date()), 60000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   const loadClasses = async () => {
     const data = await getClasses();
@@ -242,8 +248,9 @@ function AdminClasses() {
             </p>
             <p className="mt-1 text-2xl font-bold text-emerald-400">
               {
-                classes.filter((classItem) => classItem.status === "Active")
-                  .length
+                classes.filter((classItem) =>
+                  isScheduleActive(classItem, currentTime),
+                ).length
               }
             </p>
           </div>
@@ -268,6 +275,7 @@ function AdminClasses() {
                 key={classItem.id ?? classItem.code}
                 onEdit={handleEditClass}
                 onDelete={requestDeleteClass}
+                currentTime={currentTime}
                 classItem={{
                   ...classItem,
                   accent: accents[index % accents.length],

@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getStudentEnrollments } from "../services/enrollmentServices";
 import { getAssignments } from "../services/assignmentServices";
 import formatDate from "../utils/formatDate";
-import { formatSchedule } from "../utils/schedule";
+import { formatSchedule, isScheduleActive } from "../utils/schedule";
 
 function StudentClassWorkspace() {
   const { classId } = useParams();
@@ -13,6 +13,12 @@ function StudentClassWorkspace() {
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [currentTime, setCurrentTime] = useState(() => new Date());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => setCurrentTime(new Date()), 60000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     const fetchWorkspace = async () => {
@@ -80,8 +86,12 @@ function StudentClassWorkspace() {
                       Instructor: {classItem.instructor_name}
                     </p>
                   </div>
-                  <span className="w-fit rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-300">
-                    {classItem.status === "Archived" ? "Archived" : "Active"}
+                  <span
+                    className={`w-fit rounded-full border px-2.5 py-1 text-xs font-medium ${isScheduleActive(classItem, currentTime) ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-300" : "border-gray-700 bg-gray-800 text-gray-400"}`}
+                  >
+                    {isScheduleActive(classItem, currentTime)
+                      ? "Active"
+                      : "Inactive"}
                   </span>
                 </div>
                 <p className="mt-4 inline-flex items-center gap-2 text-sm text-gray-400">

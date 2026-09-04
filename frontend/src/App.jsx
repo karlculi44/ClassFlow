@@ -11,7 +11,7 @@ import AssignmentDetails from "./pages/AssignmentDetails";
 import Assignments from "./pages/Assignments";
 import MainLayout from "./layout/MainLayout";
 import Submissions from "./pages/Submissions";
-import Classes from "./components/Classes";
+import Classes from "./pages/Classes";
 import StudentClassWorkspace from "./pages/StudentClassWorkspace";
 import Grades from "./pages/Grades";
 import Signup from "./pages/Signup";

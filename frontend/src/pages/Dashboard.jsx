@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   BookOpen,
   CalendarDays,
@@ -11,14 +12,21 @@ import { AuthContext } from "../context/AuthContext";
 import { getStudentEnrollments } from "../services/enrollmentServices";
 import { getAssignments } from "../services/assignmentServices";
 import formatDate from "../utils/formatDate";
-import { formatSchedule } from "../utils/schedule";
+import { formatSchedule, isScheduleActive } from "../utils/schedule";
 
 function Dashboard() {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [classes, setClasses] = useState([]);
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [currentTime, setCurrentTime] = useState(() => new Date());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => setCurrentTime(new Date()), 60000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     const fetchStudentClasses = async () => {
@@ -148,22 +156,31 @@ function Dashboard() {
                         </p>
                       )}
                       {classes.map((classItem) => (
-                        <div
+                        <button
                           key={classItem.id}
-                          className="flex items-center justify-between gap-4 rounded-xl border border-gray-800 bg-gray-950/60 px-4 py-3"
+                          type="button"
+                          onClick={() => navigate(`/classes/${classItem.id}`)}
+                          className="relative flex w-full cursor-pointer flex-col items-start gap-2 rounded-xl border border-gray-800 bg-gray-950/60 px-4 py-3 text-left transition hover:border-indigo-500/50 hover:bg-gray-800/70 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
                         >
-                          <div className="min-w-0">
-                            <p className="truncate text-sm font-medium text-gray-100">
+                          {isScheduleActive(classItem, currentTime) && (
+                            <span
+                              aria-label="Active now"
+                              title="Active now"
+                              className="absolute right-3 top-3 h-2.5 w-2.5 rounded-full bg-emerald-400"
+                            />
+                          )}
+                          <div className="min-w-0 w-full sm:flex-1">
+                            <p className="text-sm font-medium text-gray-100 sm:truncate">
                               {classItem.name}
                             </p>
                             <p className="mt-1 text-xs text-gray-500">
                               {classItem.code}
                             </p>
                           </div>
-                          <span className="shrink-0 text-right text-xs text-gray-400">
+                          <span className="w-full text-left text-xs text-gray-400 sm:w-auto sm:shrink-0 sm:text-right">
                             {formatSchedule(classItem)}
                           </span>
-                        </div>
+                        </button>
                       ))}
                     </div>
                   </section>
@@ -187,9 +204,15 @@ function Dashboard() {
                         </p>
                       )}
                       {openAssignments.slice(0, 4).map((assignment) => (
-                        <div
+                        <button
                           key={assignment.id}
-                          className="rounded-xl border border-gray-800 bg-gray-950/60 px-4 py-3"
+                          type="button"
+                          onClick={() =>
+                            navigate(
+                              `/assignments/${assignment.id}/class/${assignment.class_id}`,
+                            )
+                          }
+                          className="w-full cursor-pointer rounded-xl border border-gray-800 bg-gray-950/60 px-4 py-3 text-left transition hover:border-indigo-500/50 hover:bg-gray-800/70"
                         >
                           <p className="truncate text-sm font-medium text-gray-100">
                             {assignment.title}
@@ -202,7 +225,7 @@ function Dashboard() {
                               Due {formatDate(assignment.due_date)}
                             </span>
                           </div>
-                        </div>
+                        </button>
                       ))}
                     </div>
                   </section>
