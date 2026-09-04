@@ -3,6 +3,8 @@ import {
   BookOpen,
   CheckCircle2,
   ClipboardList,
+  ChevronDown,
+  ChevronUp,
   Plus,
   Users,
 } from "lucide-react";
@@ -13,11 +15,42 @@ import { getAdminSubmissions } from "../services/submissionServices";
 import { getStudents } from "../services/userServices";
 import formatDate from "../utils/formatDate";
 
+const getAssignmentStatus = (assignment) => {
+  const dueDate = new Date(
+    `${String(assignment.due_date).slice(0, 10)}T23:59:59`,
+  );
+  const submitted = Number(assignment.submittedCount ?? 0);
+  const total = Number(assignment.totalStudents ?? 0);
+
+  if (new Date() > dueDate) {
+    return {
+      label: "Closed",
+      className: "border-rose-500/20 bg-rose-500/10 text-rose-300",
+    };
+  }
+
+  if (total > 0 && submitted >= total) {
+    return {
+      label: "Complete",
+      className: "border-emerald-500/20 bg-emerald-500/10 text-emerald-300",
+    };
+  }
+
+  return {
+    label: submitted > 0 ? "In progress" : "Open",
+    className:
+      submitted > 0
+        ? "border-amber-500/20 bg-amber-500/10 text-amber-300"
+        : "border-gray-700 bg-gray-800 text-gray-400",
+  };
+};
+
 function AdminDashboard() {
   const navigate = useNavigate();
   const [classes, setClasses] = useState([]);
   const [students, setStudents] = useState([]);
   const [assignments, setAssignments] = useState([]);
+  const [assignmentsExpanded, setAssignmentsExpanded] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -74,6 +107,13 @@ function AdminDashboard() {
       assignment.submittedCount > 0 &&
       assignment.submittedCount === assignment.totalStudents,
   ).length;
+  const sortedAssignments = [...assignments].sort(
+    (firstAssignment, secondAssignment) =>
+      new Date(firstAssignment.due_date) - new Date(secondAssignment.due_date),
+  );
+  const visibleAssignments = assignmentsExpanded
+    ? sortedAssignments
+    : sortedAssignments.slice(0, 5);
   const stats = [
     {
       label: "Total Students",
@@ -148,10 +188,10 @@ function AdminDashboard() {
                 ))}
               </section>
 
-              <section className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-                <div className="rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-lg shadow-black/30 sm:p-6">
-                  <div className="flex items-center justify-between gap-4">
-                    <div>
+              <section className="grid min-w-0 gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+                <div className="min-w-0 rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-lg shadow-black/30 sm:p-6">
+                  <div className="flex min-w-0 items-center justify-between gap-4">
+                    <div className="min-w-0">
                       <p className="text-xs font-semibold uppercase tracking-wider text-indigo-400">
                         Teaching overview
                       </p>
@@ -177,8 +217,10 @@ function AdminDashboard() {
                       <button
                         key={classItem.id}
                         type="button"
-                        onClick={() => navigate(`/admin-classes/${classItem.id}`)}
-                        className="flex w-full items-center justify-between gap-4 rounded-xl border border-gray-800 bg-gray-950/60 px-4 py-3 text-left transition hover:border-indigo-500/50 hover:bg-gray-800/70"
+                        onClick={() =>
+                          navigate(`/admin-classes/${classItem.id}`)
+                        }
+                        className="flex min-w-0 w-full items-center justify-between gap-4 overflow-hidden rounded-xl border border-gray-800 bg-gray-950/60 px-4 py-3 text-left transition hover:border-indigo-500/50 hover:bg-gray-800/70"
                       >
                         <div className="min-w-0">
                           <p className="truncate text-sm font-medium text-gray-100">
@@ -199,12 +241,12 @@ function AdminDashboard() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-lg shadow-black/30 sm:p-6">
+                <div className="min-w-0 rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-lg shadow-black/30 sm:p-6">
                   <p className="text-xs font-semibold uppercase tracking-wider text-cyan-400">
-                    Latest workload
+                    Assignments
                   </p>
                   <h2 className="mt-1 text-lg font-semibold text-white">
-                    Recent assignments
+                    Assignments needing attention
                   </h2>
                   <div className="mt-5 space-y-3">
                     {assignments.length === 0 && (
@@ -212,35 +254,61 @@ function AdminDashboard() {
                         No assignments created yet.
                       </p>
                     )}
-                    {assignments.slice(0, 5).map((assignment) => (
-                      <button
-                        key={`${assignment.class_id}-${assignment.id}`}
-                        type="button"
-                        onClick={() =>
-                          navigate(
-                            `/admin-classes/${assignment.class_id}/assignments/${assignment.id}`,
-                          )
-                        }
-                        className="w-full rounded-xl border border-gray-800 bg-gray-950/60 px-4 py-3 text-left transition hover:border-indigo-500/50 hover:bg-gray-800/70"
-                      >
-                        <p className="truncate text-sm font-medium text-gray-100">
-                          {assignment.title}
-                        </p>
-                        <div className="mt-2 flex items-center justify-between gap-3 text-xs">
-                          <span className="truncate text-gray-500">
-                            {assignment.className}
-                          </span>
-                          <span className="shrink-0 text-cyan-300">
-                            {assignment.submittedCount}/
-                            {assignment.totalStudents} submitted
-                          </span>
-                        </div>
-                        <p className="mt-1 text-xs text-gray-600">
-                          Due {formatDate(assignment.due_date)}
-                        </p>
-                      </button>
-                    ))}
+                    {visibleAssignments.map((assignment) => {
+                      const status = getAssignmentStatus(assignment);
+                      return (
+                        <button
+                          key={`${assignment.class_id}-${assignment.id}`}
+                          type="button"
+                          onClick={() =>
+                            navigate(
+                              `/admin-classes/${assignment.class_id}/assignments/${assignment.id}`,
+                            )
+                          }
+                          className="flex h-24 min-w-0 w-full flex-col justify-center overflow-hidden rounded-xl border border-gray-800 bg-gray-950/60 px-4 text-left transition hover:border-indigo-500/50 hover:bg-gray-800/70"
+                        >
+                          <div className="flex min-w-0 items-start justify-between gap-3">
+                            <p className="min-w-0 flex-1 truncate text-sm font-medium text-gray-100">
+                              {assignment.title}
+                            </p>
+                            <span
+                              className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold ${status.className}`}
+                            >
+                              {status.label}
+                            </span>
+                          </div>
+                          <div className="mt-2 flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs">
+                            <span className="min-w-0 flex-1 truncate text-gray-500">
+                              {assignment.className}
+                            </span>
+                            <span className="shrink-0 text-cyan-300">
+                              {assignment.submittedCount}/
+                              {assignment.totalStudents} submitted
+                            </span>
+                          </div>
+                          <p className="mt-1 text-xs text-gray-600">
+                            Due {formatDate(assignment.due_date)}
+                          </p>
+                        </button>
+                      );
+                    })}
                   </div>
+                  {assignments.length > 5 && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setAssignmentsExpanded((expanded) => !expanded)
+                      }
+                      className="mt-4 inline-flex max-w-full items-center gap-1.5 text-sm font-semibold text-indigo-400 transition hover:text-indigo-300"
+                    >
+                      {assignmentsExpanded ? "Show less" : "View all"}
+                      {assignmentsExpanded ? (
+                        <ChevronUp size={16} />
+                      ) : (
+                        <ChevronDown size={16} />
+                      )}
+                    </button>
+                  )}
                 </div>
               </section>
 
