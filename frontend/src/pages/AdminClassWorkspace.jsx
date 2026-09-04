@@ -513,7 +513,7 @@ function ClassWorkspace() {
                                   className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-gray-300 transition hover:bg-indigo-500/10 hover:text-indigo-300"
                                 >
                                   <Pencil size={15} strokeWidth={1.8} />
-                                  Edit Assignment
+                                  Edit
                                 </button>
                                 <button
                                   type="button"
@@ -525,7 +525,7 @@ function ClassWorkspace() {
                                   className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-gray-300 transition hover:bg-red-500/10 hover:text-red-300"
                                 >
                                   <Trash size={15} strokeWidth={1.8} />
-                                  Delete Assignment
+                                  Delete
                                 </button>
                               </div>
                             )}

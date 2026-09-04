@@ -40,7 +40,7 @@ function AdminDashboard() {
                 );
                 return {
                   ...assignment,
-                  classCode: classItem.code,
+                  className: classItem.name,
                   submittedCount: submissionData.assignment.submitted_count,
                   totalStudents: submissionData.assignment.total_students,
                 };
@@ -174,9 +174,11 @@ function AdminDashboard() {
                       </p>
                     )}
                     {classes.map((classItem) => (
-                      <div
+                      <button
                         key={classItem.id}
-                        className="flex items-center justify-between gap-4 rounded-xl border border-gray-800 bg-gray-950/60 px-4 py-3"
+                        type="button"
+                        onClick={() => navigate(`/admin-classes/${classItem.id}`)}
+                        className="flex w-full items-center justify-between gap-4 rounded-xl border border-gray-800 bg-gray-950/60 px-4 py-3 text-left transition hover:border-indigo-500/50 hover:bg-gray-800/70"
                       >
                         <div className="min-w-0">
                           <p className="truncate text-sm font-medium text-gray-100">
@@ -192,7 +194,7 @@ function AdminDashboard() {
                         >
                           {classItem.status}
                         </span>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -211,16 +213,22 @@ function AdminDashboard() {
                       </p>
                     )}
                     {assignments.slice(0, 5).map((assignment) => (
-                      <div
+                      <button
                         key={`${assignment.class_id}-${assignment.id}`}
-                        className="rounded-xl border border-gray-800 bg-gray-950/60 px-4 py-3"
+                        type="button"
+                        onClick={() =>
+                          navigate(
+                            `/admin-classes/${assignment.class_id}/assignments/${assignment.id}`,
+                          )
+                        }
+                        className="w-full rounded-xl border border-gray-800 bg-gray-950/60 px-4 py-3 text-left transition hover:border-indigo-500/50 hover:bg-gray-800/70"
                       >
                         <p className="truncate text-sm font-medium text-gray-100">
                           {assignment.title}
                         </p>
                         <div className="mt-2 flex items-center justify-between gap-3 text-xs">
                           <span className="truncate text-gray-500">
-                            {assignment.classCode}
+                            {assignment.className}
                           </span>
                           <span className="shrink-0 text-cyan-300">
                             {assignment.submittedCount}/
@@ -230,7 +238,7 @@ function AdminDashboard() {
                         <p className="mt-1 text-xs text-gray-600">
                           Due {formatDate(assignment.due_date)}
                         </p>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 </div>
