@@ -15,6 +15,7 @@ import Classes from "./components/Classes";
 import StudentClassWorkspace from "./pages/StudentClassWorkspace";
 import Grades from "./pages/Grades";
 import Signup from "./pages/Signup";
+import Students from "./pages/Students";
 
 function App() {
   return (
@@ -78,6 +79,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["Admin"]}>
                   <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/students"
+              element={
+                <ProtectedRoute allowedRoles={["Admin"]}>
+                  <Students />
                 </ProtectedRoute>
               }
             />

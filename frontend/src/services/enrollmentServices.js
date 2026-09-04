@@ -6,6 +6,16 @@ export const getStudentEnrollments = async () => {
   return response.data;
 };
 
+export const getAdminStudents = async () => {
+  const response = await api.get("/enrollments/admin/students");
+  return response.data;
+};
+
+export const getAdminStudentDetails = async (studentId) => {
+  const response = await api.get(`/enrollments/admin/students/${studentId}`);
+  return response.data;
+};
+
 //Admin Enpoints
 export const getEnrolledStudents = async (classId) => {
   const response = await api.get(`/enrollments/${classId}`);

@@ -5,6 +5,8 @@ import {
   addStudentToClass,
   findStudentsByClassId,
   findClassesByStudentId,
+  findAdminStudents,
+  findAdminStudentDetails,
 } from "../models/enrollmentModel.js";
 
 export const addStudents = asyncHandler(async (req, res) => {
@@ -48,6 +50,28 @@ export const getStudentClasses = asyncHandler(async (req, res) => {
   return res.status(200).json({
     message: "Student classes retrieved successfully",
     classes,
+  });
+});
+
+export const getAdminStudents = asyncHandler(async (req, res) => {
+  const students = await findAdminStudents(req.user.id);
+  return res.status(200).json({
+    message: "Admin students retrieved successfully",
+    students,
+  });
+});
+
+export const getAdminStudentDetails = asyncHandler(async (req, res) => {
+  const student = await findAdminStudentDetails(
+    req.user.id,
+    req.params.studentId,
+  );
+  if (!student) {
+    throw new AppError("Student not found in your classes.", 404);
+  }
+  return res.status(200).json({
+    message: "Admin student details retrieved successfully",
+    ...student,
   });
 });
 
