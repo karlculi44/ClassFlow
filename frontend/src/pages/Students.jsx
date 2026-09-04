@@ -308,7 +308,7 @@ function Students() {
                             </span>
                             {graded && (
                               <span className="font-semibold text-emerald-300">
-                                {assignment.grade}/100
+                                {assignment.grade}
                               </span>
                             )}
                           </div>

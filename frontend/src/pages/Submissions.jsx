@@ -194,7 +194,7 @@ function Submissions() {
                           </span>
                         </td>
                         <td className="px-4 py-4 text-gray-300">
-                          {graded ? `${student.submission.grade}/100` : "-"}
+                          {graded ? `${student.submission.grade}` : "-"}
                         </td>
                         <td className="px-4 py-4 text-right">
                           <button

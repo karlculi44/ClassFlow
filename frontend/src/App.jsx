@@ -17,6 +17,7 @@ import Grades from "./pages/Grades";
 import Signup from "./pages/Signup";
 import Students from "./pages/Students";
 import Profile from "./pages/Profile";
+import Reports from "./pages/Reports";
 
 function App() {
   return (
@@ -96,6 +97,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["Admin"]}>
                   <Students />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/reports"
+              element={
+                <ProtectedRoute allowedRoles={["Admin"]}>
+                  <Reports />
                 </ProtectedRoute>
               }
             />

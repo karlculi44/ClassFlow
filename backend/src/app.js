@@ -8,6 +8,7 @@ import classRoutes from "./routes/classRoutes.js";
 import assignmentRoutes from "./routes/assignmentRoutes.js";
 import enrollmentRoutes from "./routes/enrollmentRoutes.js";
 import submissionRoutes from "./routes/submissionRoutes.js";
+import reportRoutes from "./routes/reportRoutes.js";
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use("/api/classes", classRoutes);
 app.use("/api/assignments", assignmentRoutes);
 app.use("/api/enrollments", enrollmentRoutes);
 app.use("/api/submissions", submissionRoutes);
+app.use("/api/reports", reportRoutes);
 
 // Root route
 app.get("/", (req, res) => {
