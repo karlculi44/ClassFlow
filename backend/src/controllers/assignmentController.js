@@ -5,6 +5,7 @@ import {
   deleteAssignmentById,
   getAssignmentById,
   getAssignmentByClassId,
+  getAssignmentsByAdminId,
   getAssignmentsByStudentId,
   getStudentAssignmentById,
   updateAssignmentById,
@@ -19,22 +20,30 @@ export const getStudentAssignments = asyncHandler(async (req, res) => {
   });
 });
 
+export const getAdminAssignments = asyncHandler(async (req, res) => {
+  const assignments = await getAssignmentsByAdminId(req.user.id);
+
+  return res.status(200).json({
+    message: "Assignments retrieved successfully",
+    assignments,
+  });
+});
+
 export const getAdminAssignmentsByClassId = asyncHandler(
   async (req, res, next) => {
     const { classId } = req.params;
     const assignments = await getAssignmentByClassId(classId);
 
-    res
-      .status(200)
-      .json({
-        message: "Assignments retrieved successfully",
-        data: assignments,
-      });
+    res.status(200).json({
+      message: "Assignments retrieved successfully",
+      data: assignments,
+    });
   },
 );
 
 export const getAdminAssignmentDetails = asyncHandler(async (req, res) => {
   const assignment = await getAssignmentById({
+    adminId: req.user.id,
     classId: req.params.classId,
     assignmentId: req.params.assignmentId,
   });
@@ -105,7 +114,11 @@ export const updateAssignment = asyncHandler(async (req, res) => {
     throw new AppError("Title, description, and due date are required.", 400);
   }
 
-  const existingAssignment = await getAssignmentById({ classId, assignmentId });
+  const existingAssignment = await getAssignmentById({
+    adminId: req.user.id,
+    classId,
+    assignmentId,
+  });
   if (!existingAssignment) {
     throw new AppError("Assignment not found.", 404);
   }

@@ -18,6 +18,7 @@ import Signup from "./pages/Signup";
 import Students from "./pages/Students";
 import Profile from "./pages/Profile";
 import Reports from "./pages/Reports";
+import AdminAssignments from "./pages/AdminAssignments";
 
 function App() {
   return (
@@ -105,6 +106,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["Admin"]}>
                   <Reports />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin-assignments"
+              element={
+                <ProtectedRoute allowedRoles={["Admin"]}>
+                  <AdminAssignments />
                 </ProtectedRoute>
               }
             />

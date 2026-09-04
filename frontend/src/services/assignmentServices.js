@@ -14,6 +14,11 @@ export const getAssignmentDetails = async (classId, assignmentId) => {
 };
 
 // Admin assignments
+export const getAllAdminAssignments = async () => {
+  const response = await api.get("/assignments/admin");
+  return response.data;
+};
+
 export const getAdminAssignments = async (classId) => {
   const response = await api.get(`/assignments/${classId}`);
   return response.data;

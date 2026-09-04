@@ -7,6 +7,7 @@ import {
   deleteAssignment,
   getAdminAssignmentDetails,
   getAdminAssignmentsByClassId,
+  getAdminAssignments,
   getStudentAssignments,
   getStudentAssignmentDetails,
   updateAssignment,
@@ -26,6 +27,8 @@ router.get(
   authorize("Student"),
   getStudentAssignmentDetails,
 );
+
+router.get("/admin", verifyToken, authorize("Admin"), getAdminAssignments);
 
 router.get(
   "/:classId/:assignmentId",

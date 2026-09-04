@@ -37,6 +37,30 @@ export const getAssignmentByClassId = async (classId) => {
   return rows;
 };
 
+export const getAssignmentsByAdminId = async (adminId) => {
+  const [rows] = await pool.query(
+    `
+      SELECT assignments.id, assignments.class_id, assignments.title,
+             assignments.due_date, classes.name AS class_name,
+             classes.code AS class_code,
+             COUNT(DISTINCT enrollments.student_id) AS total_students,
+             COUNT(DISTINCT submissions.id) AS submitted_count
+      FROM assignments
+      INNER JOIN classes ON classes.id = assignments.class_id
+       AND classes.admin_id = ?
+      LEFT JOIN enrollments ON enrollments.class_id = classes.id
+      LEFT JOIN submissions
+        ON submissions.assignment_id = assignments.id
+       AND submissions.student_id = enrollments.student_id
+      GROUP BY assignments.id, assignments.class_id, assignments.title,
+               assignments.due_date, classes.name, classes.code
+      ORDER BY assignments.due_date ASC, assignments.title ASC
+    `,
+    [adminId],
+  );
+  return rows;
+};
+
 export const getAssignmentsByStudentId = async (studentId) => {
   const [rows] = await pool.query(
     `
@@ -70,14 +94,16 @@ export const getAssignmentsByStudentId = async (studentId) => {
   return rows;
 };
 
-export const getAssignmentById = async ({ classId, assignmentId }) => {
+export const getAssignmentById = async ({ adminId, classId, assignmentId }) => {
   const [rows] = await pool.query(
     `
-      SELECT * FROM assignments
-      WHERE id = ? AND class_id = ?
+      SELECT assignments.* FROM assignments
+      INNER JOIN classes ON classes.id = assignments.class_id
+       AND classes.admin_id = ?
+      WHERE assignments.id = ? AND assignments.class_id = ?
       LIMIT 1
     `,
-    [assignmentId, classId],
+    [adminId, assignmentId, classId],
   );
 
   return rows[0];
