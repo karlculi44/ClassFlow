@@ -141,11 +141,12 @@ function Students() {
                 className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-900 shadow-lg shadow-black/20"
                 aria-label="Enrolled students"
               >
-                <div className="hidden grid-cols-[1.2fr_0.8fr_1.4fr_0.7fr_1.2fr_auto] gap-4 border-b border-gray-800 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500 md:grid">
+                <div className="hidden grid-cols-[1.2fr_0.8fr_1.4fr_0.7fr_1fr_1.2fr_auto] gap-4 border-b border-gray-800 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500 md:grid">
                   <span>Student</span>
                   <span>Student ID</span>
                   <span>Email</span>
                   <span>Classes</span>
+                  <span>Status</span>
                   <span>Enrollment</span>
                   <span />
                 </div>
@@ -158,7 +159,7 @@ function Students() {
                   {filteredStudents.map((student) => (
                     <article
                       key={student.id}
-                      className="grid gap-4 px-5 py-5 md:grid-cols-[1.2fr_0.8fr_1.4fr_0.7fr_1.2fr_auto] md:items-center"
+                      className="grid gap-4 px-5 py-5 md:grid-cols-[1.2fr_0.8fr_1.4fr_0.7fr_1fr_1.2fr_auto] md:items-center"
                     >
                       <div>
                         <p className="font-semibold text-white">
@@ -171,6 +172,11 @@ function Students() {
                       <p className="text-sm text-gray-300">{student.email}</p>
                       <p className="text-sm text-gray-300">
                         {student.class_count}
+                      </p>
+                      <p className="text-sm text-white">
+                        {student.status === "Online"
+                          ? "🟢 Online"
+                          : "⚪ Offline"}
                       </p>
                       <p className="text-sm text-gray-400">
                         Enrolled in {student.class_count} class
@@ -219,8 +225,7 @@ function Students() {
                 </h2>
                 <p className="mt-1 text-sm text-gray-400">
                   {selectedStudent.student.user_code || "Code unavailable"} ·{" "}
-                  {selectedStudent.student.email} ·{" "}
-                  {selectedStudent.student.role}
+                  {selectedStudent.student.email}
                 </p>
               </div>
               <button

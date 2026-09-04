@@ -191,7 +191,7 @@ function Grades() {
                           {assignment.class_name}
                         </p>
                         <p className="text-lg font-bold text-emerald-300">
-                          {assignment.grade}/100
+                          {assignment.grade}
                         </p>
                         <div className="text-sm text-gray-400">
                           <p className="inline-flex items-center gap-2 text-indigo-300 mr-5">

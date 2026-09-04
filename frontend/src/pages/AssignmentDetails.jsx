@@ -184,7 +184,7 @@ function AssignmentDetails() {
                       GRADED
                     </p>
                     <p className="mt-1 text-2xl font-black leading-none text-white sm:text-3xl">
-                      {submission.grade}/100
+                      {submission.grade}
                     </p>
                   </div>
                 )}

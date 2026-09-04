@@ -115,7 +115,11 @@ export const getAdminAssignmentSubmissions = async ({
 			SELECT assignments.id AS assignment_id, assignments.title,
 						 assignments.due_date, classes.name AS class_name,
 						 classes.code AS class_code, users.id AS student_id,
-						 users.name AS student_name, users.email AS student_email,
+               users.name AS student_name, users.email AS student_email,
+               users.user_code AS student_code, users.last_seen_at,
+               CASE WHEN users.last_seen_at IS NOT NULL
+                     AND users.last_seen_at >= CURRENT_TIMESTAMP - INTERVAL 2 MINUTE
+                    THEN 'Online' ELSE 'Offline' END AS status,
 						 submissions.id AS submission_id, submissions.content,
 						 submissions.attachment_name, submissions.attachment_url,
 						 submissions.submitted_at, submissions.updated_at,
@@ -157,6 +161,9 @@ export const getAdminAssignmentSubmissions = async ({
         id: row.student_id,
         name: row.student_name,
         email: row.student_email,
+        user_code: row.student_code,
+        last_seen_at: row.last_seen_at,
+        status: row.status,
         submission: row.submission_id
           ? {
               id: row.submission_id,
@@ -185,7 +192,11 @@ export const getAdminSubmission = async ({
 						 submissions.attachment_url, submissions.submitted_at,
 						 submissions.updated_at, submissions.grade, submissions.feedback,
 						 users.id AS student_id, users.name AS student_name,
-						 users.email AS student_email
+               users.email AS student_email, users.user_code AS student_code,
+               users.last_seen_at,
+               CASE WHEN users.last_seen_at IS NOT NULL
+                     AND users.last_seen_at >= CURRENT_TIMESTAMP - INTERVAL 2 MINUTE
+                    THEN 'Online' ELSE 'Offline' END AS status
 			FROM submissions
 			INNER JOIN assignments ON assignments.id = submissions.assignment_id
 			INNER JOIN classes

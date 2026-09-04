@@ -27,7 +27,11 @@ export const addStudentsToClass = async (classId, studentIds) => {
 export const findStudentsByClassId = async (classId) => {
   const [rows] = await pool.query(
     `
-      SELECT users.id, users.name, users.email, users.role, users.user_code
+            SELECT users.id, users.name, users.email, users.role, users.user_code,
+              users.last_seen_at,
+              CASE WHEN users.last_seen_at IS NOT NULL
+                AND users.last_seen_at >= CURRENT_TIMESTAMP - INTERVAL 2 MINUTE
+              THEN 'Online' ELSE 'Offline' END AS status
       FROM enrollments
       INNER JOIN users ON users.id = enrollments.student_id
       WHERE enrollments.class_id = ? AND users.role = 'Student'
@@ -44,7 +48,11 @@ export const findClassesByStudentId = async (studentId) => {
     `
             SELECT classes.id, classes.status, classes.code, classes.name,
               classes.schedule, classes.capacity,
-              admins.name AS instructor_name
+              admins.name AS instructor_name,
+              admins.last_seen_at AS instructor_last_seen_at,
+              CASE WHEN admins.last_seen_at IS NOT NULL
+                    AND admins.last_seen_at >= CURRENT_TIMESTAMP - INTERVAL 2 MINUTE
+                  THEN 'Online' ELSE 'Offline' END AS instructor_status
       FROM enrollments
       INNER JOIN classes ON classes.id = enrollments.class_id
             INNER JOIN users AS admins ON admins.id = classes.admin_id
@@ -60,7 +68,11 @@ export const findClassesByStudentId = async (studentId) => {
 export const findAdminStudents = async (adminId) => {
   const [rows] = await pool.query(
     `
-      SELECT users.id, users.name, users.email, users.role, users.user_code,
+            SELECT users.id, users.name, users.email, users.role, users.user_code,
+              users.last_seen_at,
+              CASE WHEN users.last_seen_at IS NOT NULL
+                AND users.last_seen_at >= CURRENT_TIMESTAMP - INTERVAL 2 MINUTE
+              THEN 'Online' ELSE 'Offline' END AS status,
              COUNT(DISTINCT classes.id) AS class_count,
              GROUP_CONCAT(DISTINCT classes.name ORDER BY classes.name SEPARATOR ', ') AS class_names
       FROM enrollments
@@ -68,7 +80,8 @@ export const findAdminStudents = async (adminId) => {
       INNER JOIN classes ON classes.id = enrollments.class_id
         AND classes.admin_id = ?
       WHERE users.role = 'Student'
-      GROUP BY users.id, users.name, users.email, users.role
+      GROUP BY users.id, users.name, users.email, users.role, users.user_code,
+           users.last_seen_at
       ORDER BY users.name ASC
     `,
     [adminId],
@@ -82,6 +95,10 @@ export const findAdminStudentDetails = async (adminId, studentId) => {
     `
             SELECT users.id AS student_id, users.name AS student_name,
               users.user_code AS student_code,
+             users.last_seen_at AS student_last_seen_at,
+             CASE WHEN users.last_seen_at IS NOT NULL
+                    AND users.last_seen_at >= CURRENT_TIMESTAMP - INTERVAL 2 MINUTE
+                  THEN 'Online' ELSE 'Offline' END AS student_status,
              users.email AS student_email, users.role,
              classes.id AS class_id, classes.name AS class_name,
              classes.code AS class_code, classes.schedule, classes.status AS class_status,
@@ -138,6 +155,8 @@ export const findAdminStudentDetails = async (adminId, studentId) => {
       id: first.student_id,
       name: first.student_name,
       user_code: first.student_code,
+      last_seen_at: first.student_last_seen_at,
+      status: first.student_status,
       email: first.student_email,
       role: first.role,
     },

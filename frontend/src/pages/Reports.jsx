@@ -101,7 +101,7 @@ function Reports() {
                     Your classes
                   </h2>
                 </div>
-                <div className="overflow-x-auto">
+                <div className="hidden overflow-x-auto md:block">
                   <table className="w-full min-w-190 text-left text-sm">
                     <thead>
                       <tr className="border-b border-gray-800 text-xs uppercase tracking-wider text-gray-500">
@@ -142,6 +142,38 @@ function Reports() {
                       ))}
                     </tbody>
                   </table>
+                </div>
+                <div className="divide-y divide-gray-800 md:hidden">
+                  {summary.classes?.map((classItem) => (
+                    <article key={classItem.id} className="space-y-3 px-5 py-4">
+                      <div>
+                        <p className="font-medium text-gray-100">
+                          {classItem.name}
+                        </p>
+                        <p className="mt-1 text-xs text-gray-500">
+                          {classItem.code}
+                        </p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                        <span className="text-gray-500">Students</span>
+                        <span className="text-right text-gray-300">
+                          {classItem.student_count}
+                        </span>
+                        <span className="text-gray-500">Assignments</span>
+                        <span className="text-right text-gray-300">
+                          {classItem.assignment_count}
+                        </span>
+                        <span className="text-gray-500">Submissions</span>
+                        <span className="text-right text-gray-300">
+                          {classItem.submission_count}
+                        </span>
+                        <span className="text-gray-500">Average grade</span>
+                        <span className="text-right font-semibold text-emerald-300">
+                          {formatAverage(classItem.average_grade)}
+                        </span>
+                      </div>
+                    </article>
+                  ))}
                 </div>
                 {!summary.classes?.length && (
                   <p className="px-5 py-6 text-sm text-gray-400">
@@ -202,7 +234,7 @@ function Reports() {
                         <h3 className="text-sm font-semibold text-white">
                           Student performance
                         </h3>
-                        <div className="mt-3 overflow-x-auto rounded-xl border border-gray-800">
+                        <div className="mt-3 hidden overflow-x-auto rounded-xl border border-gray-800 md:block">
                           <table className="w-full min-w-120 text-left text-sm">
                             <thead>
                               <tr className="border-b border-gray-800 text-xs uppercase tracking-wider text-gray-500">
@@ -237,6 +269,28 @@ function Reports() {
                             </tbody>
                           </table>
                         </div>
+                        <div className="mt-3 divide-y divide-gray-800 rounded-xl border border-gray-800 md:hidden">
+                          {classReport.students?.map((student) => (
+                            <article
+                              key={student.id}
+                              className="grid grid-cols-2 gap-y-2 px-4 py-3 text-sm"
+                            >
+                              <span className="col-span-2 font-medium text-gray-200">
+                                {student.name}
+                              </span>
+                              <span className="text-gray-500">Submissions</span>
+                              <span className="text-right text-gray-400">
+                                {student.submission_count}
+                              </span>
+                              <span className="text-gray-500">
+                                Average grade
+                              </span>
+                              <span className="text-right font-semibold text-emerald-300">
+                                {formatAverage(student.average_grade)}
+                              </span>
+                            </article>
+                          ))}
+                        </div>
                         {!classReport.students?.length && (
                           <p className="mt-3 text-sm text-gray-400">
                             No students are enrolled in this class.
@@ -247,7 +301,7 @@ function Reports() {
                         <h3 className="text-sm font-semibold text-white">
                           Assignment performance
                         </h3>
-                        <div className="mt-3 overflow-x-auto rounded-xl border border-gray-800">
+                        <div className="mt-3 hidden overflow-x-auto rounded-xl border border-gray-800 md:block">
                           <table className="w-full min-w-120 text-left text-sm">
                             <thead>
                               <tr className="border-b border-gray-800 text-xs uppercase tracking-wider text-gray-500">
@@ -281,6 +335,28 @@ function Reports() {
                               ))}
                             </tbody>
                           </table>
+                        </div>
+                        <div className="mt-3 divide-y divide-gray-800 rounded-xl border border-gray-800 md:hidden">
+                          {classReport.assignments?.map((assignment) => (
+                            <article
+                              key={assignment.id}
+                              className="grid grid-cols-2 gap-y-2 px-4 py-3 text-sm"
+                            >
+                              <span className="col-span-2 font-medium text-gray-200">
+                                {assignment.title}
+                              </span>
+                              <span className="text-gray-500">Submissions</span>
+                              <span className="text-right text-gray-400">
+                                {assignment.submission_count}
+                              </span>
+                              <span className="text-gray-500">
+                                Average grade
+                              </span>
+                              <span className="text-right font-semibold text-emerald-300">
+                                {formatAverage(assignment.average_grade)}
+                              </span>
+                            </article>
+                          ))}
                         </div>
                         {!classReport.assignments?.length && (
                           <p className="mt-3 text-sm text-gray-400">

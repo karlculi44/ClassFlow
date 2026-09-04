@@ -1,6 +1,15 @@
 import pool from "../config/db.js";
 
 const rolePrefixes = { Student: "STU", Admin: "ADM" };
+const presenceSelect = `
+  last_seen_at,
+  CASE
+    WHEN last_seen_at IS NOT NULL
+      AND last_seen_at >= CURRENT_TIMESTAMP - INTERVAL 2 MINUTE
+    THEN 'Online'
+    ELSE 'Offline'
+  END AS status
+`;
 
 const generateUserCode = async (connection, role) => {
   const prefix = rolePrefixes[role];
@@ -68,7 +77,9 @@ export const findUserByEmail = async (email) => {
 
 export const findUserForLogin = async (email) => {
   const [rows] = await pool.query(
-    "SELECT id, name, email, password as hashedPassword, role, user_code, created_at FROM users WHERE email = ?",
+    `SELECT id, name, email, password as hashedPassword, role, user_code,
+            created_at, ${presenceSelect}
+     FROM users WHERE email = ?`,
     [email],
   );
   return rows[0];
@@ -76,7 +87,8 @@ export const findUserForLogin = async (email) => {
 
 export const findUserById = async (id) => {
   const [rows] = await pool.query(
-    "SELECT id, name, email, role, user_code, created_at FROM users WHERE id = ?",
+    `SELECT id, name, email, role, user_code, created_at, ${presenceSelect}
+     FROM users WHERE id = ?`,
     [id],
   );
   return rows[0];
@@ -108,7 +120,8 @@ export const updateUserPassword = async (id, hashedPassword) => {
 
 export const findStudents = async () => {
   const [rows] = await pool.query(
-    "SELECT id, name, email, role, user_code FROM users WHERE role = 'Student' ORDER BY name ASC",
+    `SELECT id, name, email, role, user_code, ${presenceSelect}
+     FROM users WHERE role = 'Student' ORDER BY name ASC`,
   );
   return rows;
 };

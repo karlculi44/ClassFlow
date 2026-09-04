@@ -53,7 +53,10 @@ export const getAdminClassReport = async (adminId, classId) => {
 
   const [studentRows] = await pool.query(
     `
-      SELECT users.id, users.name,
+            SELECT users.id, users.name, users.last_seen_at,
+              CASE WHEN users.last_seen_at IS NOT NULL
+                AND users.last_seen_at >= CURRENT_TIMESTAMP - INTERVAL 2 MINUTE
+              THEN 'Online' ELSE 'Offline' END AS status,
              AVG(submissions.grade) AS average_grade,
              COUNT(DISTINCT submissions.id) AS submission_count
       FROM enrollments

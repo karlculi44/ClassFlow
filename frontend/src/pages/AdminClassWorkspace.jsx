@@ -402,8 +402,12 @@ function ClassWorkspace() {
                               {student.email}
                             </td>
                             <td className="px-4 py-3">
-                              <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-400">
-                                Active
+                              <span
+                                className={`rounded-full border px-2.5 py-1 text-xs font-medium ${student.status === "Online" ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400" : "border-gray-700 bg-gray-800 text-gray-400"}`}
+                              >
+                                {student.status === "Online"
+                                  ? "🟢 Online"
+                                  : "⚪ Offline"}
                               </span>
                             </td>
                           </tr>

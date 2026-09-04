@@ -104,7 +104,7 @@ function GradeDetailsModal({ assignment, loading, error, onClose }) {
                 Grade
               </p>
               <p className="mt-2 text-4xl font-black text-white">
-                {submission.grade}/100
+                {submission.grade}
               </p>
             </aside>
           </div>
