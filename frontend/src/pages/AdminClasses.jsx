@@ -8,6 +8,7 @@ import {
 import AdminClassCard from "../components/AdminClassCard";
 import ClassModal from "../components/ClassModal";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import { normalizeDays } from "../utils/schedule";
 
 const accents = [
   "bg-indigo-500",
@@ -21,7 +22,9 @@ const accents = [
 const initialFormData = {
   name: "",
   code: "",
-  schedule: "",
+  schedule_days: [],
+  schedule_start_time: "",
+  schedule_end_time: "",
   capacity: "30",
   status: "Active",
 };
@@ -63,6 +66,15 @@ function AdminClasses() {
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
+    if (event.target.type === "day") {
+      setFormData((currentFormData) => ({
+        ...currentFormData,
+        schedule_days: currentFormData.schedule_days.includes(value)
+          ? currentFormData.schedule_days.filter((day) => day !== value)
+          : [...currentFormData.schedule_days, value],
+      }));
+      return;
+    }
     setFormData((currentFormData) => ({
       ...currentFormData,
       [name]: value,
@@ -115,7 +127,14 @@ function AdminClasses() {
     setFormData({
       name: selectedClass.name ?? "",
       code: selectedClass.code ?? "",
-      schedule: selectedClass.schedule ?? "",
+      schedule_days: normalizeDays(selectedClass.schedule_days),
+      schedule_start_time: String(
+        selectedClass.schedule_start_time ?? "",
+      ).slice(0, 5),
+      schedule_end_time: String(selectedClass.schedule_end_time ?? "").slice(
+        0,
+        5,
+      ),
       capacity: String(selectedClass.capacity ?? ""),
       status: selectedClass.status ?? "Active",
     });

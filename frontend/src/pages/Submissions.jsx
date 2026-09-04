@@ -154,12 +154,16 @@ function Submissions() {
             </header>
 
             <div className="mt-6 overflow-x-auto rounded-2xl border border-gray-800 bg-gray-900">
-              <table className="w-full min-w-180 text-left text-sm">
+              <table className="w-full text-left text-sm md:min-w-180">
                 <thead>
                   <tr className="border-b border-gray-800 text-xs uppercase tracking-wider text-gray-500">
                     <th className="px-4 py-3 font-medium">Student Name</th>
-                    <th className="px-4 py-3 font-medium">Submission Date</th>
-                    <th className="px-4 py-3 font-medium">Status</th>
+                    <th className="hidden px-4 py-3 font-medium md:table-cell">
+                      Submission Date
+                    </th>
+                    <th className="hidden px-4 py-3 font-medium md:table-cell">
+                      Status
+                    </th>
                     <th className="px-4 py-3 font-medium">Grade</th>
                     <th className="px-4 py-3 text-right font-medium">Action</th>
                   </tr>
@@ -177,12 +181,12 @@ function Submissions() {
                         <td className="px-4 py-4 text-gray-200">
                           {student.name}
                         </td>
-                        <td className="px-4 py-4 text-gray-400">
+                        <td className="hidden px-4 py-4 text-gray-400 md:table-cell">
                           {submitted
                             ? formatDate(student.submission.submitted_at)
                             : "-"}
                         </td>
-                        <td className="px-4 py-4">
+                        <td className="hidden px-4 py-4 md:table-cell">
                           <span
                             className={`rounded-full border px-2.5 py-1 text-xs font-medium ${graded ? "border-cyan-500/20 bg-cyan-500/10 text-cyan-400" : submitted ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400" : "border-gray-700 bg-gray-800 text-gray-500"}`}
                           >

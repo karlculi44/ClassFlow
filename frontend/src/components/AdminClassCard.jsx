@@ -1,6 +1,7 @@
 import { MoreVertical, Pencil, Trash } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { formatSchedule } from "../utils/schedule";
 
 function ClassCard({ classItem, onEdit, onDelete }) {
   const navigate = useNavigate();
@@ -89,7 +90,9 @@ function ClassCard({ classItem, onEdit, onDelete }) {
       <dl className="mt-5 space-y-3 text-sm">
         <div className="flex items-center justify-between gap-4">
           <dt className="text-gray-500">Schedule</dt>
-          <dd className="text-right text-gray-300">{classItem.schedule}</dd>
+          <dd className="text-right text-gray-300">
+            {formatSchedule(classItem)}
+          </dd>
         </div>
       </dl>
 

@@ -2,6 +2,7 @@ import { BookOpen, CalendarDays, UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getStudentEnrollments } from "../services/enrollmentServices";
+import { formatSchedule } from "../utils/schedule";
 
 const statusClasses = {
   Active: "border-emerald-400/30 bg-emerald-500/10 text-emerald-300",
@@ -109,7 +110,7 @@ function Classes() {
                         <div>
                           <dt className="text-xs text-gray-500">Schedule</dt>
                           <dd className="mt-1 text-gray-300">
-                            {classItem.schedule || "Schedule pending"}
+                            {formatSchedule(classItem)}
                           </dd>
                         </div>
                       </div>

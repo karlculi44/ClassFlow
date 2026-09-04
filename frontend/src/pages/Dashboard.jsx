@@ -11,6 +11,7 @@ import { AuthContext } from "../context/AuthContext";
 import { getStudentEnrollments } from "../services/enrollmentServices";
 import { getAssignments } from "../services/assignmentServices";
 import formatDate from "../utils/formatDate";
+import { formatSchedule } from "../utils/schedule";
 
 function Dashboard() {
   const { user } = useContext(AuthContext);
@@ -160,7 +161,7 @@ function Dashboard() {
                             </p>
                           </div>
                           <span className="shrink-0 text-right text-xs text-gray-400">
-                            {classItem.schedule || "Schedule pending"}
+                            {formatSchedule(classItem)}
                           </span>
                         </div>
                       ))}

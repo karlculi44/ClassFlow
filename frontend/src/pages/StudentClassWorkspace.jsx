@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getStudentEnrollments } from "../services/enrollmentServices";
 import { getAssignments } from "../services/assignmentServices";
 import formatDate from "../utils/formatDate";
+import { formatSchedule } from "../utils/schedule";
 
 function StudentClassWorkspace() {
   const { classId } = useParams();
@@ -85,7 +86,7 @@ function StudentClassWorkspace() {
                 </div>
                 <p className="mt-4 inline-flex items-center gap-2 text-sm text-gray-400">
                   <CalendarDays size={16} className="text-cyan-400" />{" "}
-                  {classItem.schedule || "Schedule pending"}
+                  {formatSchedule(classItem)}
                 </p>
               </header>
               <section className="mt-7">

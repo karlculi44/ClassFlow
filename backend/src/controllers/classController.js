@@ -7,6 +7,7 @@ import {
   deleteClassById,
 } from "../models/classModel.js";
 import { findUserById } from "../models/userModel.js";
+import { normalizeSchedule } from "../utils/schedule.js";
 
 export const getClasses = asyncHandler(async (req, res) => {
   const classes = await findClassesByAdminId(req.user.id);
@@ -18,7 +19,7 @@ export const getClasses = asyncHandler(async (req, res) => {
 });
 
 export const createClass = asyncHandler(async (req, res) => {
-  const { code, name, schedule, capacity, status } = req.body;
+  const { code, name, capacity, status } = req.body;
   const { user } = req;
   const findUser = await findUserById(user.id);
 
@@ -27,15 +28,22 @@ export const createClass = asyncHandler(async (req, res) => {
   }
   const adminId = findUser.id;
 
-  if (!code || !adminId || !name || !schedule || !capacity) {
+  if (!code || !adminId || !name || !capacity) {
     throw new AppError("All fields are required!", 400);
+  }
+
+  let schedule;
+  try {
+    schedule = normalizeSchedule(req.body);
+  } catch (error) {
+    throw new AppError(error.message, 400);
   }
 
   const newClass = await createNewClass({
     code,
     adminId,
     name,
-    schedule,
+    ...schedule,
     capacity,
     status,
   });
@@ -46,10 +54,17 @@ export const createClass = asyncHandler(async (req, res) => {
 });
 
 export const updateClass = asyncHandler(async (req, res) => {
-  const { code, name, schedule, capacity, status } = req.body;
+  const { code, name, capacity, status } = req.body;
 
-  if (!code || !name || !schedule || !capacity || !status) {
+  if (!code || !name || !capacity || !status) {
     throw new AppError("All fields are required!", 400);
+  }
+
+  let schedule;
+  try {
+    schedule = normalizeSchedule(req.body);
+  } catch (error) {
+    throw new AppError(error.message, 400);
   }
 
   const updatedRows = await updateClassById({
@@ -57,7 +72,7 @@ export const updateClass = asyncHandler(async (req, res) => {
     adminId: req.user.id,
     code,
     name,
-    schedule,
+    ...schedule,
     capacity,
     status,
   });

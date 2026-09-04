@@ -6,6 +6,7 @@ import {
 } from "../services/enrollmentServices";
 import { getClasses } from "../services/classServices";
 import formatDate from "../utils/formatDate";
+import { formatSchedule } from "../utils/schedule";
 
 function Students() {
   const [students, setStudents] = useState([]);
@@ -265,7 +266,7 @@ function Students() {
                           {classItem.code}
                         </p>
                         <p className="mt-3 text-sm text-gray-400">
-                          {classItem.schedule || "Schedule pending"}
+                          {formatSchedule(classItem)}
                         </p>
                         <span className="mt-3 inline-block rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2.5 py-1 text-xs text-emerald-300">
                           {classItem.status}

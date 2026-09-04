@@ -1,4 +1,5 @@
 import { Download, Save, X } from "lucide-react";
+import formatDate from "../utils/formatDate";
 
 function SubmissionDetailsModal({
   isOpen,
@@ -47,7 +48,13 @@ function SubmissionDetailsModal({
             >
               {student.name}
             </h2>
-            <p className="mt-1 text-sm text-gray-400">{student.email}</p>
+
+            {submission?.submitted_at && (
+              <p className="mt-2 text-sm text-gray-400">
+                <span className="font-medium text-gray-500">Submitted on:</span>{" "}
+                {formatDate(submission.submitted_at)}
+              </p>
+            )}
           </div>
           <button
             type="button"

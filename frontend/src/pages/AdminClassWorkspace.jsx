@@ -27,6 +27,7 @@ import {
   getEnrolledStudents,
 } from "../services/enrollmentServices";
 import { getAdminSubmissions } from "../services/submissionServices";
+import { formatSchedule } from "../utils/schedule";
 
 const initialAssignmentFormData = {
   title: "",
@@ -331,7 +332,7 @@ function ClassWorkspace() {
                 <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-gray-400">
                   <span className="inline-flex items-center gap-1.5">
                     <CalendarDays size={15} strokeWidth={1.8} />
-                    {classItem.schedule}
+                    {formatSchedule(classItem)}
                   </span>
                   <span className="inline-flex items-center gap-1.5">
                     <Users size={15} strokeWidth={1.8} />
@@ -403,11 +404,20 @@ function ClassWorkspace() {
                             </td>
                             <td className="px-4 py-3">
                               <span
-                                className={`rounded-full border px-2.5 py-1 text-xs font-medium ${student.status === "Online" ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400" : "border-gray-700 bg-gray-800 text-gray-400"}`}
+                                aria-label={student.status}
+                                title={student.status}
+                                className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${student.status === "Online" ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400" : "border-gray-700 bg-gray-800 text-gray-400"}`}
                               >
-                                {student.status === "Online"
-                                  ? "🟢 Online"
-                                  : "⚪ Offline"}
+                                <span
+                                  className={`h-2 w-2 rounded-full ${student.status === "Online" ? "bg-emerald-400" : "bg-gray-400"}`}
+                                  aria-hidden="true"
+                                />
+                                <span className="sr-only">
+                                  {student.status}
+                                </span>
+                                <span className="hidden sm:inline">
+                                  {student.status}
+                                </span>
                               </span>
                             </td>
                           </tr>

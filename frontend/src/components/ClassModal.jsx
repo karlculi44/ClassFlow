@@ -1,3 +1,5 @@
+import { formatSchedule, WEEKDAYS } from "../utils/schedule";
+
 function ClassModal({
   isOpen,
   formData,
@@ -83,17 +85,58 @@ function ClassModal({
             </label>
           </div>
 
-          <label className="block space-y-1.5 text-sm text-gray-300">
+          <div className="block space-y-1.5 text-sm text-gray-300">
             Schedule
-            <input
-              required
-              name="schedule"
-              value={formData.schedule}
-              onChange={onChange}
-              placeholder="Mon, Wed, Fri · 9:00 AM"
-              className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-white outline-none placeholder:text-gray-600 focus:border-indigo-500"
-            />
-          </label>
+            <span className="block text-xs text-gray-500">Days</span>
+            <div className="grid grid-cols-4 gap-2 sm:grid-cols-7">
+              {WEEKDAYS.map((day) => {
+                const selected = formData.schedule_days.includes(day);
+                return (
+                  <button
+                    key={day}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() =>
+                      onChange({
+                        target: {
+                          name: "schedule_days",
+                          value: day,
+                          type: "day",
+                        },
+                      })
+                    }
+                    className={`rounded-lg border px-2 py-2 text-xs font-semibold transition ${selected ? "border-indigo-400 bg-indigo-500 text-white" : "border-gray-700 bg-gray-950 text-gray-400 hover:border-indigo-500"}`}
+                  >
+                    {day.slice(0, 3)}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="grid gap-3 pt-2 sm:grid-cols-2">
+              <label className="space-y-1.5 text-xs text-gray-500">
+                Start Time
+                <input
+                  type="time"
+                  name="schedule_start_time"
+                  value={formData.schedule_start_time}
+                  onChange={onChange}
+                  className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-sm text-white outline-none focus:border-indigo-500"
+                />
+              </label>
+              <label className="space-y-1.5 text-xs text-gray-500">
+                End Time
+                <input
+                  type="time"
+                  name="schedule_end_time"
+                  value={formData.schedule_end_time}
+                  onChange={onChange}
+                  className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-sm text-white outline-none focus:border-indigo-500"
+                />
+              </label>
+            </div>
+            <p className="pt-1 text-xs text-gray-500">Schedule Preview</p>
+            <p className="text-sm text-gray-300">{formatSchedule(formData)}</p>
+          </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="space-y-1.5 text-sm text-gray-300">

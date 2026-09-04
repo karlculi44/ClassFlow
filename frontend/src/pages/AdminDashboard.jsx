@@ -13,6 +13,7 @@ import { getClasses } from "../services/classServices";
 import { getAdminAssignments } from "../services/assignmentServices";
 import { getAdminSubmissions } from "../services/submissionServices";
 import { getStudents } from "../services/userServices";
+import { formatSchedule } from "../utils/schedule";
 import formatDate from "../utils/formatDate";
 
 const getAssignmentStatus = (assignment) => {
@@ -227,8 +228,7 @@ function AdminDashboard() {
                             {classItem.name}
                           </p>
                           <p className="mt-1 text-xs text-gray-500">
-                            {classItem.code} ·{" "}
-                            {classItem.schedule || "Schedule pending"}
+                            {classItem.code} · {formatSchedule(classItem)}
                           </p>
                         </div>
                         <span

@@ -47,7 +47,7 @@ export const findClassesByStudentId = async (studentId) => {
   const [rows] = await pool.query(
     `
             SELECT classes.id, classes.status, classes.code, classes.name,
-              classes.schedule, classes.capacity,
+              classes.schedule_days, classes.schedule_start_time, classes.schedule_end_time, classes.capacity,
               admins.name AS instructor_name,
               admins.last_seen_at AS instructor_last_seen_at,
               CASE WHEN admins.last_seen_at IS NOT NULL
@@ -101,7 +101,7 @@ export const findAdminStudentDetails = async (adminId, studentId) => {
                   THEN 'Online' ELSE 'Offline' END AS student_status,
              users.email AS student_email, users.role,
              classes.id AS class_id, classes.name AS class_name,
-             classes.code AS class_code, classes.schedule, classes.status AS class_status,
+             classes.code AS class_code, classes.schedule_days, classes.schedule_start_time, classes.schedule_end_time, classes.status AS class_status,
              assignments.id AS assignment_id, assignments.title AS assignment_title,
              assignments.due_date, submissions.submitted_at,
              submissions.grade, submissions.id AS submission_id
@@ -132,7 +132,9 @@ export const findAdminStudentDetails = async (adminId, studentId) => {
         id: row.class_id,
         name: row.class_name,
         code: row.class_code,
-        schedule: row.schedule,
+        schedule_days: row.schedule_days,
+        schedule_start_time: row.schedule_start_time,
+        schedule_end_time: row.schedule_end_time,
         status: row.class_status,
       });
     }
