@@ -20,6 +20,7 @@ function Profile() {
   const [profile, setProfile] = useState({
     name: user?.name || "",
     email: user?.email || "",
+    user_code: user?.user_code || "",
     role: user?.role || "",
     created_at: user?.created_at,
   });
@@ -177,6 +178,14 @@ function Profile() {
                   />
                 </label>
                 <div className="grid gap-5 sm:grid-cols-2">
+                  <div>
+                    <p className="text-sm font-medium text-gray-300">
+                      User code
+                    </p>
+                    <p className="mt-1.5 rounded-lg border border-gray-800 bg-gray-950 px-4 py-2.5 text-sm text-gray-400">
+                      {profile.user_code || "Unavailable"}
+                    </p>
+                  </div>
                   <div>
                     <p className="text-sm font-medium text-gray-300">Role</p>
                     <p className="mt-1.5 rounded-lg border border-gray-800 bg-gray-950 px-4 py-2.5 text-sm text-gray-400">

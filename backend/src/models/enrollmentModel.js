@@ -27,7 +27,7 @@ export const addStudentsToClass = async (classId, studentIds) => {
 export const findStudentsByClassId = async (classId) => {
   const [rows] = await pool.query(
     `
-      SELECT users.id, users.name, users.email, users.role
+      SELECT users.id, users.name, users.email, users.role, users.user_code
       FROM enrollments
       INNER JOIN users ON users.id = enrollments.student_id
       WHERE enrollments.class_id = ? AND users.role = 'Student'
@@ -60,7 +60,7 @@ export const findClassesByStudentId = async (studentId) => {
 export const findAdminStudents = async (adminId) => {
   const [rows] = await pool.query(
     `
-      SELECT users.id, users.name, users.email, users.role,
+      SELECT users.id, users.name, users.email, users.role, users.user_code,
              COUNT(DISTINCT classes.id) AS class_count,
              GROUP_CONCAT(DISTINCT classes.name ORDER BY classes.name SEPARATOR ', ') AS class_names
       FROM enrollments
@@ -80,7 +80,8 @@ export const findAdminStudents = async (adminId) => {
 export const findAdminStudentDetails = async (adminId, studentId) => {
   const [rows] = await pool.query(
     `
-      SELECT users.id AS student_id, users.name AS student_name,
+            SELECT users.id AS student_id, users.name AS student_name,
+              users.user_code AS student_code,
              users.email AS student_email, users.role,
              classes.id AS class_id, classes.name AS class_name,
              classes.code AS class_code, classes.schedule, classes.status AS class_status,
@@ -136,6 +137,7 @@ export const findAdminStudentDetails = async (adminId, studentId) => {
     student: {
       id: first.student_id,
       name: first.student_name,
+      user_code: first.student_code,
       email: first.student_email,
       role: first.role,
     },
