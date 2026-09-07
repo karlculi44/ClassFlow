@@ -108,11 +108,7 @@ function AdminDashboard() {
     (total, assignment) => total + assignment.submittedCount,
     0,
   );
-  const fullySubmittedCount = assignments.filter(
-    (assignment) =>
-      assignment.submittedCount > 0 &&
-      assignment.submittedCount === assignment.totalStudents,
-  ).length;
+
   const sortedAssignments = [...assignments].sort(
     (firstAssignment, secondAssignment) =>
       new Date(firstAssignment.due_date) - new Date(secondAssignment.due_date),
@@ -317,31 +313,6 @@ function AdminDashboard() {
                       )}
                     </button>
                   )}
-                </div>
-              </section>
-
-              <section className="mt-6 flex flex-col gap-4 rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-lg shadow-black/30 sm:flex-row sm:items-center sm:justify-between sm:p-6">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-                    Workspace actions
-                  </p>
-                  <h2 className="mt-1 text-lg font-semibold text-white">
-                    Keep your classes moving
-                  </h2>
-                  <p className="mt-1 text-sm text-gray-400">
-                    {fullySubmittedCount} assignment
-                    {fullySubmittedCount === 1 ? "" : "s"} have submissions from
-                    every enrolled student.
-                  </p>
-                </div>
-                <div className="flex flex-col gap-3 sm:flex-row">
-                  <button
-                    type="button"
-                    onClick={() => navigate("/admin-classes")}
-                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white"
-                  >
-                    <BookOpen size={16} /> Manage Classes
-                  </button>
                 </div>
               </section>
             </>

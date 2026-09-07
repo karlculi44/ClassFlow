@@ -9,7 +9,7 @@ const MainLayout = () => {
     <div className="flex min-h-screen flex-col bg-gray-950 md:flex-row">
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-      <main className="relative min-w-0 flex-1">
+      <main className="relative min-w-0 flex-1 md:ml-64">
         <Outlet />
       </main>
     </div>

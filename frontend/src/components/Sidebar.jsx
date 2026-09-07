@@ -121,7 +121,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
       <aside
         className={`fixed inset-y-0 left-0 z-50 flex w-72 max-w-[85vw] flex-col justify-between border-r border-gray-800 bg-gray-900/98 shadow-2xl shadow-black/40 backdrop-blur-sm transform transition-transform duration-300 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:static md:z-auto md:translate-x-0 md:w-64 md:shrink-0 md:bg-gray-900/60`}
+        } md:fixed md:z-50 md:translate-x-0 md:w-64 md:bg-gray-900/60`}
       >
         <div>
           <div className="flex items-center justify-between gap-3 px-6 py-6">
