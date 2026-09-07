@@ -218,7 +218,7 @@ function AdminClasses() {
               setFormData(initialFormData);
               setClassModalOpen(true);
             }}
-            className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 active:bg-indigo-700"
+            className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 active:bg-indigo-700 cursor-pointer"
           >
             Create class
           </button>

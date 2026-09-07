@@ -121,7 +121,7 @@ function ClassCard({ classItem, onEdit, onDelete, currentTime }) {
           event.stopPropagation();
           goToClassWorkspace();
         }}
-        className="mt-5 w-full rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white"
+        className="mt-5 w-full rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white cursor-pointer"
       >
         View class
       </button>

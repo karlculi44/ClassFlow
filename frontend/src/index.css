@@ -6,6 +6,169 @@
   --font-heading: "Montserrat", sans-serif;
 }
 
+:root {
+  color-scheme: dark;
+  --background: #030712;
+  --foreground: #f9fafb;
+  --surface: #111827;
+  --surface-secondary: #1f2937;
+  --border: #1f2937;
+  --muted: #374151;
+  --muted-foreground: #9ca3af;
+  --primary: #4f46e5;
+  --primary-foreground: #ffffff;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --background: #f4f7fb;
+  --foreground: #172033;
+  --surface: #ffffff;
+  --surface-secondary: #eef2f7;
+  --border: #d9e0ea;
+  --muted: #e7ecf3;
+  --muted-foreground: #526071;
+  --primary: #4f46e5;
+  --primary-foreground: #ffffff;
+  --success: #047857;
+  --warning: #b45309;
+  --danger: #b91c1c;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+[data-theme="light"] [class~="bg-gray-950"] {
+  background-color: var(--background);
+}
+
+[data-theme="light"] [class~="bg-gray-900"],
+[data-theme="light"] [class~="bg-gray-900/80"],
+[data-theme="light"] [class~="bg-gray-900/95"],
+[data-theme="light"] [class~="bg-gray-900/98"],
+[data-theme="light"] [class*="bg-gray-900/"] {
+  background-color: var(--surface);
+}
+
+[data-theme="light"] [class~="bg-gray-800"],
+[data-theme="light"] [class~="bg-gray-800/50"],
+[data-theme="light"] [class*="bg-gray-800/"] {
+  background-color: var(--surface-secondary);
+}
+
+[data-theme="light"] [class~="bg-gray-950/60"] {
+  background-color: #f8fafc;
+}
+
+[data-theme="light"] [class~="border-gray-800"],
+[data-theme="light"] [class~="border-gray-700"],
+[data-theme="light"] [class~="border-gray-600"] {
+  border-color: var(--border);
+}
+
+[data-theme="light"] [class~="divide-gray-800"] > :not(:last-child) {
+  border-color: var(--border);
+}
+
+[data-theme="light"] [class~="text-white"],
+[data-theme="light"] [class~="text-gray-100"],
+[data-theme="light"] [class~="text-gray-200"] {
+  color: var(--foreground);
+}
+
+[data-theme="light"] [class~="text-gray-300"] {
+  color: #344054;
+}
+
+[data-theme="light"] [class~="text-gray-400"] {
+  color: #526071;
+}
+
+[data-theme="light"] [class~="text-gray-500"] {
+  color: #687386;
+}
+
+[data-theme="light"] [class~="text-gray-600"] {
+  color: #8490a2;
+}
+
+[data-theme="light"] [class~="text-indigo-300"],
+[data-theme="light"] [class~="text-indigo-400"] {
+  color: #4338ca;
+}
+
+[data-theme="light"] [class~="text-cyan-300"],
+[data-theme="light"] [class~="text-cyan-400"] {
+  color: #0e7490;
+}
+
+[data-theme="light"] [class~="text-emerald-300"],
+[data-theme="light"] [class~="text-emerald-400"] {
+  color: #047857;
+}
+
+[data-theme="light"] [class~="text-amber-300"],
+[data-theme="light"] [class~="text-amber-400"] {
+  color: #b45309;
+}
+
+[data-theme="light"] [class~="text-rose-300"],
+[data-theme="light"] [class~="text-rose-400"],
+[data-theme="light"] [class~="text-red-300"],
+[data-theme="light"] [class~="text-red-400"] {
+  color: #b91c1c;
+}
+
+[data-theme="light"] [class~="placeholder:text-gray-500"]::placeholder,
+[data-theme="light"] [class~="placeholder:text-gray-600"]::placeholder {
+  color: #8490a2;
+}
+
+[data-theme="light"] [class~="hover:bg-gray-800"]:hover,
+[data-theme="light"] [class~="hover:bg-gray-800/60"]:hover,
+[data-theme="light"] [class~="hover:bg-gray-800/70"]:hover {
+  background-color: #e5eaf1;
+}
+
+[data-theme="light"] [class~="hover:text-white"]:hover {
+  color: #172033;
+}
+
+[data-theme="light"] [class~="bg-indigo-600"] {
+  background-color: #4f46e5;
+}
+
+[data-theme="light"] [class~="bg-red-600"] {
+  background-color: #dc2626;
+}
+
+[data-theme="light"] [class~="bg-indigo-600"][class~="text-white"],
+[data-theme="light"] [class~="bg-red-600"][class~="text-white"],
+[data-theme="light"] [class~="bg-linear-to-br"] [class~="text-white"],
+[data-theme="light"] [class*="bg-linear-"] [class~="text-white"] {
+  color: #ffffff;
+}
+
+[data-theme="light"] input,
+[data-theme="light"] textarea,
+[data-theme="light"] select {
+  color-scheme: light;
+}
+
 body {
   font-family: "Poppins", sans-serif;
 }

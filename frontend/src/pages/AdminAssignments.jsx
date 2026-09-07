@@ -157,7 +157,7 @@ function AdminAssignments() {
                           `/admin-classes/${assignment.class_id}/assignments/${assignment.id}`,
                         )
                       }
-                      className="grid w-full gap-3 px-5 py-5 text-left transition hover:bg-gray-800/60 md:grid-cols-[1.5fr_1fr_1fr_1fr_auto] md:items-center md:gap-4"
+                      className="grid w-full gap-3 px-5 py-5 text-left transition hover:bg-gray-800/60 md:grid-cols-[1.5fr_1fr_1fr_1fr_auto] md:items-center md:gap-4 cursor-pointer"
                     >
                       <span className="min-w-0">
                         <span className="block truncate text-sm font-semibold text-white">

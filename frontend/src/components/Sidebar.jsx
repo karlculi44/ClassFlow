@@ -2,6 +2,8 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { NavLink } from "react-router-dom";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "../context/useTheme";
 
 const studentNavItems = [
   {
@@ -67,10 +69,12 @@ const adminNavItems = [
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const { logout, user } = useContext(AuthContext);
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const isAdmin = user?.role === "Admin";
   const navItems = isAdmin ? adminNavItems : studentNavItems;
+  const isDark = theme === "dark";
 
   const handleLogout = async () => {
     navigate("/");
@@ -80,33 +84,49 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   return (
     <>
       {/* Mobile top bar */}
-      <div className="fixed inset-x-0 top-0 z-50 flex h-[69px] w-full items-center justify-between border-b border-gray-800 bg-gray-900/95 px-4 shadow-lg shadow-black/10 backdrop-blur-sm md:hidden">
+      <div className="fixed inset-x-0 top-0 z-50 flex h-17.25 w-full items-center justify-between border-b border-gray-800 bg-gray-900/95 px-4 shadow-lg shadow-black/10 backdrop-blur-sm md:hidden">
         <div className="flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-purple-600">
             <span className="text-xs font-bold text-white">CF</span>
           </div>
           <span className="text-base font-bold text-white">ClassFlow</span>
         </div>
-        <button
-          onClick={() => setSidebarOpen(true)}
-          aria-label="Open menu"
-          className="p-2 rounded-lg text-gray-300 hover:bg-gray-800 transition"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={1.5}
-            className="h-6 w-6"
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            className="rounded-lg p-2 text-gray-300 transition hover:bg-gray-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"
-            />
-          </svg>
-        </button>
+            {isDark ? (
+              <Sun size={19} strokeWidth={1.8} />
+            ) : (
+              <Moon size={19} strokeWidth={1.8} />
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Open menu"
+            className="rounded-lg p-2 text-gray-300 transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.5}
+              className="h-6 w-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Backdrop for mobile sidebar */}
@@ -140,26 +160,44 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 )}
               </div>
             </div>
-            <button
-              onClick={() => setSidebarOpen(false)}
-              aria-label="Close menu"
-              className="md:hidden p-1.5 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-gray-100 transition"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.5}
-                className="h-5 w-5"
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={toggleTheme}
+                aria-label={
+                  isDark ? "Switch to light mode" : "Switch to dark mode"
+                }
+                title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+                className="rounded-lg p-1.5 text-gray-400 transition hover:bg-gray-800 hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
+                {isDark ? (
+                  <Sun size={17} strokeWidth={1.8} />
+                ) : (
+                  <Moon size={17} strokeWidth={1.8} />
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={() => setSidebarOpen(false)}
+                aria-label="Close menu"
+                className="rounded-lg p-1.5 text-gray-400 transition hover:bg-gray-800 hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 md:hidden"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                  className="h-5 w-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
           <nav className="flex flex-col gap-1 px-3 pb-4 md:pb-6">
             {navItems.map((item) => (
