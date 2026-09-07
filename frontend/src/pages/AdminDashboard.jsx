@@ -205,7 +205,7 @@ function AdminDashboard() {
                     <button
                       type="button"
                       onClick={() => navigate("/admin-classes")}
-                      className="text-sm font-semibold text-indigo-400 hover:text-indigo-300"
+                      className="text-sm font-semibold text-indigo-400 hover:text-indigo-300 cursor-pointer"
                     >
                       Manage
                     </button>

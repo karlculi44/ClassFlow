@@ -373,7 +373,7 @@ function ClassWorkspace() {
         <button
           type="button"
           onClick={() => navigate("/admin-classes")}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 transition hover:text-white"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 transition hover:text-white cursor-pointer"
         >
           <ArrowLeft size={16} strokeWidth={1.8} />
           Back to classes
@@ -429,7 +429,7 @@ function ClassWorkspace() {
               <button
                 type="button"
                 onClick={() => setAssignmentModalOpen(true)}
-                className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 active:bg-indigo-700"
+                className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 active:bg-indigo-700 cursor-pointer"
               >
                 <Plus size={16} strokeWidth={1.8} />
                 Create assignment
@@ -437,7 +437,7 @@ function ClassWorkspace() {
               <button
                 type="button"
                 onClick={handleOpenStudentModal}
-                className="inline-flex items-center gap-2 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white"
+                className="inline-flex items-center gap-2 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white cursor-pointer"
               >
                 <UserPlus size={16} strokeWidth={1.8} />
                 Add student
@@ -459,7 +459,7 @@ function ClassWorkspace() {
                           type="button"
                           onClick={handleCancelStudentSelection}
                           disabled={removingStudents}
-                          className="rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-300 transition hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                          className="rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-300 transition hover:bg-gray-800 hover:text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                         >
                           Cancel
                         </button>
@@ -469,7 +469,7 @@ function ClassWorkspace() {
                           disabled={
                             selectedStudentIds.length === 0 || removingStudents
                           }
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-red-500 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                         >
                           <Trash size={15} strokeWidth={1.8} />
                           Remove
@@ -480,7 +480,7 @@ function ClassWorkspace() {
                         type="button"
                         onClick={handleStartStudentSelection}
                         aria-label="Edit student enrollment"
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-300 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-300 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white cursor-pointer"
                       >
                         <Pencil size={15} strokeWidth={1.8} />
                         Edit
@@ -579,7 +579,7 @@ function ClassWorkspace() {
                     onClick={() =>
                       setShowAllStudents((isVisible) => !isVisible)
                     }
-                    className="mx-auto mt-3 block px-2 py-1 text-sm font-semibold text-indigo-400 transition hover:text-indigo-300"
+                    className="mx-auto mt-3 block px-2 py-1 text-sm font-semibold text-indigo-400 transition hover:text-indigo-300 cursor-pointer"
                   >
                     {showAllStudents ? "View less" : "View all"}
                   </button>
@@ -658,7 +658,7 @@ function ClassWorkspace() {
                                 openAssignmentMenu === assignment.id
                               }
                               title="More options"
-                              className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white"
+                              className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white cursor-pointer"
                             >
                               <MoreVertical size={17} strokeWidth={1.8} />
                             </button>
@@ -673,7 +673,7 @@ function ClassWorkspace() {
                                   onClick={() =>
                                     handleEditAssignment(assignment)
                                   }
-                                  className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-gray-300 transition hover:bg-indigo-500/10 hover:text-indigo-300"
+                                  className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-gray-300 transition hover:bg-indigo-500/10 hover:text-indigo-300 cursor-pointer"
                                 >
                                   <Pencil size={15} strokeWidth={1.8} />
                                   Edit
@@ -685,7 +685,7 @@ function ClassWorkspace() {
                                     setDeleteAssignmentError("");
                                     setAssignmentToDelete(assignment);
                                   }}
-                                  className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-gray-300 transition hover:bg-red-500/10 hover:text-red-300"
+                                  className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-gray-300 transition hover:bg-red-500/10 hover:text-red-300 cursor-pointer"
                                 >
                                   <Trash size={15} strokeWidth={1.8} />
                                   Delete

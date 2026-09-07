@@ -203,7 +203,7 @@ function Reports() {
                         setSelectedClassId(event.target.value);
                         setClassReport(null);
                       }}
-                      className="mt-1.5 h-11 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 text-sm text-gray-200 outline-none focus:border-indigo-500"
+                      className="mt-1.5 h-11 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 text-sm text-gray-200 outline-none focus:border-indigo-500 cursor-pointer"
                     >
                       <option value="">Choose a class</option>
                       {summary.classes?.map((classItem) => (

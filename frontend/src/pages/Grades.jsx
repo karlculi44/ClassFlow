@@ -123,7 +123,7 @@ function Grades() {
                     id="class-filter"
                     value={classFilter}
                     onChange={(event) => setClassFilter(event.target.value)}
-                    className="h-11 w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 px-3 pr-10 text-sm text-gray-300 outline-none transition hover:border-gray-600 focus:border-indigo-500"
+                    className="h-11 w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 px-3 pr-10 text-sm text-gray-300 outline-none transition hover:border-gray-600 focus:border-indigo-500 cursor-pointer"
                   >
                     <option value="all">All classes</option>
                     {classes.map((classItem) => (
@@ -207,7 +207,7 @@ function Grades() {
                         <button
                           type="button"
                           onClick={() => handleView(assignment)}
-                          className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white"
+                          className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white cursor-pointer"
                         >
                           <CalendarDays size={15} /> View
                         </button>

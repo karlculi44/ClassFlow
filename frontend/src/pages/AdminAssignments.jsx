@@ -103,7 +103,7 @@ function AdminAssignments() {
               <select
                 value={classFilter}
                 onChange={(event) => setClassFilter(event.target.value)}
-                className="h-11 w-full rounded-lg border border-gray-700 bg-gray-900 px-3 text-sm text-gray-200 outline-none focus:border-indigo-500"
+                className="h-11 w-full rounded-lg border border-gray-700 bg-gray-900 px-3 text-sm text-gray-200 outline-none focus:border-indigo-500 cursor-pointer"
               >
                 <option value="all">All classes</option>
                 {classes.map((classItem) => (

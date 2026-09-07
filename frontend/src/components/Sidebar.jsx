@@ -97,7 +97,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             onClick={toggleTheme}
             aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
             title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-            className="rounded-lg p-2 text-gray-300 transition hover:bg-gray-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="rounded-lg p-2 text-gray-300 transition hover:bg-gray-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
           >
             {isDark ? (
               <Sun size={19} strokeWidth={1.8} />
@@ -109,7 +109,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             type="button"
             onClick={() => setSidebarOpen(true)}
             aria-label="Open menu"
-            className="rounded-lg p-2 text-gray-300 transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="rounded-lg p-2 text-gray-300 transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -168,7 +168,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   isDark ? "Switch to light mode" : "Switch to dark mode"
                 }
                 title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-                className="rounded-lg p-1.5 text-gray-400 transition hover:bg-gray-800 hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="rounded-lg p-1.5 text-gray-400 transition hover:bg-gray-800 hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
               >
                 {isDark ? (
                   <Sun size={17} strokeWidth={1.8} />
@@ -180,7 +180,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 type="button"
                 onClick={() => setSidebarOpen(false)}
                 aria-label="Close menu"
-                className="rounded-lg p-1.5 text-gray-400 transition hover:bg-gray-800 hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 md:hidden"
+                className="rounded-lg p-1.5 text-gray-400 transition hover:bg-gray-800 hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 md:hidden cursor-pointer"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -211,7 +211,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     isActive
                       ? "bg-indigo-600 text-white shadow-lg shadow-indigo-950/30"
                       : "text-gray-400 hover:bg-gray-800 hover:text-gray-100"
-                  }`
+                  } cursor-pointer`
                 }
               >
                 {item.title}
@@ -222,7 +222,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         <div className="px-3 pb-6">
           <button
             onClick={handleLogout}
-            className="w-full rounded-lg px-4 py-2.5 text-sm font-medium text-left text-red-400 hover:bg-red-500/10 hover:text-red-300 transition"
+            className="w-full rounded-lg px-4 py-2.5 text-sm font-medium text-left text-red-400 hover:bg-red-500/10 hover:text-red-300 transition cursor-pointer"
           >
             Sign Out
           </button>

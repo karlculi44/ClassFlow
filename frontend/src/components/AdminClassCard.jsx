@@ -35,7 +35,7 @@ function ClassCard({ classItem, onEdit, onDelete, currentTime }) {
           aria-label={`More options for ${classItem.name}`}
           aria-expanded={menuOpen}
           title="More options"
-          className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white"
+          className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white cursor-pointer"
         >
           <MoreVertical size={17} strokeWidth={1.8} />
         </button>
@@ -51,7 +51,7 @@ function ClassCard({ classItem, onEdit, onDelete, currentTime }) {
                 setMenuOpen(false);
                 onEdit(classItem);
               }}
-              className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-gray-300 transition hover:bg-indigo-500/10 hover:text-indigo-300"
+              className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-gray-300 transition hover:bg-indigo-500/10 hover:text-indigo-300 cursor-pointer"
             >
               <Pencil size={15} strokeWidth={1.8} />
               Edit
@@ -62,7 +62,7 @@ function ClassCard({ classItem, onEdit, onDelete, currentTime }) {
                 setMenuOpen(false);
                 onDelete(classItem);
               }}
-              className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-gray-300 transition hover:bg-red-500/10 hover:text-red-300"
+              className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-gray-300 transition hover:bg-red-500/10 hover:text-red-300 cursor-pointer"
             >
               <Trash size={15} strokeWidth={1.8} />
               Delete

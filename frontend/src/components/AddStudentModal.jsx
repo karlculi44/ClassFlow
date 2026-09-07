@@ -61,7 +61,7 @@ function AddStudentModal({
             onClick={onClose}
             disabled={loading || saving}
             aria-label="Close student list"
-            className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
           >
             <X size={19} strokeWidth={1.8} />
           </button>
@@ -101,7 +101,7 @@ function AddStudentModal({
                     type="button"
                     onClick={() => toggleStudent(student.id)}
                     disabled={saving}
-                    className="flex w-full items-center gap-3 px-4 py-3 text-left disabled:cursor-not-allowed disabled:opacity-60"
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                     aria-pressed={selectedStudentIds.includes(student.id)}
                   >
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-500/10 text-sm font-semibold text-indigo-300">
@@ -134,7 +134,7 @@ function AddStudentModal({
             type="button"
             onClick={onClose}
             disabled={loading || saving}
-            className="rounded-lg border border-gray-700 px-4 py-2.5 mx-2 text-sm font-semibold text-gray-300 transition hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-lg border border-gray-700 px-4 py-2.5 mx-2 text-sm font-semibold text-gray-300 transition hover:bg-gray-800 hover:text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
           >
             Close
           </button>
@@ -143,7 +143,7 @@ function AddStudentModal({
               type="button"
               onClick={() => onAdd(selectedStudentIds)}
               disabled={loading || saving || selectedCount === 0}
-              className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
             >
               {saving ? "Adding..." : `Add ${studentLabel}`}
             </button>

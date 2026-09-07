@@ -82,7 +82,7 @@ function ConfirmDeleteModal({
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-300 transition hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-300 transition hover:bg-gray-800 hover:text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
           >
             Cancel
           </button>
@@ -90,7 +90,7 @@ function ConfirmDeleteModal({
             type="button"
             onClick={onConfirm}
             disabled={loading || confirmationValue !== confirmationText}
-            className="rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-500 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? "Deleting..." : `Delete ${itemLabel}`}
           </button>

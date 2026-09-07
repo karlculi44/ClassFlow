@@ -61,7 +61,7 @@ function SubmissionDetailsModal({
             onClick={onClose}
             disabled={saving}
             aria-label="Close submission details"
-            className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
           >
             <X size={19} strokeWidth={1.8} />
           </button>
@@ -88,7 +88,7 @@ function SubmissionDetailsModal({
                   target="_blank"
                   rel="noreferrer"
                   download={submission.attachment_name}
-                  className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-indigo-400 hover:text-indigo-300"
+                  className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-indigo-400 hover:text-indigo-300 cursor-pointer"
                 >
                   <Download size={16} strokeWidth={1.8} />
                   {submission.attachment_name}
@@ -123,7 +123,7 @@ function SubmissionDetailsModal({
               <button
                 type="submit"
                 disabled={saving}
-                className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Save size={16} strokeWidth={1.8} />
                 {saving ? "Saving..." : "Save Grade"}

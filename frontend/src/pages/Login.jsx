@@ -154,13 +154,13 @@ function Login() {
 
               <button
                 type="submit"
-                className="w-full rounded-lg bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold py-2.5 transition"
+                className="w-full rounded-lg bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold py-2.5 transition cursor-pointer"
               >
                 Sign In
               </button>
               <a
                 href="#"
-                className="text-xs text-indigo-400 hover:text-indigo-300 transition"
+                className="text-xs text-indigo-400 hover:text-indigo-300 transition cursor-pointer"
               >
                 Forgot password?
               </a>
@@ -170,7 +170,7 @@ function Login() {
               Don&apos;t have an account?{" "}
               <a
                 href="/signup"
-                className="text-indigo-400 hover:text-indigo-300 font-medium transition"
+                className="text-indigo-400 hover:text-indigo-300 font-medium transition cursor-pointer"
               >
                 Sign up
               </a>

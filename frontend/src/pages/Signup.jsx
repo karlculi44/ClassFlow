@@ -159,7 +159,7 @@ function Signup() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full rounded-lg bg-indigo-600 py-2.5 font-semibold text-white transition hover:bg-indigo-500 active:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-lg bg-indigo-600 py-2.5 font-semibold text-white transition hover:bg-indigo-500 active:bg-indigo-700 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {submitting ? "Creating account..." : "Create account"}
               </button>
@@ -168,7 +168,7 @@ function Signup() {
               Already have an account?{" "}
               <Link
                 to="/"
-                className="font-medium text-indigo-400 transition hover:text-indigo-300"
+                className="font-medium text-indigo-400 transition hover:text-indigo-300 cursor-pointer"
               >
                 Sign in
               </Link>

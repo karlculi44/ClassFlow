@@ -45,7 +45,7 @@ function GradeDetailsModal({ assignment, loading, error, onClose }) {
             type="button"
             onClick={onClose}
             aria-label="Close grade details"
-            className="shrink-0 rounded-lg p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white"
+            className="shrink-0 rounded-lg p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white cursor-pointer"
           >
             <X size={19} strokeWidth={1.8} />
           </button>

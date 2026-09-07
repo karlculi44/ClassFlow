@@ -50,7 +50,7 @@ function AdminAssignmentDetails() {
         <button
           type="button"
           onClick={() => navigate(`/admin-classes/${classId}`)}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 transition hover:text-white"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 transition hover:text-white cursor-pointer"
         >
           <ArrowLeft size={16} strokeWidth={1.8} />
           Back to Class
@@ -123,7 +123,7 @@ function AdminAssignmentDetails() {
                     target="_blank"
                     rel="noreferrer"
                     download={attachmentName}
-                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white cursor-pointer"
                   >
                     <Download size={16} strokeWidth={1.8} />
                     View / Download
@@ -140,7 +140,7 @@ function AdminAssignmentDetails() {
                     `/admin-classes/${classId}/assignments/${assignmentId}/submissions`,
                   )
                 }
-                className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500"
+                className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 cursor-pointer"
               >
                 <Users size={16} strokeWidth={1.8} />
                 View Submissions

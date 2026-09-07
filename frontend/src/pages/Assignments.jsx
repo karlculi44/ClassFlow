@@ -124,7 +124,7 @@ function Assignments() {
                   id="class-filter"
                   value={classFilter}
                   onChange={(event) => setClassFilter(event.target.value)}
-                  className={filterClassName}
+                  className={`${filterClassName} cursor-pointer`}
                 >
                   <option value="all">All classes</option>
                   {classOptions.map((classOption) => (
@@ -149,7 +149,7 @@ function Assignments() {
                   id="status-filter"
                   value={statusFilter}
                   onChange={(event) => setStatusFilter(event.target.value)}
-                  className={filterClassName}
+                  className={`${filterClassName} cursor-pointer`}
                 >
                   <option value="all">All statuses</option>
                   <option value="in-progress">In progress</option>

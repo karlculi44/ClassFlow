@@ -61,7 +61,7 @@ function StudentClassWorkspace() {
           <button
             type="button"
             onClick={() => navigate("/classes")}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 transition hover:text-white"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 transition hover:text-white cursor-pointer"
           >
             <ArrowLeft size={16} /> Back to Classes
           </button>

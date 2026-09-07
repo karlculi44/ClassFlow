@@ -51,7 +51,7 @@ function ClassModal({
             type="button"
             onClick={onClose}
             aria-label="Close modal"
-            className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white"
+            className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white cursor-pointer"
           >
             <span aria-hidden="true" className="text-xl leading-none">
               &times;
@@ -105,7 +105,7 @@ function ClassModal({
                         },
                       })
                     }
-                    className={`rounded-lg border px-2 py-2 text-xs font-semibold transition ${selected ? "border-indigo-400 bg-indigo-500 text-white" : "border-gray-700 bg-gray-950 text-gray-400 hover:border-indigo-500"}`}
+                    className={`rounded-lg border px-2 py-2 text-xs font-semibold transition cursor-pointer ${selected ? "border-indigo-400 bg-indigo-500 text-white" : "border-gray-700 bg-gray-950 text-gray-400 hover:border-indigo-500"}`}
                   >
                     {day.slice(0, 3)}
                   </button>
@@ -159,8 +159,8 @@ function ClassModal({
                 onChange={onChange}
                 className={
                   formData.status === "Active"
-                    ? "w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-white outline-none focus:border-indigo-500"
-                    : "w-full rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2.5 text-red-400 outline-none focus:border-red-500"
+                    ? "w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-white outline-none focus:border-indigo-500 cursor-pointer"
+                    : "w-full rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2.5 text-red-400 outline-none focus:border-red-500 cursor-pointer"
                 }
               >
                 <option value="Active">Active</option>
@@ -175,14 +175,14 @@ function ClassModal({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-300 transition hover:bg-gray-800 hover:text-white"
+              className="rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-300 transition hover:bg-gray-800 hover:text-white cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? "Saving..." : isEditing ? "Save" : "Create class"}
             </button>

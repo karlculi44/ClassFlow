@@ -224,7 +224,7 @@ function Profile() {
                     setProfileSuccess("");
                     setView("edit");
                   }}
-                  className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500"
+                  className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 cursor-pointer"
                 >
                   Edit profile
                 </button>
@@ -235,7 +235,7 @@ function Profile() {
                     setPasswordSuccess("");
                     setView("password");
                   }}
-                  className="text-sm font-medium text-gray-400 transition hover:text-white"
+                  className="text-sm font-medium text-gray-400 transition hover:text-white cursor-pointer"
                 >
                   Change password
                 </button>
@@ -322,14 +322,14 @@ function Profile() {
                   <button
                     type="submit"
                     disabled={profileSubmitting}
-                    className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {profileSubmitting ? "Saving..." : "Save changes"}
                   </button>
                   <button
                     type="button"
                     onClick={() => setView("view")}
-                    className="ml-3 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-300 transition hover:bg-gray-800 hover:text-white"
+                    className="ml-3 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-300 transition hover:bg-gray-800 hover:text-white cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -387,14 +387,14 @@ function Profile() {
                 <button
                   type="submit"
                   disabled={passwordSubmitting}
-                  className="rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                  className="rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {passwordSubmitting ? "Changing..." : "Change password"}
                 </button>
                 <button
                   type="button"
                   onClick={() => setView("view")}
-                  className="ml-3 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-300 transition hover:bg-gray-800 hover:text-white"
+                  className="ml-3 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-300 transition hover:bg-gray-800 hover:text-white cursor-pointer"
                 >
                   Back to profile
                 </button>
@@ -435,7 +435,7 @@ function Profile() {
                 type="button"
                 onClick={() => setConfirmation(null)}
                 disabled={profileSubmitting || passwordSubmitting}
-                className="rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-300 transition hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-300 transition hover:bg-gray-800 hover:text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Cancel
               </button>
@@ -443,7 +443,7 @@ function Profile() {
                 type="button"
                 onClick={handleConfirmation}
                 disabled={profileSubmitting || passwordSubmitting}
-                className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {confirmation.type === "profile"
                   ? "Update profile"

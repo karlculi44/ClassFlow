@@ -120,7 +120,7 @@ function Submissions() {
           onClick={() =>
             navigate(`/admin-classes/${classId}/assignments/${assignmentId}`)
           }
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 transition hover:text-white"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 transition hover:text-white cursor-pointer"
         >
           <ArrowLeft size={16} strokeWidth={1.8} />
           Back to Assignment
@@ -205,7 +205,7 @@ function Submissions() {
                             type="button"
                             onClick={() => handleView(student)}
                             disabled={!submitted}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
                           >
                             {selectedStudent?.id === student.id ? (
                               <EyeOff size={15} strokeWidth={1.8} />

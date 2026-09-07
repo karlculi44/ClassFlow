@@ -128,7 +128,7 @@ function Students() {
                   value={classFilter}
                   onChange={(event) => setClassFilter(event.target.value)}
                   aria-label="Filter by class"
-                  className="h-11 rounded-lg border border-gray-700 bg-gray-900 px-3 text-sm text-gray-300 outline-none focus:border-indigo-500"
+                  className="h-11 rounded-lg border border-gray-700 bg-gray-900 px-3 text-sm text-gray-300 outline-none focus:border-indigo-500 cursor-pointer"
                 >
                   <option value="">All classes</option>
                   {classes.map((classItem) => (
@@ -186,7 +186,7 @@ function Students() {
                       <button
                         type="button"
                         onClick={() => handleView(student)}
-                        className="rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white"
+                        className="rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white cursor-pointer"
                       >
                         View
                       </button>
@@ -233,7 +233,7 @@ function Students() {
                 type="button"
                 onClick={() => setSelectedStudent(null)}
                 aria-label="Close student details"
-                className="rounded-lg p-2 text-gray-400 hover:bg-gray-800 hover:text-white"
+                className="rounded-lg p-2 text-gray-400 hover:bg-gray-800 hover:text-white cursor-pointer"
               >
                 <X size={19} />
               </button>

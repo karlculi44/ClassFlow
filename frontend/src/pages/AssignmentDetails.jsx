@@ -149,7 +149,7 @@ function AssignmentDetails() {
         <button
           type="button"
           onClick={() => navigate("/assignments")}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 transition hover:text-white"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 transition hover:text-white cursor-pointer"
         >
           <ArrowLeft size={16} strokeWidth={1.8} />
           Back to Assignments
@@ -223,7 +223,7 @@ function AssignmentDetails() {
                     target="_blank"
                     rel="noreferrer"
                     download={attachmentName}
-                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white cursor-pointer"
                   >
                     <Download size={16} strokeWidth={1.8} />
                     View / Download
@@ -280,7 +280,7 @@ function AssignmentDetails() {
                             href={`http://localhost:3000${submissionAttachmentPath}`}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-indigo-400 hover:text-indigo-300"
+                            className="text-indigo-400 hover:text-indigo-300 cursor-pointer"
                           >
                             {submission.attachment_name}
                           </a>
@@ -346,7 +346,7 @@ function AssignmentDetails() {
                   <button
                     type="button"
                     onClick={() => setViewingSubmission(false)}
-                    className="w-full shrink-0 rounded-lg border border-gray-700 px-4 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white sm:w-auto"
+                    className="w-full shrink-0 rounded-lg border border-gray-700 px-4 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white cursor-pointer sm:w-auto"
                   >
                     Close
                   </button>
@@ -406,7 +406,7 @@ function AssignmentDetails() {
                         type="button"
                         onClick={handleUpdateClick}
                         disabled={loadingSubmission}
-                        className="w-full rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                        className="w-full rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                       >
                         {loadingSubmission ? "Loading..." : "Update Submission"}
                       </button>
