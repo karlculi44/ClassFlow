@@ -6,6 +6,7 @@ import {
 } from "../services/enrollmentServices";
 import { getClasses } from "../services/classServices";
 import formatDate from "../utils/formatDate";
+import formatGrade from "../utils/formatGrade";
 import { formatSchedule } from "../utils/schedule";
 
 function Students() {
@@ -316,7 +317,7 @@ function Students() {
                             </span>
                             {graded && (
                               <span className="font-semibold text-emerald-300">
-                                {assignment.grade}
+                                {formatGrade(assignment.grade)}
                               </span>
                             )}
                           </div>

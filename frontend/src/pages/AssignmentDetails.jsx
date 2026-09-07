@@ -8,6 +8,7 @@ import {
   updateSubmission,
 } from "../services/submissionServices";
 import formatDate from "../utils/formatDate";
+import formatGrade from "../utils/formatGrade";
 
 function AssignmentDetails() {
   const { classId, assignmentId } = useParams();
@@ -184,7 +185,7 @@ function AssignmentDetails() {
                       GRADED
                     </p>
                     <p className="mt-1 text-2xl font-black leading-none text-white sm:text-3xl">
-                      {submission.grade}
+                      {formatGrade(submission.grade)}
                     </p>
                   </div>
                 )}

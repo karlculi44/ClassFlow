@@ -1,6 +1,8 @@
 import express from "express";
 import verifyToken from "../middleware/verifyToken.js";
 import authorize from "../middleware/authorize.js";
+import validate from "../middleware/validate.js";
+import { createClassSchema } from "../schemas/classSchema.js";
 import {
   createClass,
   getClasses,
@@ -11,7 +13,13 @@ import {
 const router = express.Router();
 
 router.get("/", verifyToken, authorize("Admin"), getClasses);
-router.post("/create-class", verifyToken, authorize("Admin"), createClass);
+router.post(
+  "/create-class",
+  verifyToken,
+  authorize("Admin"),
+  validate(createClassSchema),
+  createClass,
+);
 router.put("/update-class/:id", verifyToken, authorize("Admin"), updateClass);
 router.delete(
   "/delete-class/:id",

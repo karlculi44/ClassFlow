@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, Eye, EyeOff, Users } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import formatDate from "../utils/formatDate";
+import formatGrade from "../utils/formatGrade";
 import {
   getAdminStudentSubmission,
   getAdminSubmissions,
@@ -198,7 +199,7 @@ function Submissions() {
                           </span>
                         </td>
                         <td className="px-4 py-4 text-gray-300">
-                          {graded ? `${student.submission.grade}` : "-"}
+                          {graded ? formatGrade(student.submission.grade) : "-"}
                         </td>
                         <td className="px-4 py-4 text-right">
                           <button

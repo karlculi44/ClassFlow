@@ -12,6 +12,7 @@ import {
 import { getStudentEnrollments } from "../services/enrollmentServices";
 import GradeDetailsModal from "../components/GradeDetailsModal";
 import formatDate from "../utils/formatDate";
+import formatGrade from "../utils/formatGrade";
 
 function Grades() {
   const [grades, setGrades] = useState([]);
@@ -142,7 +143,7 @@ function Grades() {
                     Overall average
                   </p>
                   <p className="mt-2 text-3xl font-black text-white">
-                    {average}%
+                    {formatGrade(average)}%
                   </p>
                 </div>
                 <div className="rounded-2xl border border-gray-800 bg-gray-900 p-5">
@@ -191,7 +192,7 @@ function Grades() {
                           {assignment.class_name}
                         </p>
                         <p className="text-lg font-bold text-emerald-300">
-                          {assignment.grade}
+                          {formatGrade(assignment.grade)}
                         </p>
                         <div className="text-sm text-gray-400">
                           <p className="inline-flex items-center gap-2 text-indigo-300 mr-5">

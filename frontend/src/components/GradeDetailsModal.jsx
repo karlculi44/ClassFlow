@@ -1,4 +1,5 @@
 import { CalendarDays, Download, MessageSquareText, X } from "lucide-react";
+import formatGrade from "../utils/formatGrade";
 
 function GradeDetailsModal({ assignment, loading, error, onClose }) {
   if (!assignment && !loading && !error) {
@@ -104,7 +105,7 @@ function GradeDetailsModal({ assignment, loading, error, onClose }) {
                 Grade
               </p>
               <p className="mt-2 text-4xl font-black text-white">
-                {submission.grade}
+                {formatGrade(submission.grade)}
               </p>
             </aside>
           </div>

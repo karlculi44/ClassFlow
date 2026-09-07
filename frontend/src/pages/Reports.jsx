@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import { getClassReport, getReportSummary } from "../services/reportServices";
-
-const formatAverage = (value) =>
-  value === null || value === undefined
-    ? "-"
-    : `${Number(value).toFixed(2).replace(/\.00$/, "")}`;
+import formatGrade from "../utils/formatGrade";
 
 const getErrorMessage = (error, fallback) =>
   error.response?.data?.message || fallback;
@@ -136,7 +132,7 @@ function Reports() {
                             {classItem.submission_count}
                           </td>
                           <td className="px-5 py-4 font-semibold text-emerald-300">
-                            {formatAverage(classItem.average_grade)}
+                            {formatGrade(classItem.average_grade)}
                           </td>
                         </tr>
                       ))}
@@ -169,7 +165,7 @@ function Reports() {
                         </span>
                         <span className="text-gray-500">Average grade</span>
                         <span className="text-right font-semibold text-emerald-300">
-                          {formatAverage(classItem.average_grade)}
+                          {formatGrade(classItem.average_grade)}
                         </span>
                       </div>
                     </article>
@@ -262,7 +258,7 @@ function Reports() {
                                     {student.submission_count}
                                   </td>
                                   <td className="px-4 py-3 font-semibold text-emerald-300">
-                                    {formatAverage(student.average_grade)}
+                                    {formatGrade(student.average_grade)}
                                   </td>
                                 </tr>
                               ))}
@@ -286,7 +282,7 @@ function Reports() {
                                 Average grade
                               </span>
                               <span className="text-right font-semibold text-emerald-300">
-                                {formatAverage(student.average_grade)}
+                                {formatGrade(student.average_grade)}
                               </span>
                             </article>
                           ))}
@@ -329,7 +325,7 @@ function Reports() {
                                     {assignment.submission_count}
                                   </td>
                                   <td className="px-4 py-3 font-semibold text-emerald-300">
-                                    {formatAverage(assignment.average_grade)}
+                                    {formatGrade(assignment.average_grade)}
                                   </td>
                                 </tr>
                               ))}
@@ -353,7 +349,7 @@ function Reports() {
                                 Average grade
                               </span>
                               <span className="text-right font-semibold text-emerald-300">
-                                {formatAverage(assignment.average_grade)}
+                                {formatGrade(assignment.average_grade)}
                               </span>
                             </article>
                           ))}
