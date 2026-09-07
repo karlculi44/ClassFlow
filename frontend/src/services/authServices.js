@@ -5,6 +5,11 @@ export const register = async (data) => {
   return response.data;
 };
 
+export const createAdmin = async (data) => {
+  const response = await api.post("/auth/admins", data);
+  return response.data;
+};
+
 export const login = async (data) => {
   const response = await api.post("/auth/login", data);
   return response.data;

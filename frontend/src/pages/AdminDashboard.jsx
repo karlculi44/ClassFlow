@@ -5,6 +5,7 @@ import {
   ClipboardList,
   ChevronDown,
   ChevronUp,
+  UserPlus,
   Users,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +15,8 @@ import { getAdminSubmissions } from "../services/submissionServices";
 import { getStudents } from "../services/userServices";
 import { formatSchedule, isScheduleActive } from "../utils/schedule";
 import formatDate from "../utils/formatDate";
+import { createAdmin } from "../services/authServices";
+import AddAdminModal from "../components/AddAdminModal";
 
 const getAssignmentStatus = (assignment) => {
   const dueDate = new Date(
@@ -54,6 +57,14 @@ function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [currentTime, setCurrentTime] = useState(() => new Date());
+  const [adminModalOpen, setAdminModalOpen] = useState(false);
+  const [adminFormData, setAdminFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const [creatingAdmin, setCreatingAdmin] = useState(false);
+  const [adminCreateError, setAdminCreateError] = useState("");
 
   useEffect(() => {
     const intervalId = setInterval(() => setCurrentTime(new Date()), 60000);
@@ -116,6 +127,46 @@ function AdminDashboard() {
   const visibleAssignments = assignmentsExpanded
     ? sortedAssignments
     : sortedAssignments.slice(0, 5);
+
+  const closeAdminModal = (force = false) => {
+    if (creatingAdmin && !force) {
+      return;
+    }
+
+    setAdminModalOpen(false);
+    setAdminFormData({ name: "", email: "", password: "" });
+    setAdminCreateError("");
+  };
+
+  const handleAdminFormChange = (event) => {
+    const { name, value } = event.target;
+    setAdminCreateError("");
+    setAdminFormData((currentFormData) => ({
+      ...currentFormData,
+      [name]: value,
+    }));
+  };
+
+  const handleCreateAdmin = async (event) => {
+    event.preventDefault();
+    setCreatingAdmin(true);
+    setAdminCreateError("");
+
+    try {
+      await createAdmin(adminFormData);
+      closeAdminModal(true);
+    } catch (requestError) {
+      const validationMessage = requestError.response?.data?.errors?.[0]?.message;
+      setAdminCreateError(
+        validationMessage ||
+          requestError.response?.data?.message ||
+          "Unable to create this admin account right now.",
+      );
+    } finally {
+      setCreatingAdmin(false);
+    }
+  };
+
   const stats = [
     {
       label: "Total Students",
@@ -151,17 +202,30 @@ function AdminDashboard() {
       <div className="absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
       <main className="relative px-4 py-8 sm:px-6 lg:px-10">
         <div className="mx-auto max-w-6xl">
-          <header className="mb-8">
-            <p className="text-sm font-medium text-indigo-400">
-              Administration
-            </p>
-            <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-              Admin Dashboard
-            </h1>
-            <p className="mt-1 text-sm text-gray-400">
-              A live overview of your classes, assignments, and student
-              progress.
-            </p>
+          <header className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-sm font-medium text-indigo-400">
+                Administration
+              </p>
+              <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+                Admin Dashboard
+              </h1>
+              <p className="mt-1 text-sm text-gray-400">
+                A live overview of your classes, assignments, and student
+                progress.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setAdminCreateError("");
+                setAdminModalOpen(true);
+              }}
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 active:bg-indigo-700 cursor-pointer"
+            >
+              <UserPlus size={17} strokeWidth={1.8} />
+              Add Admin
+            </button>
           </header>
 
           {loading && (
@@ -319,6 +383,15 @@ function AdminDashboard() {
           )}
         </div>
       </main>
+      <AddAdminModal
+        isOpen={adminModalOpen}
+        formData={adminFormData}
+        loading={creatingAdmin}
+        error={adminCreateError}
+        onChange={handleAdminFormChange}
+        onClose={closeAdminModal}
+        onSubmit={handleCreateAdmin}
+      />
     </div>
   );
 }

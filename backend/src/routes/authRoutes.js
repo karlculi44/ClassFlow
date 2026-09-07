@@ -14,17 +14,26 @@ import {
   refresh,
   welcomeAdmin,
   googleLogin,
+  createAdmin,
 } from "../controllers/authController.js";
 import {
   registerSchema,
   loginSchema,
   profileSchema,
   changePasswordSchema,
+  createAdminSchema,
 } from "../schemas/authSchema.js";
 
 const router = express.Router();
 
 router.post("/register", validate(registerSchema), register);
+router.post(
+  "/admins",
+  verifyToken,
+  authorize("Admin"),
+  validate(createAdminSchema),
+  createAdmin,
+);
 router.post("/login", validate(loginSchema), login);
 router.post("/google-login", googleLogin);
 router.post("/logout", logout);

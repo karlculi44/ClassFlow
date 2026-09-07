@@ -51,6 +51,37 @@ export const register = asyncHandler(async (req, res) => {
   return res.status(201).json({ message: "User registered successfully!" });
 });
 
+export const createAdmin = asyncHandler(async (req, res) => {
+  const { name, email, password } = req.body;
+  const existingUser = await findUserByEmail(email);
+
+  if (existingUser) {
+    throw new AppError("Email is already taken", 409);
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  let result;
+  try {
+    result = await createUser({
+      name,
+      email,
+      hashedPassword,
+      role: "Admin",
+    });
+  } catch (error) {
+    if (error.code === "ER_DUP_ENTRY") {
+      throw new AppError("Email is already taken", 409);
+    }
+    throw error;
+  }
+  const user = await findUserById(result.insertId);
+
+  return res.status(201).json({
+    message: "Admin created successfully!",
+    user,
+  });
+});
+
 // Controller for handling user login (authentication)
 // This includes verifying user credentials, checking if the user exists,
 // comparing the provided password with the stored hashed password, and returning appropriate responses.
