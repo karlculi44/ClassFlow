@@ -137,7 +137,7 @@ function Classes() {
                         event.stopPropagation();
                         navigate(`/classes/${classItem.id}`);
                       }}
-                      className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white"
+                      className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white cursor-pointer"
                     >
                       <BookOpen size={16} /> View Class
                     </button>

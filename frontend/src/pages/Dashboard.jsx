@@ -160,7 +160,7 @@ function Dashboard() {
                           key={classItem.id}
                           type="button"
                           onClick={() => navigate(`/classes/${classItem.id}`)}
-                          className="relative flex w-full cursor-pointer flex-col items-start gap-2 rounded-xl border border-gray-800 bg-gray-950/60 px-4 py-3 text-left transition hover:border-indigo-500/50 hover:bg-gray-800/70 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+                          className="relative flex w-full cursor-pointer flex-col items-start gap-2 rounded-xl border border-gray-800 bg-gray-950/60 px-4 py-5 pb-3 text-left transition hover:border-indigo-500/50 hover:bg-gray-800/70 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
                         >
                           {isScheduleActive(classItem, currentTime) && (
                             <span

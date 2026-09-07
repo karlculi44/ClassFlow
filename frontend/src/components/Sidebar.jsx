@@ -80,7 +80,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   return (
     <>
       {/* Mobile top bar */}
-      <div className="relative z-30 flex w-full shrink-0 items-center justify-between border-b border-gray-800 bg-gray-900/95 px-4 py-4 shadow-lg shadow-black/10 backdrop-blur-sm md:hidden">
+      <div className="fixed inset-x-0 top-0 z-50 flex h-[69px] w-full items-center justify-between border-b border-gray-800 bg-gray-900/95 px-4 shadow-lg shadow-black/10 backdrop-blur-sm md:hidden">
         <div className="flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-purple-600">
             <span className="text-xs font-bold text-white">CF</span>
