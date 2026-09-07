@@ -161,9 +161,13 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 <span className="block text-lg font-bold text-white">
                   ClassFlow
                 </span>
-                {isAdmin && (
+                {isAdmin ? (
                   <span className="block text-xs text-indigo-400 font-medium">
                     Admin
+                  </span>
+                ) : (
+                  <span className="block text-xs text-gray-400 font-medium">
+                    Student
                   </span>
                 )}
               </div>

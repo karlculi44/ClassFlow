@@ -288,13 +288,13 @@ function Profile() {
                       <p className="text-sm font-medium text-gray-300">
                         User code
                       </p>
-                      <p className="mt-1.5 rounded-lg border border-gray-800 bg-gray-950 px-4 py-2.5 text-sm text-gray-400">
+                      <p className="mt-1.5 rounded-lg  font-extrabold py-2.5 text-sm text-gray-400">
                         {profile.user_code || "Unavailable"}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-300">Role</p>
-                      <p className="mt-1.5 rounded-lg border border-gray-800 bg-gray-950 px-4 py-2.5 text-sm text-gray-400">
+                      <p className="mt-1.5 rounded-lg  font-extrabold py-2.5 text-sm text-gray-400">
                         {profile.role}
                       </p>
                     </div>
@@ -302,7 +302,7 @@ function Profile() {
                       <p className="text-sm font-medium text-gray-300">
                         Account created
                       </p>
-                      <p className="mt-1.5 rounded-lg border border-gray-800 bg-gray-950 px-4 py-2.5 text-sm text-gray-400">
+                      <p className="mt-1.5 rounded-lg  font-extrabold py-2.5 text-sm text-gray-400">
                         {profile.created_at
                           ? formatDate(profile.created_at)
                           : "Unavailable"}

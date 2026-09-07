@@ -8,15 +8,17 @@ import {
   UserPlus,
   Users,
 } from "lucide-react";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { getClasses } from "../services/classServices";
 import { getAdminAssignments } from "../services/assignmentServices";
 import { getAdminSubmissions } from "../services/submissionServices";
 import { getStudents } from "../services/userServices";
 import { formatSchedule, isScheduleActive } from "../utils/schedule";
-import formatDate from "../utils/formatDate";
 import { createAdmin } from "../services/authServices";
 import AddAdminModal from "../components/AddAdminModal";
+import formatDate from "../utils/formatDate";
 
 const getAssignmentStatus = (assignment) => {
   const dueDate = new Date(
@@ -50,6 +52,7 @@ const getAssignmentStatus = (assignment) => {
 
 function AdminDashboard() {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const [classes, setClasses] = useState([]);
   const [students, setStudents] = useState([]);
   const [assignments, setAssignments] = useState([]);
@@ -209,7 +212,7 @@ function AdminDashboard() {
                 Administration
               </p>
               <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-                Admin Dashboard
+                Welcome back, {user?.name || "Admin Dashboard"}
               </h1>
               <p className="mt-1 text-sm text-gray-400">
                 A live overview of your classes, assignments, and student

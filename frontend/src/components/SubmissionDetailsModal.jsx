@@ -79,7 +79,7 @@ function SubmissionDetailsModal({
               <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Written Content
               </h3>
-              <p className="mt-2 min-h-28 whitespace-pre-wrap rounded-lg border border-gray-800 bg-gray-950 p-4 text-sm leading-6 text-gray-300">
+              <p className="mt-2 min-h-28 whitespace-pre-wrap rounded-lg  p-4 text-sm leading-6 text-gray-300">
                 {submission.content || "No written content provided."}
               </p>
               {submission.attachment_name && (
