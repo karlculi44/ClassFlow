@@ -84,50 +84,56 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   return (
     <>
       {/* Mobile top bar */}
-      <div className="fixed inset-x-0 top-0 z-50 flex h-17.25 w-full items-center justify-between border-b border-gray-800 bg-gray-900/95 px-4 shadow-lg shadow-black/10 backdrop-blur-sm md:hidden">
-        <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-purple-600">
-            <span className="text-xs font-bold text-white">CF</span>
+      {!sidebarOpen && (
+        <div className="fixed inset-x-0 top-0 z-50 flex h-17.25 w-full items-center justify-between border-b border-gray-800 bg-gray-900/95 px-4 shadow-lg shadow-black/10 backdrop-blur-sm md:hidden">
+          <div className="flex items-center gap-2">
+            <img
+              src="/ClassFlowIcon.png"
+              alt="ClassFlow"
+              className="h-9 w-9 rounded-xl object-contain"
+            />
+            <span className="text-base font-bold text-white">ClassFlow</span>
           </div>
-          <span className="text-base font-bold text-white">ClassFlow</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-            title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-            className="rounded-lg p-2 text-gray-300 transition hover:bg-gray-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
-          >
-            {isDark ? (
-              <Sun size={19} strokeWidth={1.8} />
-            ) : (
-              <Moon size={19} strokeWidth={1.8} />
-            )}
-          </button>
-          <button
-            type="button"
-            onClick={() => setSidebarOpen(true)}
-            aria-label="Open menu"
-            className="rounded-lg p-2 text-gray-300 transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-              className="h-6 w-6"
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={
+                isDark ? "Switch to light mode" : "Switch to dark mode"
+              }
+              title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+              className="rounded-lg p-2 text-gray-300 transition hover:bg-gray-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"
-              />
-            </svg>
-          </button>
+              {isDark ? (
+                <Sun size={19} strokeWidth={1.8} />
+              ) : (
+                <Moon size={19} strokeWidth={1.8} />
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Open menu"
+              className="rounded-lg p-2 text-gray-300 transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.5}
+                className="h-6 w-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Backdrop for mobile sidebar */}
       {sidebarOpen && (
@@ -146,9 +152,11 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         <div>
           <div className="flex items-center justify-between gap-3 px-6 py-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-950/50">
-                <span className="text-sm font-bold text-white">CF</span>
-              </div>
+              <img
+                src="/ClassFlowIcon.png"
+                alt="ClassFlow"
+                className="h-10 w-10 rounded-xl object-contain"
+              />
               <div>
                 <span className="block text-lg font-bold text-white">
                   ClassFlow

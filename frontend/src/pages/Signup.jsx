@@ -189,18 +189,18 @@ function Signup() {
             <span className="text-2xl font-bold text-white">CF</span>
           </div>
           <h1 className="text-4xl font-extrabold tracking-tight text-white">
-            Welcome to ClassFlow
+            Start with ClassFlow
           </h1>
           <p className="mt-3 text-indigo-100/80">
-            Everything you need to stay organized, keep learning, and make
-            progress.
+            Create your account to organize your classes, assignments, and
+            academic progress in one place.
           </p>
           <ul className="mt-8 space-y-3 text-left">
             {[
-              "Keep track of your classes",
+              "Create your student profile",
+              "Access your enrolled classes",
               "Stay on top of assignments",
-              "Follow your academic progress",
-              "Connect with your instructors",
+              "Track your academic progress",
             ].map((feature) => (
               <li key={feature} className="flex items-center gap-3">
                 <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/15">

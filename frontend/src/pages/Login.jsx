@@ -9,9 +9,11 @@ function Login() {
     email: "",
     password: "",
   });
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setError("");
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -25,6 +27,7 @@ function Login() {
       navigate(user.role === "Admin" ? "/admin" : "/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
+      setError("Invalid credentials. Please check your email and password.");
     }
   };
 
@@ -43,9 +46,6 @@ function Login() {
         <div className="absolute top-20 left-1/3 h-3 w-3 rounded-full bg-white/30" />
         <div className="absolute bottom-1/3 right-1/4 h-2 w-2 rounded-full bg-white/40" />
         <div className="relative text-center max-w-sm">
-          <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm border border-white/20">
-            <span className="text-2xl font-bold text-white">CF</span>
-          </div>
           <h1 className="text-4xl font-extrabold tracking-tight text-white">
             Welcome to ClassFlow
           </h1>
@@ -92,9 +92,6 @@ function Login() {
 
         <div className="w-full max-w-md">
           <div className="text-center mb-8 md:hidden">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-950/50">
-              <span className="text-xl font-bold text-white">CF</span>
-            </div>
             <h1 className="text-3xl font-extrabold tracking-tight text-white">
               Welcome to{" "}
               <span className="bg-linear-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
@@ -151,6 +148,11 @@ function Login() {
                   className="w-full rounded-lg bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
                 />
               </div>
+              {error && (
+                <p className="text-sm text-red-400" role="alert">
+                  {error}
+                </p>
+              )}
 
               <button
                 type="submit"
