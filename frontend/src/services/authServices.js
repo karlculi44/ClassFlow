@@ -10,6 +10,20 @@ export const createAdmin = async (data) => {
   return response.data;
 };
 
+export const forgotPassword = async (email) => {
+  const response = await api.post("/auth/forgot-password", { email });
+  return response.data;
+};
+
+export const resetPassword = async (token, password, confirmPassword) => {
+  const response = await api.post("/auth/reset-password", {
+    token,
+    password,
+    confirmPassword,
+  });
+  return response.data;
+};
+
 export const login = async (data) => {
   const response = await api.post("/auth/login", data);
   return response.data;

@@ -17,6 +17,27 @@ export const registerSchema = z
 
 export const createAdminSchema = registerSchema;
 
+export const forgotPasswordSchema = z
+  .object({
+    email: z.string().trim().toLowerCase().email("Invalid email address"),
+  })
+  .strict();
+
+export const resetPasswordSchema = z
+  .object({
+    token: z.string().trim().min(1, "Reset token is required").max(256),
+    password: z
+      .string()
+      .min(6, "Password must be at least 6 characters long")
+      .max(128, "Password must be 128 characters or fewer"),
+    confirmPassword: z.string(),
+  })
+  .strict()
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
 export const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),

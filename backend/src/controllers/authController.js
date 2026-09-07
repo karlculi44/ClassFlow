@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import asyncHandler from "../utils/asyncHandler.js";
 import AppError from "../utils/AppError.js";
@@ -20,8 +21,17 @@ import {
   saveRefreshToken,
   findRefreshTokenByUserId,
   findUserByEmailForOAuth,
+  findUserForPasswordReset,
 } from "../models/userModel.js";
+import {
+  consumePasswordResetToken,
+  createPasswordResetToken,
+} from "../models/passwordResetModel.js";
 import hashToken from "../utils/hashToken.js";
+import {
+  sendGoogleOnlyPasswordRecoveryEmail,
+  sendPasswordResetEmail,
+} from "../utils/mailer.js";
 
 // Controller for handling user authentication (registration)
 // This includes registering new users and ensuring that all required fields are provided,
@@ -80,6 +90,59 @@ export const createAdmin = asyncHandler(async (req, res) => {
     message: "Admin created successfully!",
     user,
   });
+});
+
+const passwordResetMessage =
+  "If an account exists for this email, a password reset link has been sent.";
+
+export const forgotPassword = asyncHandler(async (req, res) => {
+  const user = await findUserForPasswordReset(req.body.email);
+
+  if (user?.hashedPassword) {
+    const rawToken = crypto.randomBytes(32).toString("hex");
+    const tokenHash = hashToken(rawToken);
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000);
+    await createPasswordResetToken({
+      userId: user.id,
+      tokenHash,
+      expiresAt,
+    });
+
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${encodeURIComponent(rawToken)}`;
+    try {
+      await sendPasswordResetEmail({ email: req.body.email, resetUrl });
+    } catch (error) {
+      console.error("Unable to send password reset email:", error.message);
+    }
+  } else if (user) {
+    try {
+      await sendGoogleOnlyPasswordRecoveryEmail({ email: req.body.email });
+    } catch (error) {
+      console.error(
+        "Unable to send Google sign-in recovery email:",
+        error.message,
+      );
+    }
+  }
+
+  return res.status(200).json({ message: passwordResetMessage });
+});
+
+export const resetPassword = asyncHandler(async (req, res) => {
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  const userId = await consumePasswordResetToken({
+    tokenHash: hashToken(req.body.token),
+    hashedPassword,
+  });
+
+  if (!userId) {
+    throw new AppError(
+      "This password reset link is invalid or has expired.",
+      400,
+    );
+  }
+
+  return res.status(200).json({ message: "Password reset successfully." });
 });
 
 // Controller for handling user login (authentication)

@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { useTheme } from "../context/useTheme";
 
@@ -203,12 +203,12 @@ function Login() {
               >
                 Sign In
               </button>
-              <a
-                href="#"
+              <Link
+                to="/forgot-password"
                 className="text-xs text-indigo-400 hover:text-indigo-300 transition cursor-pointer"
               >
                 Forgot password?
-              </a>
+              </Link>
 
               <div className="flex items-center gap-3 py-1">
                 <div className="h-px flex-1 bg-gray-700" />

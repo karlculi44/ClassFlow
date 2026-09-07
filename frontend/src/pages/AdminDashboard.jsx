@@ -156,7 +156,8 @@ function AdminDashboard() {
       await createAdmin(adminFormData);
       closeAdminModal(true);
     } catch (requestError) {
-      const validationMessage = requestError.response?.data?.errors?.[0]?.message;
+      const validationMessage =
+        requestError.response?.data?.errors?.[0]?.message;
       setAdminCreateError(
         validationMessage ||
           requestError.response?.data?.message ||
