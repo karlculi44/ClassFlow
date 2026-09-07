@@ -7,6 +7,7 @@ import {
   findClassesByStudentId,
   findAdminStudents,
   findAdminStudentDetails,
+  removeStudentsFromClass,
 } from "../models/enrollmentModel.js";
 
 export const addStudents = asyncHandler(async (req, res) => {
@@ -32,6 +33,49 @@ export const addStudents = asyncHandler(async (req, res) => {
   return res.status(201).json({
     message: "Students added successfully",
     addedStudents,
+  });
+});
+
+export const removeStudents = asyncHandler(async (req, res) => {
+  const { classId } = req.params;
+  const { studentIds } = req.body;
+
+  if (
+    !classId ||
+    !Array.isArray(studentIds) ||
+    studentIds.length === 0 ||
+    studentIds.some(
+      (studentId) =>
+        (typeof studentId !== "number" && typeof studentId !== "string") ||
+        !Number.isInteger(Number(studentId)) ||
+        Number(studentId) <= 0,
+    )
+  ) {
+    throw new AppError(
+      "Class ID and at least one valid student ID are required",
+      400,
+    );
+  }
+
+  const normalizedStudentIds = [
+    ...new Set(studentIds.map((studentId) => Number(studentId))),
+  ];
+  const removed = await removeStudentsFromClass({
+    classId,
+    adminId: req.user.id,
+    studentIds: normalizedStudentIds,
+  });
+
+  if (!removed) {
+    throw new AppError(
+      "One or more selected students are not enrolled in this class.",
+      403,
+    );
+  }
+
+  return res.status(200).json({
+    message: "Students removed successfully",
+    removedCount: normalizedStudentIds.length,
   });
 });
 

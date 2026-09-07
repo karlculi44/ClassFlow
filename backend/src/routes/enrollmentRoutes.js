@@ -3,6 +3,7 @@ import verifyToken from "../middleware/verifyToken.js";
 import authorize from "../middleware/authorize.js";
 import {
   addStudents,
+  removeStudents,
   addStudent,
   getEnrolledStudents,
   getStudentClasses,
@@ -28,6 +29,13 @@ router.get(
 router.get("/:classId", verifyToken, authorize("Admin"), getEnrolledStudents);
 
 router.post("/:classId/students", verifyToken, authorize("Admin"), addStudents);
+
+router.delete(
+  "/:classId/students",
+  verifyToken,
+  authorize("Admin"),
+  removeStudents,
+);
 
 router.post(
   "/:classId/:studentId",

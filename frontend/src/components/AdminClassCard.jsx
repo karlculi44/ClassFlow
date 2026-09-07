@@ -6,7 +6,8 @@ import { formatSchedule, isScheduleActive } from "../utils/schedule";
 function ClassCard({ classItem, onEdit, onDelete, currentTime }) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const students = classItem.students ?? classItem.enrolledStudents ?? 0;
+  const students = Number(classItem.student_count ?? 0);
+  const capacity = Number(classItem.capacity ?? 0);
   const status = isScheduleActive(classItem, currentTime)
     ? "Active"
     : "Inactive";
@@ -14,7 +15,8 @@ function ClassCard({ classItem, onEdit, onDelete, currentTime }) {
     status === "Active"
       ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
       : "border-gray-500/20 bg-gray-500/10 text-gray-400";
-  const enrollmentPercent = Math.round((students / classItem.capacity) * 100);
+  const enrollmentPercent =
+    capacity > 0 ? Math.min(Math.round((students / capacity) * 100), 100) : 0;
 
   const goToClassWorkspace = () => navigate(`/admin-classes/${classItem.id}`);
 
@@ -102,7 +104,7 @@ function ClassCard({ classItem, onEdit, onDelete, currentTime }) {
         <div className="flex items-center justify-between text-sm">
           <span className="text-gray-400">Enrollment</span>
           <span className="font-medium text-white">
-            {students} / {classItem.capacity}
+            {students} / {capacity}
           </span>
         </div>
         <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-gray-800">

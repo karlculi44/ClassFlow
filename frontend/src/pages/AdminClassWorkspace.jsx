@@ -21,10 +21,12 @@ import {
 import CreateAssignmentModal from "../components/CreateAssignmentModal";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import AddStudentModal from "../components/AddStudentModal";
+import RemoveStudentsModal from "../components/RemoveStudentsModal";
 import { getStudents } from "../services/userServices";
 import {
   addStudents,
   getEnrolledStudents,
+  removeStudents as removeStudentsFromClass,
 } from "../services/enrollmentServices";
 import { getAdminSubmissions } from "../services/submissionServices";
 import { formatSchedule, isScheduleActive } from "../utils/schedule";
@@ -60,7 +62,14 @@ function ClassWorkspace() {
   const [studentsError, setStudentsError] = useState("");
   const [addingStudents, setAddingStudents] = useState(false);
   const [enrolledStudents, setEnrolledStudents] = useState([]);
+  const [enrolledStudentsLoaded, setEnrolledStudentsLoaded] = useState(false);
   const [enrolledStudentsError, setEnrolledStudentsError] = useState("");
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedStudentIds, setSelectedStudentIds] = useState([]);
+  const [showAllStudents, setShowAllStudents] = useState(false);
+  const [removeStudentsModalOpen, setRemoveStudentsModalOpen] = useState(false);
+  const [removingStudents, setRemovingStudents] = useState(false);
+  const [removeStudentsError, setRemoveStudentsError] = useState("");
   const [currentTime, setCurrentTime] = useState(() => new Date());
 
   useEffect(() => {
@@ -122,6 +131,8 @@ function ClassWorkspace() {
           requestError.response?.data?.message ||
             "Unable to load enrolled students right now.",
         );
+      } finally {
+        setEnrolledStudentsLoaded(true);
       }
     };
 
@@ -134,9 +145,9 @@ function ClassWorkspace() {
   );
 
   const students = classItem
-    ? enrolledStudents.length > 0
+    ? enrolledStudentsLoaded
       ? enrolledStudents.length
-      : (classItem.students ?? classItem.enrolledStudents ?? 0)
+      : Number(classItem.student_count ?? 0)
     : 0;
   const status = isScheduleActive(classItem, currentTime)
     ? "Active"
@@ -284,12 +295,75 @@ function ClassWorkspace() {
     }
   };
 
+  const toggleStudentSelection = (studentId) => {
+    const normalizedStudentId = String(studentId);
+    setSelectedStudentIds((currentIds) =>
+      currentIds.includes(normalizedStudentId)
+        ? currentIds.filter((id) => id !== normalizedStudentId)
+        : [...currentIds, normalizedStudentId],
+    );
+  };
+
+  const handleStartStudentSelection = () => {
+    setRemoveStudentsError("");
+    setSelectedStudentIds([]);
+    setSelectionMode(true);
+  };
+
+  const handleCancelStudentSelection = () => {
+    if (removingStudents) {
+      return;
+    }
+
+    setSelectionMode(false);
+    setSelectedStudentIds([]);
+    setRemoveStudentsModalOpen(false);
+    setRemoveStudentsError("");
+  };
+
+  const handleRequestStudentRemoval = () => {
+    if (selectedStudentIds.length === 0) {
+      return;
+    }
+
+    setRemoveStudentsError("");
+    setRemoveStudentsModalOpen(true);
+  };
+
+  const handleConfirmStudentRemoval = async () => {
+    if (selectedStudentIds.length === 0) {
+      return;
+    }
+
+    setRemovingStudents(true);
+    setRemoveStudentsError("");
+
+    try {
+      await removeStudentsFromClass(classId, selectedStudentIds);
+      const data = await getEnrolledStudents(classId);
+      setEnrolledStudents(data.students ?? []);
+      setRemoveStudentsModalOpen(false);
+      setSelectionMode(false);
+      setSelectedStudentIds([]);
+    } catch (requestError) {
+      setRemoveStudentsError(
+        requestError.response?.data?.message ||
+          "Unable to remove the selected students right now.",
+      );
+    } finally {
+      setRemovingStudents(false);
+    }
+  };
+
   const enrolledStudentIds = new Set(
     enrolledStudents.map((student) => String(student.id)),
   );
   const availableStudents = studentsList.filter(
     (student) => !enrolledStudentIds.has(String(student.id)),
   );
+  const visibleStudents = showAllStudents
+    ? enrolledStudents
+    : enrolledStudents.slice(0, 10);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gray-950">
@@ -373,16 +447,57 @@ function ClassWorkspace() {
             <div className="grid grid-cols-1 gap-8 py-8 xl:grid-cols-2">
               {/* Students list */}
               <section>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                   <h2 className="text-lg font-semibold text-white">Students</h2>
-                  <span className="text-sm text-gray-500">
-                    {students} / {classItem.capacity}
-                  </span>
+                  <div className="flex flex-wrap items-center justify-end gap-2">
+                    <span className="text-sm text-gray-500">
+                      {students} / {classItem.capacity}
+                    </span>
+                    {selectionMode ? (
+                      <>
+                        <button
+                          type="button"
+                          onClick={handleCancelStudentSelection}
+                          disabled={removingStudents}
+                          className="rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-300 transition hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleRequestStudentRemoval}
+                          disabled={
+                            selectedStudentIds.length === 0 || removingStudents
+                          }
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                          <Trash size={15} strokeWidth={1.8} />
+                          Remove
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleStartStudentSelection}
+                        aria-label="Edit student enrollment"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-300 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white"
+                      >
+                        <Pencil size={15} strokeWidth={1.8} />
+                        Edit
+                      </button>
+                    )}
+                  </div>
                 </div>
+                {removeStudentsError && !removeStudentsModalOpen && (
+                  <p className="mt-3 text-sm text-red-400">
+                    {removeStudentsError}
+                  </p>
+                )}
                 <div className="mt-4 overflow-hidden rounded-2xl border border-gray-800 bg-gray-900">
                   <table className="w-full text-left text-sm">
                     <thead>
                       <tr className="border-b border-gray-800 text-xs uppercase tracking-wider text-gray-500">
+                        {selectionMode && <th className="w-12 px-4 py-3" />}
                         <th className="px-4 py-3 font-medium">Name</th>
                         <th className="px-4 py-3 font-medium">Email</th>
                         <th className="px-4 py-3 font-medium">Status</th>
@@ -392,18 +507,33 @@ function ClassWorkspace() {
                       {enrolledStudentsError ? (
                         <tr>
                           <td
-                            colSpan={3}
+                            colSpan={selectionMode ? 4 : 3}
                             className="px-4 py-6 text-center text-sm text-red-400"
                           >
                             {enrolledStudentsError}
                           </td>
                         </tr>
                       ) : enrolledStudents.length > 0 ? (
-                        enrolledStudents.map((student) => (
+                        visibleStudents.map((student) => (
                           <tr
                             key={student.id}
                             className="border-b border-gray-800 last:border-b-0"
                           >
+                            {selectionMode && (
+                              <td className="px-4 py-3">
+                                <input
+                                  type="checkbox"
+                                  checked={selectedStudentIds.includes(
+                                    String(student.id),
+                                  )}
+                                  onChange={() =>
+                                    toggleStudentSelection(student.id)
+                                  }
+                                  aria-label={`Select ${student.name} for removal`}
+                                  className="h-4 w-4 accent-indigo-500"
+                                />
+                              </td>
+                            )}
                             <td className="px-4 py-3 text-gray-200">
                               {student.name}
                             </td>
@@ -433,7 +563,7 @@ function ClassWorkspace() {
                       ) : (
                         <tr>
                           <td
-                            colSpan={3}
+                            colSpan={selectionMode ? 4 : 3}
                             className="px-4 py-6 text-center text-gray-500"
                           >
                             No students enrolled yet.
@@ -443,6 +573,17 @@ function ClassWorkspace() {
                     </tbody>
                   </table>
                 </div>
+                {enrolledStudents.length > 10 && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setShowAllStudents((isVisible) => !isVisible)
+                    }
+                    className="mx-auto mt-3 block px-2 py-1 text-sm font-semibold text-indigo-400 transition hover:text-indigo-300"
+                  >
+                    {showAllStudents ? "View less" : "View all"}
+                  </button>
+                )}
               </section>
 
               {/* Assignments list */}
@@ -602,6 +743,21 @@ function ClassWorkspace() {
           }
         }}
         onAdd={handleAddStudents}
+      />
+      <RemoveStudentsModal
+        isOpen={removeStudentsModalOpen}
+        students={enrolledStudents.filter((student) =>
+          selectedStudentIds.includes(String(student.id)),
+        )}
+        loading={removingStudents}
+        error={removeStudentsError}
+        onClose={() => {
+          if (!removingStudents) {
+            setRemoveStudentsModalOpen(false);
+            setRemoveStudentsError("");
+          }
+        }}
+        onConfirm={handleConfirmStudentRemoval}
       />
     </div>
   );

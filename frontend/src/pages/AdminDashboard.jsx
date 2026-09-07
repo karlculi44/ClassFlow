@@ -5,7 +5,6 @@ import {
   ClipboardList,
   ChevronDown,
   ChevronUp,
-  Plus,
   Users,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -228,7 +227,7 @@ function AdminDashboard() {
                         onClick={() =>
                           navigate(`/admin-classes/${classItem.id}`)
                         }
-                        className="relative flex min-w-0 w-full items-center justify-between gap-4 overflow-hidden rounded-xl border border-gray-800 bg-gray-950/60 px-4 py-3 text-left transition hover:border-indigo-500/50 hover:bg-gray-800/70"
+                        className="relative flex min-w-0 w-full items-center justify-between gap-4 overflow-hidden rounded-xl border border-gray-800 bg-gray-950/60 px-4 py-3 text-left transition hover:border-indigo-500/50 hover:bg-gray-800/70 cursor-pointer"
                       >
                         {isScheduleActive(classItem, currentTime) && (
                           <span
@@ -274,7 +273,7 @@ function AdminDashboard() {
                               `/admin-classes/${assignment.class_id}/assignments/${assignment.id}`,
                             )
                           }
-                          className="flex h-24 min-w-0 w-full flex-col justify-center overflow-hidden rounded-xl border border-gray-800 bg-gray-950/60 px-4 text-left transition hover:border-indigo-500/50 hover:bg-gray-800/70"
+                          className="flex h-24 min-w-0 w-full flex-col justify-center overflow-hidden rounded-xl border border-gray-800 bg-gray-950/60 px-4 text-left transition hover:border-indigo-500/50 hover:bg-gray-800/70 cursor-pointer"
                         >
                           <div className="flex min-w-0 items-start justify-between gap-3">
                             <p className="min-w-0 flex-1 truncate text-sm font-medium text-gray-100">
@@ -342,13 +341,6 @@ function AdminDashboard() {
                     className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white"
                   >
                     <BookOpen size={16} /> Manage Classes
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => navigate("/admin-classes")}
-                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500"
-                  >
-                    <Plus size={16} /> Create Class
                   </button>
                 </div>
               </section>

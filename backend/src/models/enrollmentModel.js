@@ -24,6 +24,47 @@ export const addStudentsToClass = async (classId, studentIds) => {
   return result.affectedRows;
 };
 
+export const removeStudentsFromClass = async ({
+  classId,
+  adminId,
+  studentIds,
+}) => {
+  const placeholders = studentIds.map(() => "?").join(", ");
+  const [matchingRows] = await pool.query(
+    `
+      SELECT COUNT(DISTINCT enrollments.student_id) AS matching_count
+      FROM enrollments
+      INNER JOIN classes ON classes.id = enrollments.class_id
+                        AND classes.admin_id = ?
+      INNER JOIN users ON users.id = enrollments.student_id
+                      AND users.role = 'Student'
+      WHERE enrollments.class_id = ?
+        AND enrollments.student_id IN (${placeholders})
+    `,
+    [adminId, classId, ...studentIds],
+  );
+
+  if (Number(matchingRows[0].matching_count) !== studentIds.length) {
+    return false;
+  }
+
+  const [result] = await pool.query(
+    `
+      DELETE enrollments
+      FROM enrollments
+      INNER JOIN classes ON classes.id = enrollments.class_id
+                        AND classes.admin_id = ?
+      INNER JOIN users ON users.id = enrollments.student_id
+                      AND users.role = 'Student'
+      WHERE enrollments.class_id = ?
+        AND enrollments.student_id IN (${placeholders})
+    `,
+    [adminId, classId, ...studentIds],
+  );
+
+  return result.affectedRows === studentIds.length;
+};
+
 export const findStudentsByClassId = async (classId) => {
   const [rows] = await pool.query(
     `

@@ -189,8 +189,7 @@ function AdminClasses() {
   };
 
   const totalStudents = classes.reduce(
-    (total, classItem) =>
-      total + (classItem.students ?? classItem.enrolledStudents ?? 0),
+    (total, classItem) => total + Number(classItem.student_count ?? 0),
     0,
   );
 
@@ -230,7 +229,7 @@ function AdminClasses() {
             <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
               Total classes
             </p>
-            <p className="mt-1 text-2xl font-bold text-white">
+            <p className="mt-1 text-2xl font-bold  text-blue-400">
               {classes.length}
             </p>
           </div>

@@ -28,3 +28,10 @@ export const addStudents = async (classId, studentIds) => {
   });
   return response.data;
 };
+
+export const removeStudents = async (classId, studentIds) => {
+  const response = await api.delete(`/enrollments/${classId}/students`, {
+    data: { studentIds },
+  });
+  return response.data;
+};
