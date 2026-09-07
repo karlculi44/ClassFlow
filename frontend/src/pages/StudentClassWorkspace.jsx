@@ -1,4 +1,10 @@
-import { ArrowLeft, CalendarDays, ClipboardList } from "lucide-react";
+import {
+  ArrowLeft,
+  CalendarDays,
+  ChevronDown,
+  ClipboardList,
+  Search,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getStudentEnrollments } from "../services/enrollmentServices";
@@ -14,6 +20,8 @@ function StudentClassWorkspace() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [currentTime, setCurrentTime] = useState(() => new Date());
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   useEffect(() => {
     const intervalId = setInterval(() => setCurrentTime(new Date()), 60000);
@@ -52,6 +60,21 @@ function StudentClassWorkspace() {
 
     fetchWorkspace();
   }, [classId]);
+
+  const filteredAssignments = assignments.filter((assignment) => {
+    const status =
+      assignment.grade !== null && assignment.grade !== undefined
+        ? "graded"
+        : assignment.submission_id
+          ? "submitted"
+          : "not-submitted";
+    const matchesSearch = assignment.title
+      .toLowerCase()
+      .includes(search.trim().toLowerCase());
+    const matchesStatus = statusFilter === "all" || status === statusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gray-950">
@@ -106,13 +129,56 @@ function StudentClassWorkspace() {
                     Assignments
                   </h2>
                 </div>
+                <div className="mt-4 flex flex-col gap-4 rounded-2xl border border-gray-800 bg-gray-900/80 p-4 shadow-lg shadow-black/20 sm:flex-row sm:items-end">
+                  <label className="w-full sm:flex-1">
+                    <span className="mb-2 block text-xs font-semibold uppercase tracking-wider text-gray-500">
+                      Search assignments
+                    </span>
+                    <span className="relative block">
+                      <Search className="pointer-events-none absolute left-3 top-3 h-5 w-5 text-gray-500" />
+                      <input
+                        type="search"
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
+                        placeholder="Search by assignment title"
+                        className="h-11 w-full rounded-lg border border-gray-700 bg-gray-900 pl-10 pr-3 text-sm text-gray-200 outline-none placeholder:text-gray-500 focus:border-indigo-500"
+                      />
+                    </span>
+                  </label>
+                  <label className="w-full sm:max-w-xs">
+                    <span className="mb-2 block text-xs font-semibold uppercase tracking-wider text-gray-500">
+                      Status
+                    </span>
+                    <span className="relative block">
+                      <select
+                        value={statusFilter}
+                        onChange={(event) =>
+                          setStatusFilter(event.target.value)
+                        }
+                        className="h-11 w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 px-3 pr-10 text-sm text-gray-300 outline-none transition hover:border-gray-600 focus:border-indigo-500 cursor-pointer"
+                      >
+                        <option value="all">All statuses</option>
+                        <option value="not-submitted">Not submitted</option>
+                        <option value="submitted">Submitted</option>
+                        <option value="graded">Graded</option>
+                      </select>
+                      <ChevronDown className="pointer-events-none absolute right-3 top-3 h-5 w-5 text-gray-500" />
+                    </span>
+                  </label>
+                </div>
                 <div className="mt-4 space-y-3">
                   {assignments.length === 0 && (
                     <p className="text-sm text-gray-400">
                       No assignments for this class yet.
                     </p>
                   )}
-                  {assignments.map((assignment) => {
+                  {assignments.length > 0 &&
+                    filteredAssignments.length === 0 && (
+                      <p className="text-sm text-gray-400">
+                        No assignments match your filters.
+                      </p>
+                    )}
+                  {filteredAssignments.map((assignment) => {
                     const status =
                       assignment.grade !== null &&
                       assignment.grade !== undefined
