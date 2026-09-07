@@ -1,10 +1,12 @@
 import { useState, useContext, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import { useTheme } from "../context/useTheme";
 
 function Login() {
   const navigate = useNavigate();
   const { login, googleLogin } = useContext(AuthContext);
+  const { theme } = useTheme();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -58,16 +60,19 @@ function Login() {
       callback: handleGoogleLogin,
     });
 
-    window.google.accounts.id.renderButton(
-      document.getElementById("google-signin-button"),
-      {
-        theme: "filled_black",
-        size: "large",
-        width: 350,
-        text: "continue_with",
-      },
-    );
-  }, [handleGoogleLogin]);
+    const buttonContainer = document.getElementById("google-signin-button");
+    if (!buttonContainer) {
+      return;
+    }
+
+    buttonContainer.replaceChildren();
+    window.google.accounts.id.renderButton(buttonContainer, {
+      theme: theme === "dark" ? "filled_black" : "outline",
+      size: "large",
+      width: 350,
+      text: "continue_with",
+    });
+  }, [handleGoogleLogin, theme]);
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gray-950">
@@ -207,7 +212,7 @@ function Login() {
 
               <div className="flex items-center gap-3 py-1">
                 <div className="h-px flex-1 bg-gray-700" />
-                <span className="text-xs text-gray-500">or continue with</span>
+                <span className="text-xs text-gray-500">or</span>
                 <div className="h-px flex-1 bg-gray-700" />
               </div>
 
