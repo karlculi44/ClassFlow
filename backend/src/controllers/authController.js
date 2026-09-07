@@ -2,6 +2,11 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import asyncHandler from "../utils/asyncHandler.js";
 import AppError from "../utils/AppError.js";
+import { OAuth2Client } from "google-auth-library";
+import {
+  findOAuthAccount,
+  createOAuthAccount,
+} from "../models/oathAccountModels.js";
 import {
   createUser,
   findUserByEmail,
@@ -14,6 +19,7 @@ import {
   deleteRefreshToken,
   saveRefreshToken,
   findRefreshTokenByUserId,
+  findUserByEmailForOAuth,
 } from "../models/userModel.js";
 import hashToken from "../utils/hashToken.js";
 
@@ -104,6 +110,123 @@ export const login = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json({ message: "Login successful!", user: publicUser });
+});
+
+// Controller for handling Google login (OAuth authentication)
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+export const googleLogin = asyncHandler(async (req, res) => {
+  const { credential } = req.body;
+
+  if (!credential) {
+    throw new AppError("Google credential is required.", 400);
+  }
+
+  const ticket = await googleClient.verifyIdToken({
+    idToken: credential,
+    audience: process.env.GOOGLE_CLIENT_ID,
+  });
+
+  const payload = ticket.getPayload();
+
+  if (!payload) {
+    throw new AppError("Invalid Google credential.", 401);
+  }
+
+  const {
+    sub: providerAccountId,
+    email,
+    name,
+    email_verified: emailVerified,
+  } = payload;
+
+  if (!email || !emailVerified) {
+    throw new AppError("Google account email is not verified.", 401);
+  }
+
+  // 1. Check whether this Google account is already linked
+  let oauthAccount = await findOAuthAccount("google", providerAccountId);
+
+  let user;
+
+  if (oauthAccount) {
+    // Existing Google account
+    user = await findUserById(oauthAccount.user_id);
+
+    if (!user) {
+      throw new AppError("Associated user account not found.", 404);
+    }
+  } else {
+    // 2. Check whether a ClassFlow account already exists with this email
+    user = await findUserByEmailForOAuth(email);
+
+    if (user) {
+      // Link Google to the existing ClassFlow account
+      await createOAuthAccount({
+        userId: user.id,
+        provider: "google",
+        providerAccountId,
+      });
+    } else {
+      // 3. Create a new ClassFlow student
+      const result = await createUser({
+        name,
+        email,
+        hashedPassword: null,
+        role: "Student",
+      });
+
+      user = await findUserById(result.insertId);
+
+      // 4. Link Google account to the new user
+      await createOAuthAccount({
+        userId: user.id,
+        provider: "google",
+        providerAccountId,
+      });
+    }
+  }
+
+  // 5. Generate the same ClassFlow tokens as normal login
+  const accessToken = jwt.sign(
+    { id: user.id, role: user.role },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: "1h",
+    },
+  );
+
+  const refreshToken = jwt.sign(
+    { id: user.id },
+    process.env.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: "7d",
+    },
+  );
+
+  const hashedRefreshToken = hashToken(refreshToken);
+
+  await saveRefreshToken(user.id, hashedRefreshToken);
+
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
+    maxAge: 15 * 60 * 1000,
+  });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
+  return res.status(200).json({
+    message: "Google login successful!",
+    user,
+  });
 });
 
 export const getMe = asyncHandler(async (req, res) => {

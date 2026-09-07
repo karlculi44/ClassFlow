@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, useCallback } from "react";
 import {
   login as loginUser,
   logout as logoutUser,
+  googleLogin as googleLoginUser,
   getMe,
 } from "../services/authServices";
 
@@ -33,6 +34,15 @@ export function AuthProvider({ children }) {
     return userData.user;
   };
 
+  const googleLogin = async (data) => {
+    await googleLoginUser(data);
+
+    const userData = await getMe();
+    setUser(userData.user);
+
+    return userData.user;
+  };
+
   const logout = async () => {
     await logoutUser();
     setUser(null);
@@ -43,7 +53,9 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, updateUser }}>
+    <AuthContext.Provider
+      value={{ user, loading, login, googleLogin, logout, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

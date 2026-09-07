@@ -1,16 +1,32 @@
-import { useState, useContext } from "react";
-import { AuthContext } from "../context/AuthContext.jsx";
+import { useState, useContext, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
+  const { login, googleLogin } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [error, setError] = useState("");
+  const handleGoogleLogin = useCallback(
+    async (response) => {
+      try {
+        setError("");
 
+        const user = await googleLogin(response.credential);
+
+        console.log("Google authenticated user:", user);
+
+        navigate(user.role === "Admin" ? "/admin" : "/dashboard");
+      } catch (error) {
+        console.error("Google login failed:", error);
+        setError("Google login failed. Please try again.");
+      }
+    },
+    [googleLogin, navigate],
+  );
   const handleChange = (e) => {
     const { name, value } = e.target;
     setError("");
@@ -30,6 +46,28 @@ function Login() {
       setError("Invalid credentials. Please check your email and password.");
     }
   };
+
+  useEffect(() => {
+    if (!window.google) {
+      console.error("Google Identity Services script has not loaded.");
+      return;
+    }
+
+    window.google.accounts.id.initialize({
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+      callback: handleGoogleLogin,
+    });
+
+    window.google.accounts.id.renderButton(
+      document.getElementById("google-signin-button"),
+      {
+        theme: "filled_black",
+        size: "large",
+        width: 350,
+        text: "continue_with",
+      },
+    );
+  }, [handleGoogleLogin]);
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gray-950">
@@ -166,6 +204,17 @@ function Login() {
               >
                 Forgot password?
               </a>
+
+              <div className="flex items-center gap-3 py-1">
+                <div className="h-px flex-1 bg-gray-700" />
+                <span className="text-xs text-gray-500">or continue with</span>
+                <div className="h-px flex-1 bg-gray-700" />
+              </div>
+
+              <div
+                id="google-signin-button"
+                className="flex w-full justify-center"
+              ></div>
             </form>
 
             <div className="mt-6 text-center text-sm text-gray-400">

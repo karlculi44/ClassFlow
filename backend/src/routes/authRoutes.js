@@ -13,6 +13,7 @@ import {
   getStudents,
   refresh,
   welcomeAdmin,
+  googleLogin,
 } from "../controllers/authController.js";
 import {
   registerSchema,
@@ -25,6 +26,7 @@ const router = express.Router();
 
 router.post("/register", validate(registerSchema), register);
 router.post("/login", validate(loginSchema), login);
+router.post("/google-login", googleLogin);
 router.post("/logout", logout);
 router.post("/refresh", refresh);
 router.get("/me", verifyToken, getMe);

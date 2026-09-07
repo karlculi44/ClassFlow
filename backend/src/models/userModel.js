@@ -149,3 +149,22 @@ export const findRefreshTokenByUserId = async (userId) => {
   );
   return rows[0].refresh_token;
 };
+
+export const findUserByEmailForOAuth = async (email) => {
+  const [rows] = await pool.query(
+    `
+      SELECT
+        id,
+        name,
+        email,
+        role,
+        user_code,
+        created_at
+      FROM users
+      WHERE email = ?
+    `,
+    [email],
+  );
+
+  return rows[0];
+};
