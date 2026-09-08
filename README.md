@@ -361,6 +361,38 @@ frontend/
 
 ## 🚀 Getting Started
 
+## 👤 Default Demo Accounts
+
+ClassFlow includes predefined demo accounts for testing the different user roles.
+
+> **Note:** These credentials are intended for local development and portfolio demonstration only. Do not use these credentials in a production environment.
+
+### Admin Accounts
+
+| User    | Email                   | Password        | Role  |
+| ------- | ----------------------- | --------------- | ----- |
+| Admin 1 | `admin1@classflow.test` | `Password1` | Admin |
+| Admin 2 | `admin2@classflow.test` | `Password1` | Admin |
+| Admin 3 | `admin3@classflow.test` | `Password1` | Admin |
+
+### Student Accounts
+
+| User       | Email                      | Password        | Role    |
+| ---------- | -------------------------- | --------------- | ------- |
+| Student 1  | `student1@classflow.test`  | `Password1` | Student |
+| Student 2  | `student2@classflow.test`  | `Password1` | Student |
+| Student 3  | `student3@classflow.test`  | `Password1` | Student |
+| ...        | ...                        | ...             | ...     |
+| Student 20 | `student20@classflow.test` | `Password1` | Student |
+
+**Default password for all demo accounts:**
+
+```text
+Password1
+```
+
+These accounts allow reviewers to explore ClassFlow from both the **Admin** and **Student** perspectives without creating an account manually.
+
 ### Prerequisites
 
 Make sure you have installed:
@@ -408,7 +440,7 @@ CREATE DATABASE class_flow;
 ```
 
 Import the database schema provided in the project.
-[class_flow.sql](https://github.com/user-attachments/files/31931660/class_flow.sql)
+[class_flow.sql](https://github.com/user-attachments/files/31932110/class_flow.sql)
 
 
 ---
