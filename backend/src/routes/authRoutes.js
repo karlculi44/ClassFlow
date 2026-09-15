@@ -2,6 +2,7 @@ import express from "express";
 import verifyToken from "../middleware/verifyToken.js";
 import validate from "../middleware/validate.js";
 import authorize from "../middleware/authorize.js";
+import { authLimiter } from "../middleware/rateLimiter.js";
 import {
   register,
   login,
@@ -30,7 +31,7 @@ import {
 
 const router = express.Router();
 
-router.post("/register", validate(registerSchema), register);
+router.post("/register", authLimiter, validate(registerSchema), register);
 router.post(
   "/admins",
   verifyToken,
@@ -38,7 +39,7 @@ router.post(
   validate(createAdminSchema),
   createAdmin,
 );
-router.post("/login", validate(loginSchema), login);
+router.post("/login", authLimiter, validate(loginSchema), login);
 router.post("/forgot-password", validate(forgotPasswordSchema), forgotPassword);
 router.post("/reset-password", validate(resetPasswordSchema), resetPassword);
 router.post("/google-login", googleLogin);

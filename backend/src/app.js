@@ -9,6 +9,7 @@ import assignmentRoutes from "./routes/assignmentRoutes.js";
 import enrollmentRoutes from "./routes/enrollmentRoutes.js";
 import submissionRoutes from "./routes/submissionRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
+import { apiLimiter } from "./middleware/rateLimiter.js";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(
     credentials: true,
   }),
 );
+app.use(apiLimiter);
 app.use(express.json());
 app.use(cookieParser());
 
