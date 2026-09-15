@@ -30,17 +30,25 @@ describe("schedule utilities", () => {
       schedule_end_time: "10:00",
     };
 
-    expect(isScheduleActive(classItem, new Date(2026, 8, 14, 9, 30))).toBe(true);
-    expect(isScheduleActive(classItem, new Date(2026, 8, 14, 10, 0))).toBe(false);
-    expect(isScheduleActive(classItem, new Date(2026, 8, 15, 9, 30))).toBe(false);
+    expect(isScheduleActive(classItem, new Date(2026, 8, 14, 9, 30))).toBe(
+      true,
+    );
+    expect(isScheduleActive(classItem, new Date(2026, 8, 14, 10, 0))).toBe(
+      false,
+    );
+    expect(isScheduleActive(classItem, new Date(2026, 8, 15, 9, 30))).toBe(
+      false,
+    );
   });
 
   it("formats pending and multi-day schedules", () => {
     expect(formatSchedule({})).toBe("Schedule pending");
-    expect(formatSchedule({
-      schedule_days: ["Wednesday", "Monday"],
-      schedule_start_time: "13:00",
-      schedule_end_time: "14:30",
-    })).toBe("Monday & Wednesday • 1:00 PM – 2:30 PM");
+    expect(
+      formatSchedule({
+        schedule_days: ["Wednesday", "Monday"],
+        schedule_start_time: "13:00",
+        schedule_end_time: "14:30",
+      }),
+    ).toBe("Monday & Wednesday • 1:00 PM – 2:30 PM");
   });
 });

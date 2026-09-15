@@ -20,8 +20,16 @@ function Consumer() {
   const { user, loading, login, logout } = React.useContext(AuthContext);
   return (
     <div>
-      <p data-testid="state">{loading ? "loading" : user?.name || "signed out"}</p>
-      <button onClick={() => login({ email: "ada@example.com", password: "secret123" })}>Login</button>
+      <p data-testid="state">
+        {loading ? "loading" : user?.name || "signed out"}
+      </p>
+      <button
+        onClick={() =>
+          login({ email: "ada@example.com", password: "secret123" })
+        }
+      >
+        Login
+      </button>
       <button onClick={logout}>Logout</button>
     </div>
   );
@@ -29,15 +37,18 @@ function Consumer() {
 
 import React from "react";
 
-const renderProvider = () => render(
-  <AuthProvider>
-    <Consumer />
-  </AuthProvider>,
-);
+const renderProvider = () =>
+  render(
+    <AuthProvider>
+      <Consumer />
+    </AuthProvider>,
+  );
 
 beforeEach(() => {
   vi.clearAllMocks();
-  serviceMocks.getMe.mockResolvedValue({ user: { id: 1, name: "Ada", role: "Student" } });
+  serviceMocks.getMe.mockResolvedValue({
+    user: { id: 1, name: "Ada", role: "Student" },
+  });
   serviceMocks.login.mockResolvedValue({});
   serviceMocks.logout.mockResolvedValue({});
 });
@@ -62,7 +73,9 @@ describe("AuthProvider", () => {
     const user = userEvent.setup();
     renderProvider();
     await screen.findByText("Ada");
-    serviceMocks.getMe.mockResolvedValueOnce({ user: { id: 2, name: "Grace", role: "Admin" } });
+    serviceMocks.getMe.mockResolvedValueOnce({
+      user: { id: 2, name: "Grace", role: "Admin" },
+    });
 
     await user.click(screen.getByRole("button", { name: "Login" }));
 

@@ -11,7 +11,9 @@ vi.mock("jsonwebtoken", () => ({
   default: { verify: vi.fn() },
 }));
 
-const poolQuery = vi.hoisted(() => vi.fn().mockResolvedValue([{ affectedRows: 1 }]));
+const poolQuery = vi.hoisted(() =>
+  vi.fn().mockResolvedValue([{ affectedRows: 1 }]),
+);
 vi.mock("../../src/config/db.js", () => ({
   default: { query: poolQuery },
 }));
@@ -70,8 +72,9 @@ describe("authorization middleware", () => {
   });
 
   it("throws a forbidden application error for missing or disallowed roles", () => {
-    expect(() => authorize("Admin")({ user: { role: "Student" } }, {}, vi.fn()))
-      .toThrow("You do not have access this resource.");
+    expect(() =>
+      authorize("Admin")({ user: { role: "Student" } }, {}, vi.fn()),
+    ).toThrow("You do not have access this resource.");
     expect(() => authorize("Admin")({}, {}, vi.fn())).toThrow(
       "You do not have access this resource.",
     );
@@ -101,7 +104,11 @@ describe("verifyToken middleware", () => {
     });
     const response = createResponse();
 
-    await verifyToken({ cookies: { accessToken: "bad-token" } }, response, vi.fn());
+    await verifyToken(
+      { cookies: { accessToken: "bad-token" } },
+      response,
+      vi.fn(),
+    );
 
     expect(response.status).toHaveBeenCalledWith(400);
     expect(response.json).toHaveBeenCalledWith({
@@ -139,7 +146,12 @@ describe("errorHandler", () => {
   it("uses an application status and message", () => {
     const response = createResponse();
 
-    errorHandler({ statusCode: 422, message: "Invalid data" }, {}, response, vi.fn());
+    errorHandler(
+      { statusCode: 422, message: "Invalid data" },
+      {},
+      response,
+      vi.fn(),
+    );
 
     expect(response.status).toHaveBeenCalledWith(422);
     expect(response.json).toHaveBeenCalledWith({ message: "Invalid data" });
@@ -151,6 +163,8 @@ describe("errorHandler", () => {
     errorHandler(new Error("database password leaked"), {}, response, vi.fn());
 
     expect(response.status).toHaveBeenCalledWith(500);
-    expect(response.json).toHaveBeenCalledWith({ message: "Internal Server Error" });
+    expect(response.json).toHaveBeenCalledWith({
+      message: "Internal Server Error",
+    });
   });
 });

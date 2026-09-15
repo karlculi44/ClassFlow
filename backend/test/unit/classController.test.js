@@ -17,13 +17,16 @@ import {
   updateClass,
 } from "../../src/controllers/classController.js";
 
-const invoke = (handler, request) => new Promise((resolve, reject) => {
-  const response = {
-    status: vi.fn().mockReturnThis(),
-    json: vi.fn((body) => resolve({ status: response.status.mock.calls.at(-1)?.[0], body })),
-  };
-  handler(request, response, (error) => (error ? reject(error) : resolve()));
-});
+const invoke = (handler, request) =>
+  new Promise((resolve, reject) => {
+    const response = {
+      status: vi.fn().mockReturnThis(),
+      json: vi.fn((body) =>
+        resolve({ status: response.status.mock.calls.at(-1)?.[0], body }),
+      ),
+    };
+    handler(request, response, (error) => (error ? reject(error) : resolve()));
+  });
 
 const validBody = {
   code: "CS101",
@@ -45,7 +48,9 @@ beforeEach(() => {
 
 describe("class controller", () => {
   it("returns classes belonging to the authenticated admin", async () => {
-    model.findClassesByAdminId.mockResolvedValueOnce([{ id: 12, name: "Math" }]);
+    model.findClassesByAdminId.mockResolvedValueOnce([
+      { id: 12, name: "Math" },
+    ]);
 
     const result = await invoke(getClasses, { user: { id: 7 } });
 
@@ -60,7 +65,10 @@ describe("class controller", () => {
   });
 
   it("creates a class with normalized schedule data", async () => {
-    const result = await invoke(createClass, { user: { id: 7 }, body: validBody });
+    const result = await invoke(createClass, {
+      user: { id: 7 },
+      body: validBody,
+    });
 
     expect(result.status).toBe(201);
     expect(model.createNewClass).toHaveBeenCalledWith({
@@ -77,27 +85,32 @@ describe("class controller", () => {
 
   it("rejects a missing admin and invalid schedule before writing", async () => {
     users.findUserById.mockResolvedValueOnce(null);
-    await expect(invoke(createClass, { user: { id: 7 }, body: validBody }))
-      .rejects.toMatchObject({ statusCode: 404 });
+    await expect(
+      invoke(createClass, { user: { id: 7 }, body: validBody }),
+    ).rejects.toMatchObject({ statusCode: 404 });
     expect(model.createNewClass).not.toHaveBeenCalled();
 
     users.findUserById.mockResolvedValueOnce({ id: 7 });
-    await expect(invoke(updateClass, {
-      user: { id: 7 },
-      params: { id: 12 },
-      body: { ...validBody, schedule_start_time: "11:00" },
-    })).rejects.toMatchObject({ statusCode: 400 });
+    await expect(
+      invoke(updateClass, {
+        user: { id: 7 },
+        params: { id: 12 },
+        body: { ...validBody, schedule_start_time: "11:00" },
+      }),
+    ).rejects.toMatchObject({ statusCode: 400 });
     expect(model.updateClassById).not.toHaveBeenCalled();
   });
 
   it("returns not found when an admin cannot update the class", async () => {
     model.updateClassById.mockResolvedValueOnce(0);
 
-    await expect(invoke(updateClass, {
-      user: { id: 7 },
-      params: { id: 12 },
-      body: validBody,
-    })).rejects.toMatchObject({ statusCode: 404 });
+    await expect(
+      invoke(updateClass, {
+        user: { id: 7 },
+        params: { id: 12 },
+        body: validBody,
+      }),
+    ).rejects.toMatchObject({ statusCode: 404 });
   });
 
   it("deletes a class for the authenticated admin", async () => {
@@ -107,6 +120,9 @@ describe("class controller", () => {
     });
 
     expect(result.body).toEqual({ message: "Class deleted successfully!" });
-    expect(model.deleteClassById).toHaveBeenCalledWith({ classId: 12, adminId: 7 });
+    expect(model.deleteClassById).toHaveBeenCalledWith({
+      classId: 12,
+      adminId: 7,
+    });
   });
 });

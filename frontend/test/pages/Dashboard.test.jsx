@@ -6,31 +6,40 @@ import Dashboard from "../../src/pages/Dashboard";
 
 const getStudentEnrollments = vi.hoisted(() => vi.fn());
 const getAssignments = vi.hoisted(() => vi.fn());
-vi.mock("../../src/services/enrollmentServices", () => ({ getStudentEnrollments }));
+vi.mock("../../src/services/enrollmentServices", () => ({
+  getStudentEnrollments,
+}));
 vi.mock("../../src/services/assignmentServices", () => ({ getAssignments }));
 
-const renderDashboard = () => render(
-  <AuthContext.Provider value={{ user: { name: "Ada" } }}>
-    <MemoryRouter>
-      <Dashboard />
-    </MemoryRouter>
-  </AuthContext.Provider>,
-);
+const renderDashboard = () =>
+  render(
+    <AuthContext.Provider value={{ user: { name: "Ada" } }}>
+      <MemoryRouter>
+        <Dashboard />
+      </MemoryRouter>
+    </AuthContext.Provider>,
+  );
 
 describe("Dashboard", () => {
   it("loads classes and assignment statistics into the student workspace", async () => {
-    getStudentEnrollments.mockResolvedValueOnce({ classes: [{
-      id: 1,
-      name: "Mathematics",
-      code: "M101",
-      schedule_days: ["Monday"],
-      schedule_start_time: "09:00",
-      schedule_end_time: "10:00",
-    }] });
-    getAssignments.mockResolvedValueOnce({ assignments: [
-      { id: 1, title: "Quiz", submission_id: null, grade: null },
-      { id: 2, title: "Essay", submission_id: 5, grade: 90 },
-    ] });
+    getStudentEnrollments.mockResolvedValueOnce({
+      classes: [
+        {
+          id: 1,
+          name: "Mathematics",
+          code: "M101",
+          schedule_days: ["Monday"],
+          schedule_start_time: "09:00",
+          schedule_end_time: "10:00",
+        },
+      ],
+    });
+    getAssignments.mockResolvedValueOnce({
+      assignments: [
+        { id: 1, title: "Quiz", submission_id: null, grade: null },
+        { id: 2, title: "Essay", submission_id: 5, grade: 90 },
+      ],
+    });
 
     renderDashboard();
 
@@ -49,6 +58,8 @@ describe("Dashboard", () => {
 
     renderDashboard();
 
-    expect(await screen.findByText("Dashboard unavailable")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Dashboard unavailable"),
+    ).toBeInTheDocument();
   });
 });

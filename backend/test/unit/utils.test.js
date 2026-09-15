@@ -45,7 +45,10 @@ describe("normalizeSchedule", () => {
     ["unknown day", { ...validSchedule, schedule_days: ["Funday"] }],
     ["missing start time", { ...validSchedule, schedule_start_time: "" }],
     ["missing end time", { ...validSchedule, schedule_end_time: "" }],
-    ["non-chronological times", { ...validSchedule, schedule_start_time: "11:00" }],
+    [
+      "non-chronological times",
+      { ...validSchedule, schedule_start_time: "11:00" },
+    ],
   ])("rejects %s", (_, schedule) => {
     expect(() => normalizeSchedule(schedule)).toThrow();
   });

@@ -65,47 +65,52 @@ describe("submission model", () => {
   });
 
   it("maps admin submission rows into assignment and student summaries", async () => {
-    pool.query.mockResolvedValueOnce([[{
-      assignment_id: 9,
-      title: "Quiz",
-      due_date: "2026-10-01",
-      class_name: "Math",
-      class_code: "M101",
-      student_id: 4,
-      student_name: "Ada",
-      student_email: "ada@example.com",
-      student_code: "STU000001",
-      last_seen_at: null,
-      status: "Offline",
-      submission_id: 3,
-      content: "Answer",
-      attachment_name: null,
-      attachment_url: null,
-      submitted_at: "2026-09-15T10:00:00Z",
-      updated_at: null,
-      grade: 95,
-      feedback: "Excellent",
-    }, {
-      assignment_id: 9,
-      title: "Quiz",
-      due_date: "2026-10-01",
-      class_name: "Math",
-      class_code: "M101",
-      student_id: 5,
-      student_name: "Grace",
-      student_email: "grace@example.com",
-      student_code: "STU000002",
-      last_seen_at: null,
-      status: "Offline",
-      submission_id: null,
-      content: null,
-      attachment_name: null,
-      attachment_url: null,
-      submitted_at: null,
-      updated_at: null,
-      grade: null,
-      feedback: null,
-    }]]);
+    pool.query.mockResolvedValueOnce([
+      [
+        {
+          assignment_id: 9,
+          title: "Quiz",
+          due_date: "2026-10-01",
+          class_name: "Math",
+          class_code: "M101",
+          student_id: 4,
+          student_name: "Ada",
+          student_email: "ada@example.com",
+          student_code: "STU000001",
+          last_seen_at: null,
+          status: "Offline",
+          submission_id: 3,
+          content: "Answer",
+          attachment_name: null,
+          attachment_url: null,
+          submitted_at: "2026-09-15T10:00:00Z",
+          updated_at: null,
+          grade: 95,
+          feedback: "Excellent",
+        },
+        {
+          assignment_id: 9,
+          title: "Quiz",
+          due_date: "2026-10-01",
+          class_name: "Math",
+          class_code: "M101",
+          student_id: 5,
+          student_name: "Grace",
+          student_email: "grace@example.com",
+          student_code: "STU000002",
+          last_seen_at: null,
+          status: "Offline",
+          submission_id: null,
+          content: null,
+          attachment_name: null,
+          attachment_url: null,
+          submitted_at: null,
+          updated_at: null,
+          grade: null,
+          feedback: null,
+        },
+      ],
+    ]);
 
     const result = await getAdminAssignmentSubmissions({
       adminId: 1,
@@ -130,11 +135,13 @@ describe("submission model", () => {
   it("returns null when an assignment has no matching rows", async () => {
     pool.query.mockResolvedValueOnce([[]]);
 
-    await expect(getAdminAssignmentSubmissions({
-      adminId: 1,
-      classId: 2,
-      assignmentId: 99,
-    })).resolves.toBeNull();
+    await expect(
+      getAdminAssignmentSubmissions({
+        adminId: 1,
+        classId: 2,
+        assignmentId: 99,
+      }),
+    ).resolves.toBeNull();
   });
 });
 
@@ -149,10 +156,12 @@ describe("password reset model", () => {
     };
     pool.getConnection.mockResolvedValueOnce(connection);
 
-    await expect(consumePasswordResetToken({
-      tokenHash: "missing",
-      hashedPassword: "hashed",
-    })).resolves.toBeNull();
+    await expect(
+      consumePasswordResetToken({
+        tokenHash: "missing",
+        hashedPassword: "hashed",
+      }),
+    ).resolves.toBeNull();
 
     expect(connection.beginTransaction).toHaveBeenCalledOnce();
     expect(connection.rollback).toHaveBeenCalledOnce();
@@ -163,7 +172,8 @@ describe("password reset model", () => {
   it("updates the password, marks the token used, and commits", async () => {
     const connection = {
       beginTransaction: vi.fn(),
-      query: vi.fn()
+      query: vi
+        .fn()
         .mockResolvedValueOnce([[{ id: 8, user_id: 4 }]])
         .mockResolvedValueOnce([{ affectedRows: 1 }])
         .mockResolvedValueOnce([{ affectedRows: 1 }]),
@@ -173,10 +183,12 @@ describe("password reset model", () => {
     };
     pool.getConnection.mockResolvedValueOnce(connection);
 
-    await expect(consumePasswordResetToken({
-      tokenHash: "valid",
-      hashedPassword: "new-hash",
-    })).resolves.toBe(4);
+    await expect(
+      consumePasswordResetToken({
+        tokenHash: "valid",
+        hashedPassword: "new-hash",
+      }),
+    ).resolves.toBe(4);
 
     expect(connection.commit).toHaveBeenCalledOnce();
     expect(connection.rollback).not.toHaveBeenCalled();

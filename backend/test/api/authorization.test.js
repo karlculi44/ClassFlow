@@ -2,7 +2,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import request from "supertest";
 
 const jwtVerify = vi.hoisted(() => vi.fn());
-const poolQuery = vi.hoisted(() => vi.fn().mockResolvedValue([{ affectedRows: 1 }]));
+const poolQuery = vi.hoisted(() =>
+  vi.fn().mockResolvedValue([{ affectedRows: 1 }]),
+);
 vi.mock("jsonwebtoken", () => ({
   default: { verify: jwtVerify },
 }));

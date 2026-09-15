@@ -6,19 +6,20 @@ import { AuthContext } from "../../src/context/AuthContext";
 import { ThemeContext } from "../../src/context/themeContext";
 import Login from "../../src/pages/Login";
 
-const renderLogin = (login) => render(
-  <ThemeContext.Provider value={{ theme: "dark", toggleTheme: vi.fn() }}>
-    <AuthContext.Provider value={{ login, googleLogin: vi.fn() }}>
-      <MemoryRouter initialEntries={["/"]}>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/admin" element={<h1>Admin dashboard</h1>} />
-          <Route path="/dashboard" element={<h1>Student dashboard</h1>} />
-        </Routes>
-      </MemoryRouter>
-    </AuthContext.Provider>
-  </ThemeContext.Provider>,
-);
+const renderLogin = (login) =>
+  render(
+    <ThemeContext.Provider value={{ theme: "dark", toggleTheme: vi.fn() }}>
+      <AuthContext.Provider value={{ login, googleLogin: vi.fn() }}>
+        <MemoryRouter initialEntries={["/"]}>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/admin" element={<h1>Admin dashboard</h1>} />
+            <Route path="/dashboard" element={<h1>Student dashboard</h1>} />
+          </Routes>
+        </MemoryRouter>
+      </AuthContext.Provider>
+    </ThemeContext.Provider>,
+  );
 
 const fillLogin = async (user) => {
   await user.type(screen.getByLabelText("Email"), "ada@example.com");
@@ -38,7 +39,9 @@ describe("Login", () => {
       email: "ada@example.com",
       password: "secret123",
     });
-    expect(await screen.findByRole("heading", { name: "Admin dashboard" })).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { name: "Admin dashboard" }),
+    ).toBeInTheDocument();
   });
 
   it("navigates a student to the student dashboard", async () => {
@@ -48,7 +51,9 @@ describe("Login", () => {
     await fillLogin(user);
     await user.click(screen.getByRole("button", { name: "Sign In" }));
 
-    expect(await screen.findByRole("heading", { name: "Student dashboard" })).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { name: "Student dashboard" }),
+    ).toBeInTheDocument();
   });
 
   it("shows a user-facing error when login fails", async () => {
