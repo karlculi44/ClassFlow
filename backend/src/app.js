@@ -38,14 +38,6 @@ app.use("/api/enrollments", enrollmentRoutes);
 app.use("/api/submissions", submissionRoutes);
 app.use("/api/reports", reportRoutes);
 
-// Test IP route
-app.get("/api/test-ip", (req, res) => {
-  res.json({
-    ip: req.ip,
-    forwardedFor: req.headers["x-forwarded-for"],
-  });
-});
-
 // Root route
 app.get("/", (req, res) => {
   res.send("App is running!");
