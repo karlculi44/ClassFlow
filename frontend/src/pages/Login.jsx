@@ -2,6 +2,7 @@ import { useState, useContext, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { useTheme } from "../context/useTheme";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 
 function Login() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ function Login() {
     password: "",
   });
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const handleGoogleLogin = useCallback(
     async (response) => {
       try {
@@ -40,12 +42,20 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (submitting) {
+      return;
+    }
+
+    setSubmitting(true);
+    setError("");
     try {
       const user = await login(formData);
       navigate(user.role === "Admin" ? "/admin" : "/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
       setError("Invalid credentials. Please check your email and password.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -199,9 +209,10 @@ function Login() {
 
               <button
                 type="submit"
-                className="w-full rounded-lg bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold py-2.5 transition cursor-pointer"
+                disabled={submitting}
+                className="flex h-11 w-full items-center justify-center rounded-lg bg-indigo-600 text-white font-semibold transition hover:bg-indigo-500 active:bg-indigo-700 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Sign In
+                {submitting ? <LoadingSpinner label="Signing in" /> : "Sign In"}
               </button>
               <Link
                 to="/forgot-password"

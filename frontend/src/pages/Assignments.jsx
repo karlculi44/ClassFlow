@@ -3,6 +3,7 @@ import { CalendarDays, ChevronDown, Clock3, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getAssignments } from "../services/assignmentServices";
 import formatDate from "../utils/formatDate";
+import PageSkeleton from "../components/ui/PageSkeleton";
 
 const filterClassName =
   "h-11 w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 px-3 pr-10 text-sm text-gray-300 outline-none transition hover:border-gray-600 focus:border-indigo-500";
@@ -162,9 +163,7 @@ function Assignments() {
           </section>
 
           <section aria-label="Assignments list" className="space-y-3">
-            {loading && (
-              <p className="text-sm text-gray-400">Loading assignments...</p>
-            )}
+            {loading && <PageSkeleton />}
             {!loading && error && (
               <p className="text-sm text-red-400">{error}</p>
             )}

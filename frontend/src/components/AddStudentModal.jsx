@@ -1,5 +1,6 @@
-import { Check, LoaderCircle, UserRound, X } from "lucide-react";
+import { Check, UserRound, X } from "lucide-react";
 import { useState } from "react";
+import ListSkeleton from "./ui/ListSkeleton";
 
 function AddStudentModal({
   isOpen,
@@ -68,12 +69,7 @@ function AddStudentModal({
         </div>
 
         <div className="mt-6 min-h-0 overflow-y-auto">
-          {loading && (
-            <div className="flex items-center justify-center gap-2 py-12 text-sm text-gray-400">
-              <LoaderCircle size={17} className="animate-spin" />
-              Loading students...
-            </div>
-          )}
+          {loading && <ListSkeleton rows={4} />}
 
           {!loading && error && (
             <p className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">

@@ -19,6 +19,7 @@ import { formatSchedule, isScheduleActive } from "../utils/schedule";
 import { createAdmin } from "../services/authServices";
 import AddAdminModal from "../components/AddAdminModal";
 import formatDate from "../utils/formatDate";
+import PageSkeleton from "../components/ui/PageSkeleton";
 
 const getAssignmentStatus = (assignment) => {
   const dueDate = new Date(
@@ -232,9 +233,7 @@ function AdminDashboard() {
             </button>
           </header>
 
-          {loading && (
-            <p className="text-sm text-gray-400">Loading dashboard...</p>
-          )}
+          {loading && <PageSkeleton variant="dashboard" />}
           {!loading && error && <p className="text-sm text-red-400">{error}</p>}
           {!loading && !error && (
             <>

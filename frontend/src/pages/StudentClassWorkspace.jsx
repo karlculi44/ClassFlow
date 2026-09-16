@@ -11,6 +11,7 @@ import { getStudentEnrollments } from "../services/enrollmentServices";
 import { getAssignments } from "../services/assignmentServices";
 import formatDate from "../utils/formatDate";
 import { formatSchedule, isScheduleActive } from "../utils/schedule";
+import PageSkeleton from "../components/ui/PageSkeleton";
 
 function StudentClassWorkspace() {
   const { classId } = useParams();
@@ -89,7 +90,9 @@ function StudentClassWorkspace() {
             <ArrowLeft size={16} /> Back to Classes
           </button>
           {loading && (
-            <p className="mt-6 text-sm text-gray-400">Loading class...</p>
+            <div className="mt-6">
+              <PageSkeleton variant="detail" />
+            </div>
           )}
           {!loading && error && (
             <p className="mt-6 text-sm text-red-400">{error}</p>

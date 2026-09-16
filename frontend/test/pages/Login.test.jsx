@@ -67,4 +67,21 @@ describe("Login", () => {
       "Invalid credentials. Please check your email and password.",
     );
   });
+
+  it("shows a spinner and prevents duplicate login requests", async () => {
+    const user = userEvent.setup();
+    const login = vi.fn().mockReturnValue(new Promise(() => {}));
+    renderLogin(login);
+
+    await fillLogin(user);
+    const button = screen.getByRole("button", { name: "Sign In" });
+    await user.click(button);
+    await user.click(button);
+
+    expect(login).toHaveBeenCalledOnce();
+    expect(screen.getByRole("button", { name: "Signing in" })).toBeDisabled();
+    expect(
+      screen.getByRole("status", { name: "Signing in" }),
+    ).toBeInTheDocument();
+  });
 });

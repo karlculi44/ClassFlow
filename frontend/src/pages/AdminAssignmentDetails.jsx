@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getAdminAssignmentDetails } from "../services/assignmentServices";
 import { getAdminSubmissions } from "../services/submissionServices";
 import formatDate from "../utils/formatDate";
+import PageSkeleton from "../components/ui/PageSkeleton";
 
 function AdminAssignmentDetails() {
   const { classId, assignmentId } = useParams();
@@ -57,7 +58,9 @@ function AdminAssignmentDetails() {
         </button>
 
         {loading && (
-          <p className="mt-6 text-sm text-gray-400">Loading assignment...</p>
+          <div className="mt-6">
+            <PageSkeleton variant="detail" />
+          </div>
         )}
         {!loading && error && (
           <p className="mt-6 text-sm text-red-400">{error}</p>

@@ -14,6 +14,7 @@ import {
   normalizeDays,
   WEEKDAYS,
 } from "../utils/schedule";
+import PageSkeleton from "../components/ui/PageSkeleton";
 
 const statusClasses = {
   Active: "border-emerald-400/30 bg-emerald-500/10 text-emerald-300",
@@ -97,9 +98,7 @@ function Classes() {
             </p>
           </header>
 
-          {loading && (
-            <p className="text-sm text-gray-400">Loading classes...</p>
-          )}
+          {loading && <PageSkeleton />}
           {!loading && error && <p className="text-sm text-red-400">{error}</p>}
           {!loading && !error && classes.length === 0 && (
             <p className="text-sm text-gray-400">

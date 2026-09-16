@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { register } from "../services/authServices";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 
 const initialForm = { name: "", email: "", password: "", confirmPassword: "" };
 
@@ -161,7 +162,11 @@ function Signup() {
                 disabled={submitting}
                 className="w-full rounded-lg bg-indigo-600 py-2.5 font-semibold text-white transition hover:bg-indigo-500 active:bg-indigo-700 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {submitting ? "Creating account..." : "Create account"}
+                {submitting ? (
+                  <LoadingSpinner label="Creating account" />
+                ) : (
+                  "Create account"
+                )}
               </button>
             </form>
             <p className="mt-6 text-center text-sm text-gray-400">

@@ -8,6 +8,7 @@ import { getClasses } from "../services/classServices";
 import formatDate from "../utils/formatDate";
 import formatGrade from "../utils/formatGrade";
 import { formatSchedule } from "../utils/schedule";
+import PageSkeleton from "../components/ui/PageSkeleton";
 
 function Students() {
   const [students, setStudents] = useState([]);
@@ -88,9 +89,7 @@ function Students() {
             </p>
           </header>
 
-          {loading && (
-            <p className="text-sm text-gray-400">Loading students...</p>
-          )}
+          {loading && <PageSkeleton variant="table" />}
           {!loading && error && <p className="text-sm text-red-400">{error}</p>}
           {!loading && !error && (
             <>
@@ -240,9 +239,9 @@ function Students() {
               </button>
             </header>
             {detailLoading && (
-              <p className="p-7 text-sm text-gray-400">
-                Loading student details...
-              </p>
+              <div className="p-7">
+                <PageSkeleton variant="detail" />
+              </div>
             )}
             {!detailLoading && detailError && (
               <p className="p-7 text-sm text-red-400">{detailError}</p>

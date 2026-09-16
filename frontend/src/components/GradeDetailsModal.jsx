@@ -1,5 +1,6 @@
 import { CalendarDays, Download, MessageSquareText, X } from "lucide-react";
 import formatGrade from "../utils/formatGrade";
+import PageSkeleton from "./ui/PageSkeleton";
 
 function GradeDetailsModal({ assignment, loading, error, onClose }) {
   if (!assignment && !loading && !error) {
@@ -53,7 +54,9 @@ function GradeDetailsModal({ assignment, loading, error, onClose }) {
         </header>
 
         {loading && (
-          <p className="p-7 text-sm text-gray-400">Loading submission...</p>
+          <div className="p-7">
+            <PageSkeleton variant="detail" />
+          </div>
         )}
         {!loading && error && (
           <p className="p-7 text-sm text-red-400">{error}</p>

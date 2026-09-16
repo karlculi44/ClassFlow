@@ -9,6 +9,7 @@ import {
   gradeSubmission,
 } from "../services/submissionServices";
 import SubmissionDetailsModal from "../components/SubmissionDetailsModal";
+import PageSkeleton from "../components/ui/PageSkeleton";
 
 function Submissions() {
   const { classId, assignmentId } = useParams();
@@ -128,7 +129,9 @@ function Submissions() {
         </button>
 
         {loading && (
-          <p className="mt-6 text-sm text-gray-400">Loading submissions...</p>
+          <div className="mt-6">
+            <PageSkeleton variant="table" />
+          </div>
         )}
         {!loading && error && (
           <p className="mt-6 text-sm text-red-400">{error}</p>

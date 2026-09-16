@@ -13,6 +13,7 @@ import { getStudentEnrollments } from "../services/enrollmentServices";
 import GradeDetailsModal from "../components/GradeDetailsModal";
 import formatDate from "../utils/formatDate";
 import formatGrade from "../utils/formatGrade";
+import PageSkeleton from "../components/ui/PageSkeleton";
 
 function Grades() {
   const [grades, setGrades] = useState([]);
@@ -106,9 +107,7 @@ function Grades() {
             </p>
           </header>
 
-          {loading && (
-            <p className="text-sm text-gray-400">Loading grades...</p>
-          )}
+          {loading && <PageSkeleton variant="table" />}
           {!loading && error && <p className="text-sm text-red-400">{error}</p>}
           {!loading && !error && (
             <>

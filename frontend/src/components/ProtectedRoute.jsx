@@ -1,11 +1,20 @@
 import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import PageSkeleton from "./ui/PageSkeleton";
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useContext(AuthContext);
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <main
+        className="min-h-screen bg-gray-950 p-6 sm:p-8"
+        role="status"
+        aria-label="Loading page"
+      >
+        <PageSkeleton variant="dashboard" />
+      </main>
+    );
   }
 
   if (!user || (allowedRoles && !allowedRoles.includes(user.role))) {

@@ -43,7 +43,7 @@ describe("Signup", () => {
     expect(registerMock).not.toHaveBeenCalled();
   });
 
-  it("submits normalized data and shows the loading state", async () => {
+  it("submits normalized data and shows the loading spinner", async () => {
     const user = userEvent.setup();
     registerMock.mockReturnValueOnce(new Promise(() => {}));
     renderSignup();
@@ -62,8 +62,29 @@ describe("Signup", () => {
       password: "secret123",
     });
     expect(
-      screen.getByRole("button", { name: "Creating account..." }),
+      screen.getByRole("button", { name: "Creating account" }),
     ).toBeDisabled();
+    expect(
+      screen.getByRole("status", { name: "Creating account" }),
+    ).toBeInTheDocument();
+  });
+
+  it("prevents duplicate registration requests while submitting", async () => {
+    const user = userEvent.setup();
+    registerMock.mockReturnValueOnce(new Promise(() => {}));
+    renderSignup();
+
+    await fillForm(user, {
+      name: "Ada Lovelace",
+      email: "ada@example.com",
+      password: "secret123",
+      confirmPassword: "secret123",
+    });
+    const button = screen.getByRole("button", { name: "Create account" });
+    await user.click(button);
+    await user.click(button);
+
+    expect(registerMock).toHaveBeenCalledOnce();
   });
 
   it("shows an API error", async () => {

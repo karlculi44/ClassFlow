@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getAllAdminAssignments } from "../services/assignmentServices";
 import { getClasses } from "../services/classServices";
 import formatDate from "../utils/formatDate";
+import PageSkeleton from "../components/ui/PageSkeleton";
 
 const getStatus = (assignment) => {
   const dueDate = new Date(
@@ -115,9 +116,7 @@ function AdminAssignments() {
             </label>
           </div>
 
-          {loading && (
-            <p className="text-sm text-gray-400">Loading assignments...</p>
-          )}
+          {loading && <PageSkeleton variant="table" />}
           {!loading && error && (
             <p className="text-sm text-red-400" role="alert">
               {error}

@@ -13,6 +13,7 @@ import { getStudentEnrollments } from "../services/enrollmentServices";
 import { getAssignments } from "../services/assignmentServices";
 import formatDate from "../utils/formatDate";
 import { formatSchedule, isScheduleActive } from "../utils/schedule";
+import PageSkeleton from "../components/ui/PageSkeleton";
 
 function Dashboard() {
   const { user } = useContext(AuthContext);
@@ -107,9 +108,7 @@ function Dashboard() {
               </p>
             </div>
 
-            {loading && (
-              <p className="text-sm text-gray-400">Loading dashboard...</p>
-            )}
+            {loading && <PageSkeleton variant="dashboard" />}
             {!loading && error && (
               <p className="text-sm text-red-400">{error}</p>
             )}

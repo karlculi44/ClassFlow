@@ -9,6 +9,7 @@ import AdminClassCard from "../components/AdminClassCard";
 import ClassModal from "../components/ClassModal";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import { isScheduleActive, normalizeDays } from "../utils/schedule";
+import PageSkeleton from "../components/ui/PageSkeleton";
 
 const accents = [
   "bg-indigo-500",
@@ -256,9 +257,7 @@ function AdminClasses() {
         </section>
 
         <section className="grid grid-cols-1 gap-5 py-8 md:grid-cols-2 xl:grid-cols-3">
-          {loading && (
-            <p className="text-sm text-gray-400">Loading classes...</p>
-          )}
+          {loading && <PageSkeleton />}
 
           {!loading && error && <p className="text-sm text-red-400">{error}</p>}
           {!loading && !error && classes.length === 0 && (

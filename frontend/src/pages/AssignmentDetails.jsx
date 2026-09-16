@@ -9,6 +9,7 @@ import {
 } from "../services/submissionServices";
 import formatDate from "../utils/formatDate";
 import formatGrade from "../utils/formatGrade";
+import PageSkeleton from "../components/ui/PageSkeleton";
 
 function AssignmentDetails() {
   const { classId, assignmentId } = useParams();
@@ -157,7 +158,9 @@ function AssignmentDetails() {
         </button>
 
         {loading && (
-          <p className="mt-6 text-sm text-gray-400">Loading assignment...</p>
+          <div className="mt-6">
+            <PageSkeleton variant="detail" />
+          </div>
         )}
         {!loading && pageError && (
           <p className="mt-6 text-sm text-red-400">{pageError}</p>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getClassReport, getReportSummary } from "../services/reportServices";
 import formatGrade from "../utils/formatGrade";
+import PageSkeleton from "../components/ui/PageSkeleton";
 
 const getErrorMessage = (error, fallback) =>
   error.response?.data?.message || fallback;
@@ -75,9 +76,7 @@ function Reports() {
             </p>
           </header>
 
-          {loading && (
-            <p className="text-sm text-gray-400">Loading reports...</p>
-          )}
+          {loading && <PageSkeleton variant="dashboard" />}
           {!loading && error && (
             <p className="text-sm text-red-400" role="alert">
               {error}
@@ -212,9 +211,9 @@ function Reports() {
                 </div>
 
                 {detailsLoading && (
-                  <p className="pt-6 text-sm text-gray-400">
-                    Loading class details...
-                  </p>
+                  <div className="pt-6">
+                    <PageSkeleton variant="detail" />
+                  </div>
                 )}
                 {!detailsLoading && detailsError && (
                   <p className="pt-6 text-sm text-red-400" role="alert">

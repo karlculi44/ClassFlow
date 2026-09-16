@@ -1,5 +1,6 @@
 import { Download, Save, X } from "lucide-react";
 import formatDate from "../utils/formatDate";
+import PageSkeleton from "./ui/PageSkeleton";
 
 function SubmissionDetailsModal({
   isOpen,
@@ -68,7 +69,9 @@ function SubmissionDetailsModal({
         </div>
 
         {loading && (
-          <p className="py-6 text-sm text-gray-400">Loading submission...</p>
+          <div className="py-6">
+            <PageSkeleton variant="detail" />
+          </div>
         )}
         {!loading && error && (
           <p className="py-4 text-sm text-red-400">{error}</p>
