@@ -12,12 +12,13 @@ import reportRoutes from "./routes/reportRoutes.js";
 import { apiLimiter } from "./middleware/rateLimiter.js";
 
 const app = express();
+const allowedOrigin = process.env.FRONTEND_URL || "http://localhost:5173";
 
 app.set("trust proxy", 1);
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigin,
     credentials: true,
   }),
 );
