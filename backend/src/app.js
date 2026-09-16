@@ -13,6 +13,8 @@ import { apiLimiter } from "./middleware/rateLimiter.js";
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -34,6 +36,14 @@ app.use("/api/assignments", assignmentRoutes);
 app.use("/api/enrollments", enrollmentRoutes);
 app.use("/api/submissions", submissionRoutes);
 app.use("/api/reports", reportRoutes);
+
+// Test IP route
+app.get("/api/test-ip", (req, res) => {
+  res.json({
+    ip: req.ip,
+    forwardedFor: req.headers["x-forwarded-for"],
+  });
+});
 
 // Root route
 app.get("/", (req, res) => {

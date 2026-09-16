@@ -2,7 +2,10 @@ import express from "express";
 import verifyToken from "../middleware/verifyToken.js";
 import validate from "../middleware/validate.js";
 import authorize from "../middleware/authorize.js";
-import { authLimiter } from "../middleware/rateLimiter.js";
+import {
+  authLimiter,
+  passwordResetLimiter,
+} from "../middleware/rateLimiter.js";
 import {
   register,
   login,
@@ -40,9 +43,14 @@ router.post(
   createAdmin,
 );
 router.post("/login", authLimiter, validate(loginSchema), login);
-router.post("/forgot-password", validate(forgotPasswordSchema), forgotPassword);
+router.post(
+  "/forgot-password",
+  passwordResetLimiter,
+  validate(forgotPasswordSchema),
+  forgotPassword,
+);
 router.post("/reset-password", validate(resetPasswordSchema), resetPassword);
-router.post("/google-login", googleLogin);
+router.post("/google-login", authLimiter, googleLogin);
 router.post("/logout", logout);
 router.post("/refresh", refresh);
 router.get("/me", verifyToken, getMe);
