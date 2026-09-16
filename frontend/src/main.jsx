@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 import "./index.css";
+import "react-loading-skeleton/dist/skeleton.css";
 import App from "./App.jsx";
 
 const savedTheme = window.localStorage.getItem("classflow-theme");

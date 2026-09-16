@@ -20,6 +20,8 @@
   --success: #34d399;
   --warning: #fbbf24;
   --danger: #f87171;
+  --skeleton-base-color: #1f2937;
+  --skeleton-highlight-color: #374151;
 }
 
 :root[data-theme="light"] {
@@ -36,6 +38,8 @@
   --success: #047857;
   --warning: #b45309;
   --danger: #b91c1c;
+  --skeleton-base-color: #e7ecf3;
+  --skeleton-highlight-color: #f8fafc;
 }
 
 html,

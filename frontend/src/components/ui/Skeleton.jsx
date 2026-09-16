@@ -1,8 +1,13 @@
-function Skeleton({ className = "" }) {
+import SkeletonPrimitive from "react-loading-skeleton";
+
+function Skeleton({ className = "", ...props }) {
   return (
-    <span
+    <SkeletonPrimitive
       aria-hidden="true"
-      className={`block animate-pulse rounded-md bg-gray-800/80 ${className}`}
+      baseColor="var(--skeleton-base-color)"
+      highlightColor="var(--skeleton-highlight-color)"
+      className={`rounded-md ${className}`}
+      {...props}
     />
   );
 }
