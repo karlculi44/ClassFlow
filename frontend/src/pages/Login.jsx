@@ -53,7 +53,11 @@ function Login() {
       navigate(user.role === "Admin" ? "/admin" : "/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
-      setError("Invalid credentials. Please check your email and password.");
+      setError(
+        error.response?.status === 429
+          ? error.response.data.message
+          : "Invalid credentials. Please check your email and password.",
+      );
     } finally {
       setSubmitting(false);
     }

@@ -68,6 +68,25 @@ describe("Login", () => {
     );
   });
 
+  it("shows the rate limit error when login attempts are limited", async () => {
+    const user = userEvent.setup();
+    renderLogin(
+      vi.fn().mockRejectedValue({
+        response: {
+          status: 429,
+          data: { message: "Too many login attempts. Please try again." },
+        },
+      }),
+    );
+
+    await fillLogin(user);
+    await user.click(screen.getByRole("button", { name: "Sign In" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Too many login attempts. Please try again.",
+    );
+  });
+
   it("shows a spinner and prevents duplicate login requests", async () => {
     const user = userEvent.setup();
     const login = vi.fn().mockReturnValue(new Promise(() => {}));
