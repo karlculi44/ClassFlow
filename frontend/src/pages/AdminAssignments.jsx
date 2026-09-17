@@ -116,7 +116,7 @@ function AdminAssignments() {
             </label>
           </div>
 
-          {loading && <PageSkeleton variant="table" />}
+          {loading && <PageSkeleton variant="table" columns={5} />}
           {!loading && error && (
             <p className="text-sm text-red-400" role="alert">
               {error}

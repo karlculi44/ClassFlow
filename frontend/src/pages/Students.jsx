@@ -89,7 +89,7 @@ function Students() {
             </p>
           </header>
 
-          {loading && <PageSkeleton variant="table" />}
+          {loading && <PageSkeleton variant="table" columns={7} />}
           {!loading && error && <p className="text-sm text-red-400">{error}</p>}
           {!loading && !error && (
             <>

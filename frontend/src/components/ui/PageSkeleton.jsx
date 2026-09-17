@@ -3,9 +3,9 @@ import ListSkeleton from "./ListSkeleton";
 import Skeleton from "./Skeleton";
 import TableSkeleton from "./TableSkeleton";
 
-function PageSkeleton({ variant = "cards" }) {
+function PageSkeleton({ variant = "cards", columns }) {
   if (variant === "table") {
-    return <TableSkeleton />;
+    return <TableSkeleton columns={columns} />;
   }
 
   if (variant === "list") {

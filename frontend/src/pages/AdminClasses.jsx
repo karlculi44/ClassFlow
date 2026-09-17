@@ -198,89 +198,97 @@ function AdminClasses() {
     <div className="relative min-h-screen overflow-hidden bg-gray-950">
       <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-indigo-600/10 blur-3xl" />
 
-      <main className="relative px-4 py-8 sm:px-6 lg:px-10">
-        <header className="flex flex-col gap-5 border-b border-gray-800 pb-7 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-sm font-medium text-indigo-400">
-              Administration
-            </p>
-            <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-              Classes
-            </h1>
-            <p className="mt-1 text-sm text-gray-400">
-              Manage class schedules, teachers, and enrollment.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              setCreateError("");
-              setEditingClass(null);
-              setFormData(initialFormData);
-              setClassModalOpen(true);
-            }}
-            className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 active:bg-indigo-700 cursor-pointer"
-          >
-            Create class
-          </button>
-        </header>
+      <main className="relative mx-auto w-full px-4 py-8 sm:px-6 lg:px-10">
+        <div className="mx-auto max-w-6xl">
+          <header className="flex flex-col gap-5 border-b border-gray-800 pb-7 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-sm font-medium text-indigo-400">
+                Administration
+              </p>
+              <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+                Classes
+              </h1>
+              <p className="mt-1 text-sm text-gray-400">
+                Manage class schedules, teachers, and enrollment.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setCreateError("");
+                setEditingClass(null);
+                setFormData(initialFormData);
+                setClassModalOpen(true);
+              }}
+              className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 active:bg-indigo-700 cursor-pointer"
+            >
+              Create class
+            </button>
+          </header>
 
-        <section className="grid grid-cols-2 gap-4 border-b border-gray-800 py-6 sm:grid-cols-3">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
-              Total classes
-            </p>
-            <p className="mt-1 text-2xl font-bold  text-blue-400">
-              {classes.length}
-            </p>
-          </div>
-          <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
-              Enrolled students
-            </p>
-            <p className="mt-1 text-2xl font-bold text-white">
-              {totalStudents}
-            </p>
-          </div>
-          <div className="col-span-2 sm:col-span-1">
-            <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
-              Active classes
-            </p>
-            <p className="mt-1 text-2xl font-bold text-emerald-400">
-              {
-                classes.filter((classItem) =>
-                  isScheduleActive(classItem, currentTime),
-                ).length
-              }
-            </p>
-          </div>
-        </section>
+          <section className="grid grid-cols-2 gap-4 border-b border-gray-800 py-6 sm:grid-cols-3">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                Total classes
+              </p>
+              <p className="mt-1 text-2xl font-bold  text-blue-400">
+                {classes.length}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                Enrolled students
+              </p>
+              <p className="mt-1 text-2xl font-bold text-white">
+                {totalStudents}
+              </p>
+            </div>
+            <div className="col-span-2 sm:col-span-1">
+              <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                Active classes
+              </p>
+              <p className="mt-1 text-2xl font-bold text-emerald-400">
+                {
+                  classes.filter((classItem) =>
+                    isScheduleActive(classItem, currentTime),
+                  ).length
+                }
+              </p>
+            </div>
+          </section>
 
-        <section className="grid grid-cols-1 gap-5 py-8 md:grid-cols-2 xl:grid-cols-3">
-          {loading && <PageSkeleton />}
+          <section className="grid grid-cols-1 gap-5 py-8 md:grid-cols-2 xl:grid-cols-3">
+            {loading && (
+              <div className="col-span-full w-full">
+                <PageSkeleton />
+              </div>
+            )}
 
-          {!loading && error && <p className="text-sm text-red-400">{error}</p>}
-          {!loading && !error && classes.length === 0 && (
-            <p className="text-sm text-gray-400">
-              No classes have been created yet.
-            </p>
-          )}
+            {!loading && error && (
+              <p className="text-sm text-red-400">{error}</p>
+            )}
+            {!loading && !error && classes.length === 0 && (
+              <p className="text-sm text-gray-400">
+                No classes have been created yet.
+              </p>
+            )}
 
-          {!loading &&
-            !error &&
-            classes.map((classItem, index) => (
-              <AdminClassCard
-                key={classItem.id ?? classItem.code}
-                onEdit={handleEditClass}
-                onDelete={requestDeleteClass}
-                currentTime={currentTime}
-                classItem={{
-                  ...classItem,
-                  accent: accents[index % accents.length],
-                }}
-              />
-            ))}
-        </section>
+            {!loading &&
+              !error &&
+              classes.map((classItem, index) => (
+                <AdminClassCard
+                  key={classItem.id ?? classItem.code}
+                  onEdit={handleEditClass}
+                  onDelete={requestDeleteClass}
+                  currentTime={currentTime}
+                  classItem={{
+                    ...classItem,
+                    accent: accents[index % accents.length],
+                  }}
+                />
+              ))}
+          </section>
+        </div>
       </main>
       <ClassModal
         isOpen={classModalOpen}
