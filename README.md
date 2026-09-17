@@ -76,7 +76,7 @@ The interface adapts navigation, layouts, forms, tables, and dashboard component
 
 ### Login
 
-<img width="1907" height="904" alt="Login" src="https://github.com/user-attachments/assets/41b28e4c-7a85-46f9-a93e-e2b5a539083f" />
+<img width="1902" height="891" alt="Login" src="https://github.com/user-attachments/assets/0ed9bc95-d40b-4e6c-9f11-67f398ffbb34" />
 
 
 
