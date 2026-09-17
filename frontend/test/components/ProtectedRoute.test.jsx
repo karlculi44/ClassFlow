@@ -17,6 +17,7 @@ const renderRoute = (authValue, allowedRoles = ["Student"]) =>
               </ProtectedRoute>
             }
           />
+          <Route path="/" element={<h1>Login page</h1>} />
           <Route path="/unauthorized" element={<h1>Unauthorized page</h1>} />
         </Routes>
       </MemoryRouter>
@@ -32,11 +33,16 @@ describe("ProtectedRoute", () => {
     ).toBeInTheDocument();
   });
 
-  it.each([
-    ["without a user", { loading: false, user: null }],
-    ["for a disallowed role", { loading: false, user: { role: "Admin" } }],
-  ])("redirects %s", (_, authValue) => {
-    renderRoute(authValue);
+  it("redirects an unauthenticated user to login", () => {
+    renderRoute({ loading: false, user: null });
+
+    expect(
+      screen.getByRole("heading", { name: "Login page" }),
+    ).toBeInTheDocument();
+  });
+
+  it("redirects a disallowed role to the unauthorized page", () => {
+    renderRoute({ loading: false, user: { role: "Admin" } });
 
     expect(
       screen.getByRole("heading", { name: "Unauthorized page" }),

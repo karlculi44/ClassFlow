@@ -1,9 +1,24 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import { AuthContext } from "../context/AuthContext";
+import PageSkeleton from "../components/ui/PageSkeleton";
 
 const MainLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { loading } = useContext(AuthContext);
+
+  if (loading) {
+    return (
+      <main
+        className="min-h-screen bg-gray-950 p-6 sm:p-8"
+        role="status"
+        aria-label="Loading page"
+      >
+        <PageSkeleton variant="dashboard" />
+      </main>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-950 md:flex-row">

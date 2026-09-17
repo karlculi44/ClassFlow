@@ -1,5 +1,5 @@
-import Login from "./pages/Login";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -21,7 +21,7 @@ import Reports from "./pages/Reports";
 import AdminAssignments from "./pages/AdminAssignments";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-
+import PageNotFound from "./pages/PageNotFound";
 function App() {
   return (
     <>
@@ -155,6 +155,7 @@ function App() {
               }
             />
           </Route>
+          <Route path="*" element={<PageNotFound />} />
 
           <Route path="/unauthorized" element={<Unauthorized />} />
         </Routes>
