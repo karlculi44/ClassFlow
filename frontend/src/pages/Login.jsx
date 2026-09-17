@@ -21,8 +21,6 @@ function Login() {
 
         const user = await googleLogin(response.credential);
 
-        console.log("Google authenticated user:", user);
-
         navigate(user.role === "Admin" ? "/admin" : "/dashboard");
       } catch (error) {
         console.error("Google login failed:", error);
