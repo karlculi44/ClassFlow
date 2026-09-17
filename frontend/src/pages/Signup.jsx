@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { register } from "../services/authServices";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
+import { ArrowRight, Check, LockKeyhole, Mail, UserRound } from "lucide-react";
 
 const initialForm = { name: "", email: "", password: "", confirmPassword: "" };
 
@@ -69,165 +70,193 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gray-950">
-      <div className="relative flex flex-1 items-center justify-center overflow-hidden px-4 py-12 sm:px-6 md:order-1 md:w-1/2">
-        <div className="absolute top-8 left-6 h-10 w-10 rotate-12 rounded-2xl border border-gray-800 sm:h-12 sm:w-12 md:top-16 md:left-16 md:h-14 md:w-14" />
-        <div className="absolute bottom-10 right-6 h-7 w-7 rounded-full border border-gray-800 sm:h-8 sm:w-8 md:bottom-20 md:right-12 md:h-9 md:w-9" />
-        <div className="absolute top-1/4 left-10 h-4 w-4 rotate-45 bg-indigo-500/10 sm:left-14 md:top-1/3 md:left-20 md:h-5 md:w-5" />
-        <div className="absolute bottom-1/3 right-8 h-1.5 w-1.5 rounded-full bg-indigo-500/40 sm:right-12 md:bottom-1/4 md:right-16 md:h-2 md:w-2" />
+    <div className="relative flex min-h-screen overflow-hidden bg-gray-950 text-gray-100">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_88%_8%,rgba(79,70,229,0.16),transparent_30%),radial-gradient(circle_at_10%_88%,rgba(8,145,178,0.1),transparent_28%)]" />
+      <div className="pointer-events-none absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(148,163,184,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.06)_1px,transparent_1px)] [background-size:44px_44px] [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
 
+      <main className="relative flex min-w-0 flex-1 items-center justify-center px-5 py-8 sm:px-8 sm:py-12 lg:order-2 lg:w-[58%]">
         <div className="w-full max-w-md">
-          <div className="mb-8 text-center md:hidden">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-950/50">
-              <span className="text-xl font-bold text-white">CF</span>
+          <div className="mb-8 flex items-center gap-3 lg:hidden">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500 text-xs font-extrabold text-white">
+              CF
             </div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-white">
-              Join{" "}
-              <span className="bg-linear-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                ClassFlow
-              </span>
-            </h1>
+            <span className="font-heading text-lg font-bold text-white">
+              ClassFlow
+            </span>
           </div>
-
-          <div className="mb-8 hidden md:block">
-            <h2 className="text-2xl font-bold text-white">
-              Create your account
-            </h2>
-            <p className="mt-2 text-sm text-gray-400">
-              Set up your student account to get started
+          <div className="mb-7">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-300">
+              Build your workspace
+            </p>
+            <h1 className="mt-3 font-heading text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              Create your ClassFlow account
+            </h1>
+            <p className="mt-3 text-sm leading-6 text-gray-400">
+              A focused home for your classes, assignments, and progress.
             </p>
           </div>
 
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 p-6 shadow-xl shadow-black/40 sm:p-8">
-            <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-              <label className="block text-sm font-medium text-gray-300">
+          <div className="rounded-2xl border border-gray-800/90 bg-gray-900/85 p-5 shadow-2xl shadow-black/30 backdrop-blur sm:p-7">
+            <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+              <label className="block text-sm font-semibold text-gray-300">
                 Full name
-                <input
-                  name="name"
-                  type="text"
-                  value={formData.name}
-                  onChange={handleChange}
-                  autoComplete="name"
-                  maxLength={100}
-                  placeholder="Your full name"
-                  className="mt-1.5 w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-gray-100 outline-none placeholder:text-gray-500 transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
-                />
+                <span className="relative mt-2 block">
+                  <UserRound
+                    size={17}
+                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
+                  />
+                  <input
+                    name="name"
+                    type="text"
+                    value={formData.name}
+                    onChange={handleChange}
+                    autoComplete="name"
+                    maxLength={100}
+                    placeholder="Your full name"
+                    className="h-12 w-full rounded-xl border border-gray-700 bg-gray-950/60 pl-11 pr-4 text-sm text-gray-100 outline-none placeholder:text-gray-600 transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20"
+                  />
+                </span>
               </label>
-              <label className="block text-sm font-medium text-gray-300">
+              <label className="block text-sm font-semibold text-gray-300">
                 Email
-                <input
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  autoComplete="email"
-                  maxLength={254}
-                  placeholder="you@example.com"
-                  className="mt-1.5 w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-gray-100 outline-none placeholder:text-gray-500 transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
-                />
+                <span className="relative mt-2 block">
+                  <Mail
+                    size={17}
+                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
+                  />
+                  <input
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    autoComplete="email"
+                    maxLength={254}
+                    placeholder="you@example.com"
+                    className="h-12 w-full rounded-xl border border-gray-700 bg-gray-950/60 pl-11 pr-4 text-sm text-gray-100 outline-none placeholder:text-gray-600 transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20"
+                  />
+                </span>
               </label>
-              <label className="block text-sm font-medium text-gray-300">
-                Password
-                <input
-                  name="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  autoComplete="new-password"
-                  maxLength={128}
-                  placeholder="At least 6 characters"
-                  className="mt-1.5 w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-gray-100 outline-none placeholder:text-gray-500 transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
-                />
-              </label>
-              <label className="block text-sm font-medium text-gray-300">
-                Confirm password
-                <input
-                  name="confirmPassword"
-                  type="password"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  autoComplete="new-password"
-                  maxLength={128}
-                  placeholder="Re-enter your password"
-                  className="mt-1.5 w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-gray-100 outline-none placeholder:text-gray-500 transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
-                />
-              </label>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <label className="block text-sm font-semibold text-gray-300">
+                  Password
+                  <span className="relative mt-2 block">
+                    <LockKeyhole
+                      size={17}
+                      className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
+                    />
+                    <input
+                      name="password"
+                      type="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      autoComplete="new-password"
+                      maxLength={128}
+                      placeholder="At least 6 characters"
+                      className="h-12 w-full rounded-xl border border-gray-700 bg-gray-950/60 pl-11 pr-3 text-sm text-gray-100 outline-none placeholder:text-gray-600 transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20"
+                    />
+                  </span>
+                </label>
+                <label className="block text-sm font-semibold text-gray-300">
+                  Confirm password
+                  <span className="relative mt-2 block">
+                    <LockKeyhole
+                      size={17}
+                      className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
+                    />
+                    <input
+                      name="confirmPassword"
+                      type="password"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      autoComplete="new-password"
+                      maxLength={128}
+                      placeholder="Re-enter password"
+                      className="h-12 w-full rounded-xl border border-gray-700 bg-gray-950/60 pl-11 pr-3 text-sm text-gray-100 outline-none placeholder:text-gray-600 transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20"
+                    />
+                  </span>
+                </label>
+              </div>
               {error && (
-                <p className="text-sm text-red-400" role="alert">
+                <p
+                  className="rounded-lg border border-red-400/20 bg-red-400/10 px-3 py-2.5 text-sm text-red-300"
+                  role="alert"
+                >
                   {error}
                 </p>
               )}
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full rounded-lg bg-indigo-600 py-2.5 font-semibold text-white transition hover:bg-indigo-500 active:bg-indigo-700 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-indigo-500 text-sm font-bold text-white shadow-lg shadow-indigo-950/30 transition hover:bg-indigo-400 active:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {submitting ? (
                   <LoadingSpinner label="Creating account" />
                 ) : (
-                  "Create account"
+                  <>
+                    Create account <ArrowRight size={17} />
+                  </>
                 )}
               </button>
             </form>
-            <p className="mt-6 text-center text-sm text-gray-400">
+            <p className="mt-7 text-center text-sm text-gray-400">
               Already have an account?{" "}
               <Link
                 to="/"
-                className="font-medium text-indigo-400 transition hover:text-indigo-300 cursor-pointer"
+                className="font-semibold text-indigo-300 transition hover:text-indigo-200"
               >
                 Sign in
               </Link>
             </p>
           </div>
-        </div>
-      </div>
-
-      <div className="relative hidden flex-col items-center justify-center overflow-hidden bg-linear-to-br from-indigo-600 via-indigo-800 to-purple-900 px-10 py-12 md:order-2 md:flex md:w-1/2">
-        <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
-        <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-purple-400/20 blur-3xl" />
-        <div className="absolute top-12 left-12 h-16 w-16 rotate-12 rounded-2xl border border-white/20" />
-        <div className="absolute bottom-16 right-10 h-10 w-10 rounded-full border border-white/20" />
-        <div className="absolute top-1/3 right-16 h-6 w-6 rotate-45 bg-white/10" />
-        <div className="absolute bottom-1/4 left-16 h-8 w-8 rotate-45 border-2 border-purple-200/20" />
-        <div className="relative max-w-sm text-center">
-          <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm">
-            <span className="text-2xl font-bold text-white">CF</span>
-          </div>
-          <h1 className="text-4xl font-extrabold tracking-tight text-white">
-            Start with ClassFlow
-          </h1>
-          <p className="mt-3 text-indigo-100/80">
-            Create your account to organize your classes, assignments, and
-            academic progress in one place.
+          <p className="mt-6 text-center text-xs text-gray-600">
+            Set up once. Stay in sync.
           </p>
-          <ul className="mt-8 space-y-3 text-left">
+        </div>
+      </main>
+
+      <aside className="relative hidden w-[42%] max-w-xl flex-col justify-between border-l border-gray-800/80 bg-gray-900/25 px-10 py-10 lg:order-1 lg:flex xl:px-16">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500 text-sm font-extrabold text-white shadow-lg shadow-indigo-950/40">
+            CF
+          </div>
+          <span className="font-heading text-lg font-bold tracking-tight text-white">
+            ClassFlow
+          </span>
+        </div>
+        <div className="relative max-w-md pb-8">
+          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-indigo-300/20 bg-indigo-300/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-indigo-200">
+            <span className="h-1.5 w-1.5 rounded-full bg-indigo-300" />
+            Start with clarity
+          </div>
+          <h2 className="font-heading text-5xl font-extrabold leading-[1.05] tracking-tight text-white xl:text-6xl">
+            A better rhythm for <span className="text-cyan-300">learning.</span>
+          </h2>
+          <p className="mt-6 max-w-sm text-base leading-7 text-gray-400">
+            Create one place for the work that matters and make each school day
+            easier to navigate.
+          </p>
+          <ul className="mt-10 space-y-4">
             {[
               "Create your student profile",
-              "Access your enrolled classes",
+              "Access enrolled classes",
               "Stay on top of assignments",
-              "Track your academic progress",
             ].map((feature) => (
-              <li key={feature} className="flex items-center gap-3">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/15">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    className="h-3 w-3 text-white"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.704 5.29a1 1 0 010 1.415l-7.5 7.5a1 1 0 01-1.415 0l-3.5-3.5a1 1 0 111.415-1.414L8.5 12.086l6.79-6.796a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+              <li
+                key={feature}
+                className="flex items-center gap-3 text-sm text-gray-300"
+              >
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-cyan-300/25 bg-cyan-300/10 text-cyan-200">
+                  <Check size={13} strokeWidth={2.5} />
                 </span>
-                <span className="text-sm text-indigo-50/90">{feature}</span>
+                {feature}
               </li>
             ))}
           </ul>
         </div>
-      </div>
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-gray-600">
+          Your next chapter starts here
+        </p>
+      </aside>
     </div>
   );
 }
